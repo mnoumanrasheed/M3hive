@@ -3,16 +3,14 @@ import { PageShell } from '../components/layout/PageShell';
 import { Container } from '../components/ui/Container';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { Button } from '../components/ui/Button';
-import { AnimatedStatCard } from '../components/ui/AnimatedStatCard';
 import { FadeIn } from '../components/ui/FadeIn';
 import { PartnersMarquee } from '../components/home/PartnersMarquee';
 import { TestimonialCarousel } from '../components/home/TestimonialCarousel';
 import { DiscoveryForm } from '../components/home/DiscoveryForm';
-import { AnimatedHoneycomb } from '../components/graphics/AnimatedHoneycomb';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { homepageData } from '../data/homepage';
-import { companyStats } from '../data/companyStats';
 import { testimonialsData } from '../data/testimonials';
+import { HeroCarousel } from '../components/home/HeroCarousel';
 
 // A small component for the services grid on homepage
 const ServiceSummaryCard: React.FC<{ service: any; index: number }> = ({ service, index }) => {
@@ -42,52 +40,8 @@ const ServiceSummaryCard: React.FC<{ service: any; index: number }> = ({ service
 export const HomePage: React.FC = () => {
   return (
     <PageShell title={homepageData.hero.title}>
-      {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative pt-24 pb-32 lg:pt-36 lg:pb-48 overflow-hidden bg-hive-white">
-        <AnimatedHoneycomb />
-        
-        <Container size="lg" className="relative z-10 text-center">
-          <FadeIn y={30} duration={1}>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-8">
-              <span className="w-2 h-2 rounded-full bg-hive-yellow animate-pulse" />
-              <span className="text-xs font-heading font-bold tracking-widest uppercase text-hive-black">
-                M3 Hive Technology
-              </span>
-            </div>
-            
-            <h1 className="text-display-xl font-bold font-heading text-hive-black max-w-5xl mx-auto mb-8">
-              {homepageData.hero.title}
-            </h1>
-            
-            <p className="text-lg md:text-xl text-hive-text-muted max-w-3xl mx-auto leading-relaxed mb-10">
-              {homepageData.hero.description}
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button href={homepageData.hero.ctaHref} variant="primary" size="lg">
-                {homepageData.hero.ctaLabel}
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-              <Button href={homepageData.intro.ctaHref} variant="outline" size="lg">
-                {homepageData.intro.ctaLabel}
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </section>
-
-      {/* ─── STATS SECTION ────────────────────────────────────────── */}
-      <section className="py-16 bg-hive-warm-white border-y border-hive-border">
-        <Container size="lg">
-          <FadeIn>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {companyStats.map((stat, idx) => (
-                <AnimatedStatCard key={stat.id} stat={stat} className={`delay-[${idx * 100}ms]`} />
-              ))}
-            </div>
-          </FadeIn>
-        </Container>
-      </section>
+      {/* ─── HERO CAROUSEL ─────────────────────────────────────── */}
+      <HeroCarousel />
 
       {/* ─── INTRO SECTION ────────────────────────────────────────── */}
       <section className="py-24 lg:py-32 bg-hive-white">

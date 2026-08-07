@@ -9,6 +9,7 @@ import { Mail, MessageSquare } from 'lucide-react';
 import { contactPageData } from '../data/contact';
 import { officeLocations } from '../data/offices';
 import { useForm, validators } from '../hooks/useForm';
+import { HeroBackground } from '../components/ui/HeroBackground';
 
 export const ContactPage: React.FC = () => {
   const {
@@ -26,7 +27,7 @@ export const ContactPage: React.FC = () => {
     {
       firstName: validators.required('First name is required'),
       lastName: validators.required('Last name is required'),
-      email: validators.email('Please enter a valid work email'),
+      email: (val) => validators.required('Email is required')(val) || validators.email(val),
       country: validators.required('Please select a country')
     }
   );
@@ -39,13 +40,14 @@ export const ContactPage: React.FC = () => {
   return (
     <PageShell title={contactPageData.title}>
       {/* ─── HEADER ───────────────────────────────────────────────── */}
-      <section className="pt-20 pb-16 bg-hive-warm-white border-b border-hive-border">
-        <Container size="md" className="text-center">
+      <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+        <HeroBackground imageUrl="/assets/heroes/hero-contact.jpg" />
+        <Container size="md" className="relative z-10 text-center">
           <FadeIn>
-            <h1 className="text-display-lg font-bold font-heading text-hive-black mb-6">
+            <h1 className="text-display-lg font-bold font-heading text-white drop-shadow-md mb-6">
               {contactPageData.title}
             </h1>
-            <p className="text-xl text-hive-text-muted">
+            <p className="text-xl text-white/90 drop-shadow">
               {contactPageData.subtitle}
             </p>
           </FadeIn>

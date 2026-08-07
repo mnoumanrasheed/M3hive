@@ -15,24 +15,39 @@ interface ServicePageTemplateProps {
   serviceCategoryName: string;
 }
 
+const heroImageMap: Record<string, string> = {
+  'Artificial Intelligence': '/assets/heroes/hero-artificial-intelligence.jpg',
+  'Product Engineering': '/assets/heroes/hero-product-engineering.jpg',
+  'Customer Experience': '/assets/heroes/hero-customer-experience.jpg',
+  'Intelligent Automation': '/assets/heroes/hero-intelligent-automation.jpg',
+  'Data & Analytics': '/assets/heroes/hero-data-analytics.jpg',
+  'Cloud Platforms': '/assets/heroes/hero-cloud-platforms.jpg',
+  'Edge Technologies': '/assets/heroes/hero-edge-technologies.jpg',
+};
+
+import { HeroBackground } from '../ui/HeroBackground';
+
 export const ServicePageTemplate: React.FC<ServicePageTemplateProps> = ({ data, serviceCategoryName }) => {
   const breadcrumbs: BreadcrumbItem[] = [
     { label: 'Services', href: '/services' },
     { label: serviceCategoryName },
   ];
 
+  const heroImageUrl = heroImageMap[serviceCategoryName];
+
   return (
     <PageShell title={data.title} description={data.subtitle}>
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 bg-hive-warm-white border-b border-hive-border">
-        <Container size="md">
+      <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+        {heroImageUrl && <HeroBackground imageUrl={heroImageUrl} />}
+        <Container size="md" className="relative z-10">
           <Breadcrumbs items={breadcrumbs} className="mb-10 pb-0 border-none" />
           
           <FadeIn>
-            <h1 className="text-display-lg font-bold font-heading text-hive-black mb-6">
+            <h1 className="text-display-lg font-bold font-heading text-white drop-shadow-md mb-6">
               {data.title}
             </h1>
-            <p className="text-lg md:text-xl text-hive-text-muted leading-relaxed mb-10 max-w-3xl">
+            <p className="text-lg md:text-xl text-white/90 drop-shadow leading-relaxed mb-10 max-w-3xl">
               {data.subtitle}
             </p>
             

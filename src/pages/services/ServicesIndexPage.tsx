@@ -7,23 +7,26 @@ import { Button } from '../../components/ui/Button';
 import { allServicesData } from '../../data/services/servicesIndex';
 import { ArrowRight, Settings2 } from 'lucide-react';
 
+import { HeroBackground } from '../../components/ui/HeroBackground';
+
 export const ServicesIndexPage: React.FC = () => {
   return (
     <PageShell title="Services Overview">
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 bg-hive-warm-white border-b border-hive-border">
-        <Container size="md" className="text-center">
+      <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+        <HeroBackground imageUrl="/assets/heroes/hero-services.jpg" />
+        <Container size="md" className="relative z-10 text-center">
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-6">
               <Settings2 className="w-4 h-4 text-hive-yellow" />
-              <span className="text-xs font-heading font-bold tracking-widest uppercase text-hive-black">
+              <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
                 Capabilities
               </span>
             </div>
-            <h1 className="text-display-lg font-bold font-heading text-hive-black mb-6">
+            <h1 className="text-display-lg font-bold font-heading text-white drop-shadow-md mb-6">
               Our Services Overview
             </h1>
-            <p className="text-lg text-hive-text-muted leading-relaxed">
+            <p className="text-lg text-white/90 drop-shadow leading-relaxed">
               Comprehensive capabilities to transform operations, improve experiences, and build competitive advantage.
             </p>
           </FadeIn>

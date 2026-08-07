@@ -3,30 +3,31 @@ import { PageShell } from '../components/layout/PageShell';
 import { Container } from '../components/ui/Container';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { FadeIn } from '../components/ui/FadeIn';
-import { AnimatedStatCard } from '../components/ui/AnimatedStatCard';
 import { OfficeCard } from '../components/ui/OfficeCard';
 import { aboutPageData } from '../data/about';
 import { leadershipMembers } from '../data/leadership';
 import { officeLocations } from '../data/offices';
-import { companyStats } from '../data/companyStats';
+
+import { HeroBackground } from '../components/ui/HeroBackground';
 
 export const AboutPage: React.FC = () => {
   return (
     <PageShell title="About M3 Hive">
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 bg-hive-warm-white border-b border-hive-border">
-        <Container size="md" className="text-center">
+      <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+        <HeroBackground imageUrl="/assets/heroes/hero-about.jpg" />
+        <Container size="md" className="relative z-10 text-center">
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-6">
               <span className="w-2 h-2 rounded-full bg-hive-yellow" />
-              <span className="text-xs font-heading font-bold tracking-widest uppercase text-hive-black">
+              <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
                 About Us
               </span>
             </div>
-            <h1 className="text-display-lg font-bold font-heading text-hive-black mb-6">
+            <h1 className="text-display-lg font-bold font-heading text-white drop-shadow-md mb-6">
               {aboutPageData.title}
             </h1>
-            <p className="text-lg text-hive-text-muted leading-relaxed">
+            <p className="text-lg text-white/90 drop-shadow leading-relaxed">
               {aboutPageData.subtitle}
             </p>
           </FadeIn>
@@ -43,19 +44,6 @@ export const AboutPage: React.FC = () => {
                 <p key={i} className="mb-4 last:mb-0 leading-relaxed text-base">
                   {para}
                 </p>
-              ))}
-            </div>
-          </FadeIn>
-        </Container>
-      </section>
-
-      {/* ─── STATS ────────────────────────────────────────────────── */}
-      <section className="py-16 bg-hive-gray border-y border-hive-border">
-        <Container size="lg">
-          <FadeIn>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {companyStats.map((stat, idx) => (
-                <AnimatedStatCard key={stat.id} stat={stat} className={`delay-[${idx * 100}ms] bg-hive-white`} />
               ))}
             </div>
           </FadeIn>
