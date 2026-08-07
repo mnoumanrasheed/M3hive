@@ -20,14 +20,14 @@ export const ResourcesPage: React.FC = () => {
   const filteredAndSortedResources = useMemo(() => {
     let result = resourcesData;
 
-    // Search filter
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
         (r) =>
           r.title.toLowerCase().includes(q) ||
-          r.category.toLowerCase().includes(q) ||
-          (r.summary && r.summary.toLowerCase().includes(q))
+          r.displayTitle?.toLowerCase().includes(q) ||
+          r.category?.toLowerCase().includes(q) ||
+          r.sourceName?.toLowerCase().includes(q)
       );
     }
 

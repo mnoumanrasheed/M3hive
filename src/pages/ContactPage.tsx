@@ -27,7 +27,7 @@ export const ContactPage: React.FC = () => {
     {
       firstName: validators.required('First name is required'),
       lastName: validators.required('Last name is required'),
-      email: (val) => validators.required('Email is required')(val) || validators.email(val),
+      email: validators.email('Please enter a valid email address'),
       country: validators.required('Please select a country')
     }
   );
@@ -58,7 +58,7 @@ export const ContactPage: React.FC = () => {
       <section className="py-20 lg:py-24 bg-hive-white">
         <Container size="lg">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-            
+
             {/* Left Column: Info */}
             <div className="lg:col-span-5 space-y-10">
               <FadeIn>
@@ -93,7 +93,7 @@ export const ContactPage: React.FC = () => {
               <FadeIn delay={0.2}>
                 <div className="bg-hive-white border border-hive-border rounded-2xl p-8 lg:p-10 shadow-hive-lg">
                   <h3 className="text-2xl font-bold font-heading mb-8">{contactPageData.formTitle}</h3>
-                  
+
                   {status === 'success' ? (
                     <div className="bg-hive-gray border border-hive-border rounded-xl p-6 text-center animate-fade-in" role="status" aria-live="polite">
                       <p className="text-sm text-hive-black font-medium">
@@ -121,7 +121,7 @@ export const ContactPage: React.FC = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="space-y-1.5">
                           <label htmlFor="contact-firstName" className="text-sm font-semibold text-hive-black">First Name <span aria-hidden="true" className="text-hive-orange">*</span></label>
-                          <input 
+                          <input
                             id="contact-firstName"
                             name="firstName"
                             type="text"
@@ -129,17 +129,16 @@ export const ContactPage: React.FC = () => {
                             onChange={handleChange}
                             aria-invalid={!!errors.firstName}
                             aria-describedby={errors.firstName ? "contact-firstName-error" : undefined}
-                            className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${
-                              errors.firstName 
-                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                            className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${errors.firstName
+                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                                 : 'border-hive-border focus:border-hive-yellow focus:ring-hive-yellow'
-                            }`}
+                              }`}
                           />
                           {errors.firstName && <p id="contact-firstName-error" className="text-red-500 text-xs mt-1" role="alert">{errors.firstName}</p>}
                         </div>
                         <div className="space-y-1.5">
                           <label htmlFor="contact-lastName" className="text-sm font-semibold text-hive-black">Last Name <span aria-hidden="true" className="text-hive-orange">*</span></label>
-                          <input 
+                          <input
                             id="contact-lastName"
                             name="lastName"
                             type="text"
@@ -147,19 +146,18 @@ export const ContactPage: React.FC = () => {
                             onChange={handleChange}
                             aria-invalid={!!errors.lastName}
                             aria-describedby={errors.lastName ? "contact-lastName-error" : undefined}
-                            className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${
-                              errors.lastName 
-                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                            className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${errors.lastName
+                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                                 : 'border-hive-border focus:border-hive-yellow focus:ring-hive-yellow'
-                            }`}
+                              }`}
                           />
                           {errors.lastName && <p id="contact-lastName-error" className="text-red-500 text-xs mt-1" role="alert">{errors.lastName}</p>}
                         </div>
                       </div>
-                      
+
                       <div className="space-y-1.5">
                         <label htmlFor="contact-email" className="text-sm font-semibold text-hive-black">Work Email Address <span aria-hidden="true" className="text-hive-orange">*</span></label>
-                        <input 
+                        <input
                           id="contact-email"
                           name="email"
                           type="email"
@@ -167,11 +165,10 @@ export const ContactPage: React.FC = () => {
                           onChange={handleChange}
                           aria-invalid={!!errors.email}
                           aria-describedby={errors.email ? "contact-email-error" : undefined}
-                          className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${
-                            errors.email 
-                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                          className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${errors.email
+                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                               : 'border-hive-border focus:border-hive-yellow focus:ring-hive-yellow'
-                          }`}
+                            }`}
                         />
                         {errors.email && <p id="contact-email-error" className="text-red-500 text-xs mt-1" role="alert">{errors.email}</p>}
                       </div>
@@ -179,18 +176,17 @@ export const ContactPage: React.FC = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="space-y-1.5">
                           <label htmlFor="contact-country" className="text-sm font-semibold text-hive-black">Country <span aria-hidden="true" className="text-hive-orange">*</span></label>
-                          <select 
+                          <select
                             id="contact-country"
                             name="country"
                             value={values.country}
                             onChange={handleChange}
                             aria-invalid={!!errors.country}
                             aria-describedby={errors.country ? "contact-country-error" : undefined}
-                            className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${
-                              errors.country 
-                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                            className={`w-full bg-hive-gray border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${errors.country
+                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                                 : 'border-hive-border focus:border-hive-yellow focus:ring-hive-yellow'
-                            }`}
+                              }`}
                           >
                             <option value="">Select a country</option>
                             <option value="UK">United Kingdom</option>
@@ -203,7 +199,7 @@ export const ContactPage: React.FC = () => {
                         </div>
                         <div className="space-y-1.5">
                           <label htmlFor="contact-interest" className="text-sm font-semibold text-hive-black">Area of Interest</label>
-                          <select 
+                          <select
                             id="contact-interest"
                             name="interest"
                             value={values.interest}
@@ -250,7 +246,7 @@ export const ContactPage: React.FC = () => {
           <FadeIn>
             <SectionHeading title="Our Global Offices" description="M3 Hive operates 14+ offices and development centres across the world." />
           </FadeIn>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
             {officeLocations.map((office, idx) => (
               <FadeIn key={office.id} delay={(idx % 3) * 0.1}>
