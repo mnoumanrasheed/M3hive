@@ -1,26 +1,54 @@
-import { type ReactNode, useState } from 'react';
-import { CinematicLoader } from './CinematicLoader';
+import {
+  type ReactNode,
+  useCallback,
+  useState,
+} from 'react';
 
-const LOADER_STORAGE_KEY = 'm3hive-loader-seen';
+import { CinematicLoader } from './CinematicLoader';
 
 interface LoaderGateProps {
   children: ReactNode;
 }
 
-/** Shows the introductory experience once per browser session. */
-export function LoaderGate({ children }: LoaderGateProps) {
-  const [showLoader, setShowLoader] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const forceLoader = new URLSearchParams(window.location.search).get('loader') === '1';
-    return forceLoader || window.sessionStorage.getItem(LOADER_STORAGE_KEY) !== 'true';
-  });
+export function LoaderGate({
+  children,
+}: LoaderGateProps) {
+  /*
+   * Loader starts on every full browser load/refresh.
+   *
+   * F5 / Ctrl+R / new visit:
+   * loader will run.
+   *
+   * Internal React navigation:
+   * loader will NOT run again.
+   */
+  const [showLoader, setShowLoader] = useState(true);
 
-  const handleComplete = () => {
-    window.sessionStorage.setItem(LOADER_STORAGE_KEY, 'true');
+  /*
+   * This function is called ONLY after
+   * CinematicLoader has completed its final fade-out.
+   */
+  const handleComplete = useCallback(() => {
     setShowLoader(false);
-  };
+  }, []);
 
-  if (showLoader) return <CinematicLoader onComplete={handleComplete} />;
+  /*
+   * IMPORTANT:
+   * Do not render the website underneath the loader.
+   *
+   * While loader is active, render ONLY the loader.
+   */
+  if (showLoader) {
+    return (
+      <CinematicLoader
+        onComplete={handleComplete}
+      />
+    );
+  }
 
+  /*
+   * Loader has completely finished.
+   * Now render the website.
+   */
   return <>{children}</>;
 }
