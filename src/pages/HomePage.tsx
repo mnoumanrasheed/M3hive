@@ -1,52 +1,164 @@
 import React from 'react';
+
 import { PageShell } from '../components/layout/PageShell';
 import { Container } from '../components/ui/Container';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { Button } from '../components/ui/Button';
 import { FadeIn } from '../components/ui/FadeIn';
+
 import { PartnersMarquee } from '../components/home/PartnersMarquee';
-import { TestimonialCarousel } from '../components/home/TestimonialCarousel';
 import { DiscoveryForm } from '../components/home/DiscoveryForm';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import { homepageData } from '../data/homepage';
-import { testimonialsData } from '../data/testimonials';
 import { HeroCarousel } from '../components/home/HeroCarousel';
 
-// A small component for the services grid on homepage
-const ServiceSummaryCard: React.FC<{ service: any; index: number }> = ({ service, index }) => {
+/*
+ * IMPORTANT:
+ * This is the NEW auto-rotating testimonial carousel.
+ */
+import TestimonialsCarousel from '../components/TestimonialsCarousel';
+
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+
+import { homepageData } from '../data/homepage';
+
+/* ============================================================
+   SERVICE CARD
+============================================================ */
+
+const ServiceSummaryCard: React.FC<{
+  service: any;
+  index: number;
+}> = ({ service, index }) => {
   return (
     <div
-      className="group relative flex flex-col p-8 rounded-2xl bg-hive-white border border-hive-border transition-all duration-300 hover:border-hive-yellow/50 hover:shadow-hive-hover h-full"
+      className="
+        group
+        relative
+        flex
+        h-full
+        flex-col
+        overflow-hidden
+        rounded-2xl
+        border
+        border-hive-border
+        bg-hive-white
+        p-6
+        sm:p-8
+        transition-all
+        duration-500
+        hover:-translate-y-1
+        hover:border-hive-yellow
+        hover:shadow-xl
+      "
     >
-      <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <ArrowUpRight className="w-5 h-5 text-hive-yellow" />
+      {/* Number */}
+      <div
+        className="
+          mb-8
+          text-sm
+          font-semibold
+          text-hive-orange
+        "
+      >
+        {String(index + 1).padStart(2, '0')}
       </div>
-      <div className="w-12 h-12 mb-6 rounded-xl flex items-center justify-center bg-hive-warm-white border border-hive-border group-hover:border-hive-yellow/30 transition-colors">
-        <span className="font-heading font-bold text-hive-black text-lg">{index + 1}</span>
-      </div>
-      <h3 className="font-heading font-bold text-lg mb-3 text-hive-black group-hover:text-hive-orange transition-colors">
+
+      {/* Title */}
+      <h3
+        className="
+          mb-4
+          font-heading
+          text-xl
+          font-bold
+          text-hive-black
+          sm:text-2xl
+        "
+      >
         {service.title}
       </h3>
-      <p className="text-sm text-hive-text-muted leading-relaxed mb-6 flex-1">
+
+      {/* Description */}
+      <p
+        className="
+          mb-8
+          flex-grow
+          text-sm
+          leading-relaxed
+          text-hive-text-muted
+          sm:text-base
+        "
+      >
         {service.description}
       </p>
-      <Button href={service.ctaHref} variant="ghost" size="sm" className="self-start -ml-2">
+
+      {/* CTA */}
+      <a
+        href={service.ctaHref || service.href || '#'}
+        className="
+          inline-flex
+          items-center
+          gap-2
+          text-sm
+          font-semibold
+          text-hive-black
+          transition-colors
+          duration-300
+          group-hover:text-hive-orange
+        "
+      >
         {service.ctaLabel}
-      </Button>
+
+        <ArrowUpRight
+          className="
+            h-4
+            w-4
+            transition-transform
+            duration-300
+            group-hover:translate-x-1
+            group-hover:-translate-y-1
+          "
+        />
+      </a>
+
+      {/* Bottom hover accent */}
+      <div
+        className="
+          absolute
+          bottom-0
+          left-0
+          h-1
+          w-0
+          bg-gradient-to-r
+          from-hive-orange
+          to-hive-yellow
+          transition-all
+          duration-500
+          group-hover:w-full
+        "
+      />
     </div>
   );
 };
 
+/* ============================================================
+   HOME PAGE
+============================================================ */
+
 export const HomePage: React.FC = () => {
   return (
-    <PageShell title={homepageData.hero.title}>
-      {/* ─── HERO CAROUSEL ─────────────────────────────────────── */}
+    <PageShell>
+      {/* ======================================================
+          HERO CAROUSEL
+      ====================================================== */}
+
       <HeroCarousel />
 
-      {/* ─── INTRO SECTION ────────────────────────────────────────── */}
-      <section className="py-24 lg:py-32 bg-hive-white">
+      {/* ======================================================
+          INTRO SECTION
+      ====================================================== */}
+
+      <section className="bg-hive-white py-16 sm:py-24 lg:py-32">
         <Container size="lg">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-24">
             <div className="lg:col-span-5">
               <FadeIn>
                 <SectionHeading
@@ -56,17 +168,35 @@ export const HomePage: React.FC = () => {
                 />
               </FadeIn>
             </div>
-            <div className="lg:col-span-7 space-y-8">
+
+            <div className="space-y-8 lg:col-span-7">
               <FadeIn delay={0.2}>
-                <div className="prose prose-lg text-hive-text-muted max-w-none">
-                  {homepageData.intro.description.split('\n\n').map((para, i) => (
-                    <p key={i} className="mb-4 last:mb-0 leading-relaxed text-base">{para}</p>
-                  ))}
+                <div className="prose prose-lg max-w-none text-hive-text-muted">
+                  {homepageData.intro.description
+                    .split('\n\n')
+                    .map((para, i) => (
+                      <p
+                        key={i}
+                        className="
+                          mb-4
+                          text-base
+                          leading-relaxed
+                          last:mb-0
+                        "
+                      >
+                        {para}
+                      </p>
+                    ))}
                 </div>
+
                 <div className="mt-8">
-                  <Button href={homepageData.intro.ctaHref} variant="ghost">
+                  <Button
+                    href={homepageData.intro.ctaHref}
+                    variant="ghost"
+                  >
                     {homepageData.intro.ctaLabel}
-                    <ArrowRight className="w-4 h-4 ml-1" />
+
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 </div>
               </FadeIn>
@@ -75,8 +205,20 @@ export const HomePage: React.FC = () => {
         </Container>
       </section>
 
-      {/* ─── SERVICES GRID ────────────────────────────────────────── */}
-      <section className="py-24 lg:py-32 bg-hive-gray border-y border-hive-border">
+      {/* ======================================================
+          SERVICES
+      ====================================================== */}
+
+      <section
+        className="
+          border-y
+          border-hive-border
+          bg-hive-gray
+          py-16
+          sm:py-24
+          lg:py-32
+        "
+      >
         <Container size="lg">
           <FadeIn>
             <SectionHeading
@@ -87,24 +229,56 @@ export const HomePage: React.FC = () => {
             />
           </FadeIn>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {homepageData.servicesSummary.services.map((service, idx) => (
-              <FadeIn key={idx} delay={idx * 0.1}>
-                <ServiceSummaryCard service={service} index={idx} />
-              </FadeIn>
-            ))}
+          <div
+            className="
+              mt-10
+              grid
+              grid-cols-1
+              gap-4
+              sm:mt-16
+              sm:gap-6
+              md:grid-cols-2
+              lg:grid-cols-3
+            "
+          >
+            {homepageData.servicesSummary.services.map(
+              (service, idx) => (
+                <FadeIn
+                  key={service.title || idx}
+                  delay={idx * 0.1}
+                >
+                  <ServiceSummaryCard
+                    service={service}
+                    index={idx}
+                  />
+                </FadeIn>
+              )
+            )}
           </div>
         </Container>
       </section>
 
-      {/* ─── CLIENTS OVERVIEW & TESTIMONIALS ──────────────────────── */}
-      <section className="py-24 lg:py-32 bg-hive-white overflow-hidden">
+      {/* ======================================================
+          CLIENTS / TESTIMONIALS
+      ====================================================== */}
+
+      <section
+        className="
+          overflow-hidden
+          bg-hive-white
+          py-16
+          sm:py-24
+          lg:py-32
+        "
+      >
         <Container size="lg">
-          <div className="max-w-3xl mx-auto text-center mb-16">
+          <div className="mx-auto mb-10 max-w-3xl text-center sm:mb-12">
             <FadeIn>
               <SectionHeading
                 title={homepageData.clientsOverview.title}
-                description={homepageData.clientsOverview.description}
+                description={
+                  homepageData.clientsOverview.description
+                }
                 centered
                 eyebrow="Proven Impact"
                 accentBar
@@ -113,33 +287,104 @@ export const HomePage: React.FC = () => {
           </div>
 
           <FadeIn delay={0.2}>
-            {/* The carousel includes all 15 homepage testimonials natively */}
-            <TestimonialCarousel testimonials={testimonialsData} />
+            {/* NEW PREMIUM AUTO-ROTATING CAROUSEL */}
+            <TestimonialsCarousel />
           </FadeIn>
         </Container>
       </section>
 
-      {/* ─── PARTNERS MARQUEE ─────────────────────────────────────── */}
+      {/* ======================================================
+          PARTNERS
+      ====================================================== */}
+
       <PartnersMarquee />
 
-      {/* ─── BOTTOM CTA (CONTACT SECTION) ─────────────────────────── */}
-      <section className="py-24 lg:py-32 bg-hive-white">
+      {/* ======================================================
+          CONTACT CTA
+      ====================================================== */}
+
+      <section className="bg-hive-white py-16 sm:py-24 lg:py-32">
         <Container size="lg">
           <FadeIn>
-            <div className="relative rounded-[2rem] overflow-hidden bg-hive-black text-hive-white p-8 md:p-12 lg:p-16 border border-hive-border">
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-hive-yellow/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-hive-orange/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
-              
-              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                <div className="lg:col-span-5 text-center lg:text-left">
-                  <h2 className="text-display-md font-bold font-heading mb-6 text-hive-yellow">
+            <div
+              className="
+                relative
+                overflow-hidden
+                rounded-2xl
+                border
+                border-hive-border
+                bg-hive-black
+                p-6
+                text-hive-white
+                sm:rounded-[2rem]
+                sm:p-8
+                md:p-12
+                lg:p-16
+              "
+            >
+              {/* Decorative glow */}
+              <div
+                className="
+                  absolute
+                  right-0
+                  top-0
+                  h-64
+                  w-64
+                  -translate-y-1/2
+                  translate-x-1/3
+                  rounded-full
+                  bg-hive-yellow/10
+                  blur-3xl
+                "
+              />
+
+              <div
+                className="
+                  absolute
+                  bottom-0
+                  left-0
+                  h-64
+                  w-64
+                  -translate-x-1/3
+                  translate-y-1/2
+                  rounded-full
+                  bg-hive-orange/10
+                  blur-3xl
+                "
+              />
+
+              <div
+                className="
+                  relative
+                  z-10
+                  grid
+                  grid-cols-1
+                  items-center
+                  gap-8
+                  lg:grid-cols-12
+                  lg:gap-16
+                "
+              >
+                <div className="text-center lg:col-span-5 lg:text-left">
+                  <h2
+                    className="
+                      mb-4
+                      font-heading
+                      text-display-sm
+                      font-bold
+                      text-hive-yellow
+                      sm:mb-6
+                      sm:text-display-md
+                    "
+                  >
                     {homepageData.contactCTA.title}
                   </h2>
-                  <p className="text-lg text-neutral-400">
+
+                  <p className="text-base text-neutral-400 sm:text-lg">
                     {homepageData.contactCTA.description}
                   </p>
                 </div>
+
                 <div className="lg:col-span-7">
                   <DiscoveryForm />
                 </div>

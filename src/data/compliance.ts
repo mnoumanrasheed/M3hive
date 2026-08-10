@@ -2,12 +2,12 @@ import { CompliancePillar, RiskCompliancePageData } from '../types/content';
 
 export const legalLinkMap = {
   termsOfUse: null,
-  codeOfConduct: null,
-  compliancePolicy: null,
-  dignityAndRespect: null,
-  modernSlaveryStatement: null,
+  codeOfConduct: '/risk-and-compliance/code-of-conduct',
+  compliancePolicy: '/risk-and-compliance/compliance-policy',
+  dignityAndRespect: '/risk-and-compliance/dignity-and-respect',
+  modernSlaveryStatement: '/risk-and-compliance/anti-slavery-human-trafficking',
   whistleblowerPolicy: null,
-  privacyNotice: null,
+  privacyNotice: '/risk-and-compliance/diversity-equity-inclusion',
 } as const;
 
 export const compliancePageData: RiskCompliancePageData = {
@@ -61,7 +61,7 @@ export const compliancePillars: CompliancePillar[] = [
   },
   {
     id: 'modern-slavery-statement',
-    title: 'Slavery and Human Trafficking Statement 2023',
+    title: 'Anti-Slavery and Anti-Human Trafficking Statement 2024',
     description: 'M3 Hive maintains a zero-tolerance approach to slavery and human trafficking. We are committed to complying with the Modern Slavery Act 2015 and to promoting responsible practices throughout our operations and wider supply chain.',
     ctaLabel: 'Read the Slavery and Human Trafficking Statement',
     ctaHref: legalLinkMap.modernSlaveryStatement,

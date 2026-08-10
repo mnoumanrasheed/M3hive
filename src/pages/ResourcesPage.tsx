@@ -47,20 +47,20 @@ export const ResourcesPage: React.FC = () => {
   return (
     <PageShell title="Resources & Insights">
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+      <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
         <HeroBackground imageUrl="/assets/heroes/hero-resources.jpg" />
         <Container size="md" className="relative z-10 text-center">
           <FadeIn>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-5 sm:mb-6">
               <span className="w-2 h-2 rounded-full bg-hive-yellow" />
               <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
                 Knowledge Hub
               </span>
             </div>
-            <h1 className="text-display-lg font-bold font-heading text-white drop-shadow-md mb-6">
-              Insights & Resources
+            <h1 className="text-display-md sm:text-display-lg font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6">
+              Insights &amp; Resources
             </h1>
-            <p className="text-lg text-white/90 drop-shadow leading-relaxed mb-10">
+            <p className="text-base sm:text-lg text-white/90 drop-shadow leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto">
               Perspectives, case studies, and technical resources from our teams.
             </p>
 

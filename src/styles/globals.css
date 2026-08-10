@@ -37,7 +37,7 @@
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Manrope', sans-serif;
     color: var(--hive-black);
-    background: var(--hive-white);
+    background: #020202;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -49,6 +49,7 @@
 
   body {
     overflow-x: hidden;
+    background: #020202;
   }
 
   ::selection {
@@ -117,4 +118,3 @@
 ::-webkit-scrollbar-track { background: var(--hive-white); }
 ::-webkit-scrollbar-thumb { background: var(--hive-light-honey); border-radius: 6px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--hive-yellow); }
-

@@ -12,11 +12,13 @@ const PartnersPage = React.lazy(() => import('./pages/PartnersPage').then(module
 const ResourcesPage = React.lazy(() => import('./pages/ResourcesPage').then(module => ({ default: module.ResourcesPage })));
 const ResourceDetailPage = React.lazy(() => import('./pages/ResourceDetailPage').then(module => ({ default: module.ResourceDetailPage })));
 const RiskCompliancePage = React.lazy(() => import('./pages/RiskCompliancePage').then(module => ({ default: module.RiskCompliancePage })));
+const RiskPolicyDetailPage = React.lazy(() => import('./pages/risk-and-compliance/RiskPolicyDetailPage').then(module => ({ default: module.RiskPolicyDetailPage })));
 const ContactPage = React.lazy(() => import('./pages/ContactPage').then(module => ({ default: module.ContactPage })));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then(module => ({ default: module.NotFoundPage })));
 
 const ServicesIndexPage = React.lazy(() => import('./pages/services/ServicesIndexPage').then(module => ({ default: module.ServicesIndexPage })));
 const AIServicesPage = React.lazy(() => import('./pages/services/AIServicesPage').then(module => ({ default: module.AIServicesPage })));
+const AIServiceDetailPage = React.lazy(() => import('./pages/services/AIServiceDetailPage').then(module => ({ default: module.AIServiceDetailPage })));
 const ProductEngineeringPage = React.lazy(() => import('./pages/services/ProductEngineeringPage').then(module => ({ default: module.ProductEngineeringPage })));
 const CustomerExperiencePage = React.lazy(() => import('./pages/services/CustomerExperiencePage').then(module => ({ default: module.CustomerExperiencePage })));
 const IntelligentAutomationPage = React.lazy(() => import('./pages/services/IntelligentAutomationPage').then(module => ({ default: module.IntelligentAutomationPage })));
@@ -44,11 +46,13 @@ export const App: React.FC = () => {
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/resources/:slug" element={<ResourceDetailPage />} />
             <Route path="/risk-and-compliance" element={<RiskCompliancePage />} />
+            <Route path="/risk-and-compliance/:slug" element={<RiskPolicyDetailPage />} />
             <Route path="/contact" element={<ContactPage />} />
 
             {/* Services Routes */}
             <Route path="/services" element={<ServicesIndexPage />} />
             <Route path="/services/artificial-intelligence" element={<AIServicesPage />} />
+            <Route path="/services/artificial-intelligence/:slug" element={<AIServiceDetailPage />} />
             <Route path="/services/product-engineering" element={<ProductEngineeringPage />} />
             <Route path="/services/customer-experience" element={<CustomerExperiencePage />} />
             <Route path="/services/intelligent-automation" element={<IntelligentAutomationPage />} />

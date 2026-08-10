@@ -1,4 +1,5 @@
 import { ServicePageData } from '../../types/content';
+
 import { aiServicesData } from './aiServices';
 import { productEngineeringData } from './productEngineering';
 import { customerExperienceData } from './customerExperience';
@@ -17,8 +18,16 @@ export const allServicesData: ServicePageData[] = [
   edgeTechnologiesData,
 ];
 
-export const getServiceBySlug = (slug: string): ServicePageData | undefined => {
+export const getServiceBySlug = (
+  slug: string
+): ServicePageData | undefined => {
+  const normalizedSlug = slug.startsWith('/services/')
+    ? slug
+    : `/services/${slug}`;
+
   return allServicesData.find(
-    (s) => s.slug === slug || s.id === slug.replace('/services/', '')
+    (service) =>
+      service.slug === normalizedSlug ||
+      service.id === slug.replace('/services/', '')
   );
 };

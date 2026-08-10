@@ -39,28 +39,28 @@ export const ContactPage: React.FC = () => {
 
   return (
     <PageShell title={contactPageData.title}>
-      {/* ─── HEADER ───────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+      {/* ─── HEADER ───────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
         <HeroBackground imageUrl="/assets/heroes/hero-contact.jpg" />
         <Container size="md" className="relative z-10 text-center">
           <FadeIn>
-            <h1 className="text-display-lg font-bold font-heading text-white drop-shadow-md mb-6">
+            <h1 className="text-display-md sm:text-display-lg font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6">
               {contactPageData.title}
             </h1>
-            <p className="text-xl text-white/90 drop-shadow">
+            <p className="text-base sm:text-xl text-white/90 drop-shadow leading-relaxed">
               {contactPageData.subtitle}
             </p>
           </FadeIn>
         </Container>
       </section>
 
-      {/* ─── CONTACT FORM & INFO ──────────────────────────────────── */}
-      <section className="py-20 lg:py-24 bg-hive-white">
+      {/* ─── CONTACT FORM & INFO ─────────────────────────────────── */}
+      <section className="py-14 sm:py-20 lg:py-24 bg-hive-white">
         <Container size="lg">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
 
             {/* Left Column: Info */}
-            <div className="lg:col-span-5 space-y-10">
+            <div className="lg:col-span-5 space-y-8 sm:space-y-10">
               <FadeIn>
                 <div className="space-y-4">
                   <div className="w-12 h-12 bg-hive-yellow/10 rounded-xl flex items-center justify-center border border-hive-yellow/20">
@@ -91,8 +91,8 @@ export const ContactPage: React.FC = () => {
             {/* Right Column: Form */}
             <div className="lg:col-span-7">
               <FadeIn delay={0.2}>
-                <div className="bg-hive-white border border-hive-border rounded-2xl p-8 lg:p-10 shadow-hive-lg">
-                  <h3 className="text-2xl font-bold font-heading mb-8">{contactPageData.formTitle}</h3>
+                <div className="bg-hive-white border border-hive-border rounded-2xl p-6 sm:p-8 lg:p-10 shadow-hive-lg">
+                  <h3 className="text-xl sm:text-2xl font-bold font-heading mb-6 sm:mb-8">{contactPageData.formTitle}</h3>
 
                   {status === 'success' ? (
                     <div className="bg-hive-gray border border-hive-border rounded-xl p-6 text-center animate-fade-in" role="status" aria-live="polite">
@@ -240,8 +240,8 @@ export const ContactPage: React.FC = () => {
         </Container>
       </section>
 
-      {/* ─── GLOBAL OFFICES DIRECTORY ─────────────────────────────── */}
-      <section className="py-20 lg:py-24 bg-hive-gray border-t border-hive-border">
+      {/* ─── GLOBAL OFFICES DIRECTORY ─────────────────────────────────── */}
+      <section className="py-14 sm:py-20 lg:py-24 bg-hive-gray border-t border-hive-border">
         <Container size="lg">
           <FadeIn>
             <SectionHeading title="Our Global Offices" description="M3 Hive operates 14+ offices and development centres across the world." />

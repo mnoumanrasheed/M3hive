@@ -17,7 +17,7 @@ export const aiServicesData: ServicePageData = {
       title: 'AI-Enabled Engineering',
       description: 'Embed intelligence throughout the software-development lifecycle to accelerate delivery, reduce rework, improve code quality, and strengthen engineering consistency. Our AI-enabled workflows help teams develop faster without compromising security, governance, or technical standards.',
       ctaLabel: 'Explore AI-Enabled Engineering',
-      ctaHref: '/contact',
+      ctaHref: '/services/artificial-intelligence/ai-enabled-engineering',
       enabled: true,
     },
     {
@@ -25,7 +25,7 @@ export const aiServicesData: ServicePageData = {
       title: 'Agentic AI',
       description: 'Design intelligent agents that can reason, plan, take action, and adapt to changing conditions. By combining context, decision-making, and workflow integration, agentic AI enables proactive automation across complex business processes.',
       ctaLabel: 'Explore Agentic AI',
-      ctaHref: '/contact',
+      ctaHref: '/services/artificial-intelligence/agentic-ai',
       enabled: true,
     },
     {
@@ -33,7 +33,7 @@ export const aiServicesData: ServicePageData = {
       title: 'Generative AI',
       description: 'Use generative AI to create content, personalise experiences, accelerate knowledge work, support decision-making, and reduce repetitive effort. We design solutions that integrate securely with your data and workflows to create practical and scalable business value.',
       ctaLabel: 'Explore Generative AI',
-      ctaHref: '/contact',
+      ctaHref: '/services/artificial-intelligence/generative-ai',
       enabled: true,
     },
     {
@@ -41,7 +41,7 @@ export const aiServicesData: ServicePageData = {
       title: 'Conversational AI',
       description: 'Transform customer and employee interactions through intelligent virtual assistants and conversational solutions. Our platforms improve responsiveness, reduce service costs, support round-the-clock availability, and integrate directly with existing business systems.',
       ctaLabel: 'Explore Conversational AI',
-      ctaHref: '/contact',
+      ctaHref: '/services/artificial-intelligence/conversational-ai',
       enabled: true,
     },
     {
@@ -49,7 +49,7 @@ export const aiServicesData: ServicePageData = {
       title: 'MLOps',
       description: 'Move AI models into production faster and operate them reliably at scale. Our MLOps frameworks support deployment, monitoring, versioning, retraining, governance, and continuous performance improvement.',
       ctaLabel: 'Explore MLOps',
-      ctaHref: '/contact',
+      ctaHref: '/services/artificial-intelligence/mlops',
       enabled: true,
     },
     {
@@ -57,7 +57,7 @@ export const aiServicesData: ServicePageData = {
       title: 'Responsible AI',
       description: 'Build AI systems that are transparent, explainable, secure, and aligned with regulatory expectations. We integrate responsible-AI principles into governance, data protection, model design, bias management, monitoring, and operational controls.',
       ctaLabel: 'Explore Responsible AI',
-      ctaHref: '/contact',
+      ctaHref: '/services/artificial-intelligence/responsible-ai',
       enabled: true,
     },
   ],

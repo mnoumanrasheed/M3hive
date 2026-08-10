@@ -16,20 +16,20 @@ export const PartnersPage: React.FC = () => {
   return (
     <PageShell title="Our Partners">
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+      <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
         <HeroBackground imageUrl="/assets/heroes/hero-partners.jpg" />
         <Container size="md" className="relative z-10 text-center">
           <FadeIn>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-6">
-              <span className="w-2 h-2 rounded-full bg-hive-yellow" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-4 sm:mb-6">
+              <span className="w-2 h-2 rounded-full bg-hive-yellow flex-shrink-0" />
               <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
                 Ecosystem
               </span>
             </div>
-            <h1 className="text-display-lg font-bold font-heading text-white drop-shadow-md mb-6">
+            <h1 className="text-display-md sm:text-display-lg font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6">
               Our Partners
             </h1>
-            <p className="text-lg text-white/90 drop-shadow leading-relaxed">
+            <p className="text-base sm:text-lg text-white/90 drop-shadow leading-relaxed">
               A Technology Ecosystem Built for Greater Impact
             </p>
           </FadeIn>

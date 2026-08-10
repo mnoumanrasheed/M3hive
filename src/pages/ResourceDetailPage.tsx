@@ -47,12 +47,12 @@ export const ResourceDetailPage: React.FC = () => {
 
   return (
     <PageShell title={visibleTitle}>
-      <div className="pt-24 pb-16 lg:pt-32 lg:pb-24 bg-hive-warm-white border-b border-hive-border min-h-[60vh] flex flex-col justify-center">
+      <div className="pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 bg-hive-warm-white border-b border-hive-border min-h-[60vh] flex flex-col justify-center">
         <Container size="md">
           <FadeIn>
             <Link
               to="/resources"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-hive-text-muted hover:text-hive-black transition-colors mb-10"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-hive-text-muted hover:text-hive-black transition-colors mb-8 sm:mb-10"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Resources
@@ -74,7 +74,7 @@ export const ResourceDetailPage: React.FC = () => {
               )}
             </div>
 
-            <h1 className="text-display-md font-bold font-heading text-hive-black mb-8 leading-tight">
+            <h1 className="text-display-sm sm:text-display-md font-bold font-heading text-hive-black mb-6 sm:mb-8 leading-tight">
               {visibleTitle}
             </h1>
 
