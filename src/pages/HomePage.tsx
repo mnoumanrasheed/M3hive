@@ -145,7 +145,7 @@ const ServiceSummaryCard: React.FC<{
 
 export const HomePage: React.FC = () => {
   return (
-    <PageShell>
+    <PageShell title="M3 Hive - Engineering Digital Experiences">
       {/* ======================================================
           HERO CAROUSEL
       ====================================================== */}
