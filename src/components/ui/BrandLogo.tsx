@@ -11,15 +11,23 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   imgClassName = 'h-10 w-auto object-contain',
 }) => {
   return (
-    <Link to="/" className={`inline-flex items-center gap-3 group ${className}`} aria-label="M3 Hive Homepage">
+    <Link
+      to="/"
+      className={`inline-flex items-center shrink-0 ${className}`}
+      aria-label="M3 Hive Homepage"
+    >
       <img
         src="/assets/brand/m3hive-logo.png"
         alt="M3 Hive Logo"
-        width="200"
-        height="40"
-        className={imgClassName}
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).src = '/favicon.png';
+        className={`block max-w-full h-auto object-contain ${imgClassName}`}
+        draggable={false}
+        loading="eager"
+        decoding="async"
+        style={{
+          imageRendering: 'auto',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
         }}
       />
     </Link>

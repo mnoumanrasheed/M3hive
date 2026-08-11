@@ -16,12 +16,12 @@ interface CinematicLoaderProps {
 ========================================================= */
 
 const particles = Array.from(
-  { length: 18 },
+  { length: 16 },
   (_, index) => ({
     left: `${7 + ((index * 31) % 86)}%`,
     top: `${12 + ((index * 47) % 72)}%`,
     size: index % 5 === 0 ? 3 : 2,
-  })
+  }),
 );
 
 /* =========================================================
@@ -77,11 +77,6 @@ export function CinematicLoader({
   const loaderRef =
     useRef<HTMLDivElement | null>(null);
 
-  /*
-   * Direct reference to percentage.
-   * More reliable than querying it through
-   * gsap.utils.selector().
-   */
   const percentageRef =
     useRef<HTMLSpanElement | null>(null);
 
@@ -91,7 +86,9 @@ export function CinematicLoader({
   useLayoutEffect(() => {
     const loader = loaderRef.current;
 
-    if (!loader) return;
+    if (!loader) {
+      return;
+    }
 
     const previousOverflow =
       document.body.style.overflow;
@@ -101,7 +98,9 @@ export function CinematicLoader({
     let completed = false;
 
     const finish = () => {
-      if (completed) return;
+      if (completed) {
+        return;
+      }
 
       completed = true;
 
@@ -127,9 +126,6 @@ export function CinematicLoader({
       const progressFill =
         select('.cinematic-progress-fill');
 
-      const scene =
-        select('.cinematic-scene');
-
       const glow =
         select('.cinematic-glow');
 
@@ -142,88 +138,73 @@ export function CinematicLoader({
       const shine =
         select('.cinematic-shine');
 
+      const scene =
+        select('.cinematic-scene');
+
       /* =====================================================
-         INITIAL STATES
+         INITIAL STATE
 
-         IMPORTANT:
-         Everything starts very close to its final position.
-
-         This prevents the animation from feeling like a
-         sudden zoom or jump.
+         Keep everything near its final position.
+         This prevents sudden zooms / jumps.
       ===================================================== */
+
+      gsap.set(loader, {
+        autoAlpha: 1,
+      });
+
+      gsap.set(scene, {
+        scale: 1,
+      });
 
       gsap.set(glow, {
         autoAlpha: 0,
-        scale: 0.94,
+        scale: 0.97,
       });
 
       gsap.set(particleElements, {
         autoAlpha: 0,
-        scale: 0.92,
+        scale: 0.9,
+        y: 3,
       });
 
       gsap.set(hexElements, {
         autoAlpha: 0,
-        scale: 0.88,
+        scale: 0.96,
+        y: 3,
       });
 
+      /*
+       * No blur.
+       * No rotationX.
+       * No rotationY.
+       *
+       * These were contributing to the
+       * unstable / glitchy logo appearance.
+       */
       gsap.set(logo, {
         autoAlpha: 0,
-
-        /*
-         * Very subtle scale difference.
-         *
-         * Old:
-         * 0.78 / 0.90
-         *
-         * New:
-         * 0.94
-         */
-        scale: 0.94,
-
-        y: 5,
-
-        rotationX: 1.5,
-        rotationY: -2,
-
-        filter: 'blur(2px)',
+        scale: 0.97,
+        y: 8,
       });
 
       gsap.set(
         [copy, progress],
         {
           autoAlpha: 0,
-          y: 4,
-        }
+          y: 5,
+        },
       );
 
-      gsap.set(
-        progressFill,
-        {
-          scaleX: 0,
-          transformOrigin:
-            'left center',
-        }
-      );
+      gsap.set(progressFill, {
+        scaleX: 0,
+        transformOrigin: 'left center',
+      });
 
-      gsap.set(
-        shine,
-        {
-          autoAlpha: 0,
-          xPercent: -160,
-        }
-      );
+      gsap.set(shine, {
+        autoAlpha: 0,
+        xPercent: -170,
+      });
 
-      gsap.set(
-        scene,
-        {
-          scale: 1,
-        }
-      );
-
-      /*
-       * Always reset percentage.
-       */
       if (percentageRef.current) {
         percentageRef.current.textContent =
           '0%';
@@ -234,453 +215,371 @@ export function CinematicLoader({
       ===================================================== */
 
       if (reducedMotion) {
-        const reducedCounter = {
+        const counter = {
           value: 0,
         };
 
-        const reducedTimeline =
-          gsap.timeline();
+        const tl = gsap.timeline();
 
-        reducedTimeline
-          .to(
-            logo,
-            {
-              autoAlpha: 1,
-              scale: 1,
-              y: 0,
+        tl.to(
+          logo,
+          {
+            autoAlpha: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.35,
+            ease: 'power2.out',
+          },
+          0,
+        );
 
-              rotationX: 0,
-              rotationY: 0,
+        tl.to(
+          [copy, progress],
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.25,
+            ease: 'power2.out',
+          },
+          0.2,
+        );
 
-              filter: 'blur(0px)',
+        tl.to(
+          progressFill,
+          {
+            scaleX: 1,
+            duration: 0.65,
+            ease: 'sine.inOut',
+          },
+          0.3,
+        );
 
-              duration: 0.45,
+        tl.to(
+          counter,
+          {
+            value: 100,
+            duration: 0.65,
+            ease: 'sine.inOut',
 
-              ease: 'power1.out',
+            onUpdate: () => {
+              if (percentageRef.current) {
+                percentageRef.current.textContent =
+                  `${Math.round(counter.value)}%`;
+              }
             },
-            0
-          )
 
-          .to(
-            [copy, progress],
-            {
-              autoAlpha: 1,
-              y: 0,
-
-              duration: 0.3,
-
-              ease: 'power1.out',
+            onComplete: () => {
+              if (percentageRef.current) {
+                percentageRef.current.textContent =
+                  '100%';
+              }
             },
-            0.3
-          )
+          },
+          0.3,
+        );
 
-          .to(
-            progressFill,
-            {
-              scaleX: 1,
-
-              duration: 0.7,
-
-              ease: 'sine.inOut',
-            },
-            0.4
-          )
-
-          .to(
-            reducedCounter,
-            {
-              value: 100,
-
-              duration: 0.7,
-
-              ease: 'sine.inOut',
-
-              onUpdate: () => {
-                if (
-                  percentageRef.current
-                ) {
-                  percentageRef.current.textContent =
-                    `${Math.round(
-                      reducedCounter.value
-                    )}%`;
-                }
-              },
-
-              onComplete: () => {
-                if (
-                  percentageRef.current
-                ) {
-                  percentageRef.current.textContent =
-                    '100%';
-                }
-              },
-            },
-            0.4
-          )
-
-          .to(
-            loader,
-            {
-              autoAlpha: 0,
-
-              duration: 0.4,
-
-              ease: 'sine.inOut',
-
-              onComplete: finish,
-            },
-            1.25
-          );
+        tl.to(
+          loader,
+          {
+            autoAlpha: 0,
+            duration: 0.4,
+            ease: 'power2.inOut',
+            onComplete: finish,
+          },
+          1.15,
+        );
 
         return;
       }
 
       /* =====================================================
-         PERCENTAGE COUNTER
+         NORMAL PREMIUM CINEMATIC TIMELINE
       ===================================================== */
 
       const counter = {
         value: 0,
       };
 
-      /* =====================================================
-         MAIN PREMIUM CINEMATIC TIMELINE
-
-         Total:
-         approximately 9 seconds
-      ===================================================== */
-
-      const timeline =
-        gsap.timeline();
+      const timeline = gsap.timeline({
+        defaults: {
+          overwrite: 'auto',
+        },
+      });
 
       /* =====================================================
-         0.0s
-         BACKGROUND ATMOSPHERE
+         0.00s
+         ATMOSPHERE
       ===================================================== */
 
       timeline.to(
         glow,
         {
           autoAlpha: 1,
-
           scale: 1,
-
-          duration: 2.4,
-
+          duration: 1.6,
           ease: 'sine.out',
         },
-        0
+        0,
       );
 
       /* =====================================================
-         0.35s
-         PARTICLES SLOWLY APPEAR
+         0.15s
+         PARTICLES
       ===================================================== */
 
       timeline.to(
         particleElements,
         {
-          autoAlpha: 0.48,
-
+          autoAlpha: 0.4,
           scale: 1,
-
-          duration: 2.1,
-
-          stagger: 0.055,
-
-          ease: 'sine.out',
+          y: 0,
+          duration: 1.3,
+          stagger: 0.035,
+          ease: 'power2.out',
         },
-        0.35
+        0.15,
       );
 
       /* =====================================================
-         0.75s
-         HEXAGONS SLOWLY ASSEMBLE
+         0.35s
+         HEXAGONS
       ===================================================== */
 
       timeline.to(
         hexElements,
         {
-          autoAlpha: 0.88,
-
+          autoAlpha: 0.7,
           scale: 1,
-
-          rotation: 0,
-
-          duration: 2.25,
-
-          stagger: 0.12,
-
-          ease: 'power1.out',
+          y: 0,
+          duration: 1.3,
+          stagger: 0.065,
+          ease: 'power2.out',
         },
-        0.75
+        0.35,
       );
 
       /* =====================================================
-         1.15s
-         LOGO PREMIUM REVEAL
+         0.55s
+         LOGO REVEAL
       ===================================================== */
 
       timeline.to(
         logo,
         {
           autoAlpha: 1,
-
           scale: 1,
-
           y: 0,
-
-          rotationX: 0,
-          rotationY: 0,
-
-          filter: 'blur(0px)',
-
-          /*
-           * Slow enough to feel cinematic,
-           * but because starting scale is 0.94
-           * it does not look like a big zoom.
-           */
-          duration: 2.7,
-
-          ease: 'sine.out',
+          duration: 1.25,
+          ease: 'power3.out',
         },
-        1.15
+        0.55,
       );
 
       /* =====================================================
-         2.65s
-         INITIALIZING EXPERIENCE APPEARS
+         1.40s
+         TEXT + PROGRESS APPEAR
       ===================================================== */
 
       timeline.to(
         [copy, progress],
         {
           autoAlpha: 1,
-
           y: 0,
-
-          duration: 1,
-
-          stagger: 0.12,
-
-          ease: 'sine.out',
+          duration: 0.65,
+          stagger: 0.08,
+          ease: 'power2.out',
         },
-        2.65
+        1.4,
       );
 
       /* =====================================================
-         2.90s → 7.10s
-         PROGRESS BAR
-
-         SAME timing as percentage.
+         1.65s - 4.15s
+         PROGRESS
       ===================================================== */
 
       timeline.to(
         progressFill,
         {
           scaleX: 1,
-
-          duration: 4.2,
-
-          ease: 'sine.inOut',
+          duration: 2.5,
+          ease: 'power2.inOut',
         },
-        2.9
+        1.65,
       );
-
-      /* =====================================================
-         2.90s → 7.10s
-         0% → 100%
-      ===================================================== */
 
       timeline.to(
         counter,
         {
           value: 100,
-
-          duration: 4.2,
-
-          ease: 'sine.inOut',
+          duration: 2.5,
+          ease: 'power2.inOut',
 
           onUpdate: () => {
-            if (
-              percentageRef.current
-            ) {
+            if (percentageRef.current) {
               percentageRef.current.textContent =
-                `${Math.round(
-                  counter.value
-                )}%`;
+                `${Math.round(counter.value)}%`;
             }
           },
 
           onComplete: () => {
-            /*
-             * Guarantee exact 100%.
-             */
-            if (
-              percentageRef.current
-            ) {
+            if (percentageRef.current) {
               percentageRef.current.textContent =
                 '100%';
             }
           },
         },
-        2.9
+        1.65,
       );
 
       /* =====================================================
-         3.60s
-         METALLIC SHINE APPEARS
+         2.00s
+         PREMIUM LIGHT SWEEP
       ===================================================== */
 
       timeline.to(
         shine,
         {
-          autoAlpha: 0.68,
-
-          duration: 0.4,
-
+          autoAlpha: 0.6,
+          duration: 0.25,
           ease: 'sine.out',
         },
-        3.6
+        2,
       );
-
-      /* =====================================================
-         3.75s → 6.15s
-         SLOW METALLIC SWEEP
-      ===================================================== */
 
       timeline.to(
         shine,
         {
-          xPercent: 170,
-
-          duration: 2.4,
-
-          ease: 'sine.inOut',
+          xPercent: 180,
+          duration: 1.55,
+          ease: 'power2.inOut',
         },
-        3.75
+        2.05,
       );
-
-      /* =====================================================
-         6.15s
-         SHINE DISAPPEARS
-      ===================================================== */
 
       timeline.to(
         shine,
         {
           autoAlpha: 0,
-
-          duration: 0.55,
-
+          duration: 0.3,
           ease: 'sine.out',
         },
-        6.15
+        3.4,
       );
 
       /* =====================================================
-         7.10s
-         100% COMPLETE
+         VERY SUBTLE ENVIRONMENT MOVEMENT
 
-         Short cinematic hold.
+         This is part of the SAME timeline.
+         No repeat:-1.
+      ===================================================== */
+
+      timeline.to(
+        particleElements,
+        {
+          y: -3,
+          duration: 2.2,
+          stagger: 0.02,
+          ease: 'sine.inOut',
+        },
+        1.2,
+      );
+
+      timeline.to(
+        hexElements,
+        {
+          y: -2,
+          duration: 2.3,
+          stagger: 0.03,
+          ease: 'sine.inOut',
+        },
+        1.3,
+      );
+
+      /* =====================================================
+         4.15s
+         100% MICRO HOLD
       ===================================================== */
 
       timeline.to(
         scene,
         {
-          scale: 1.008,
-
-          duration: 1.05,
-
+          scale: 1.004,
+          duration: 0.35,
           ease: 'sine.inOut',
         },
-        7.15
+        4.15,
       );
 
       /* =====================================================
-         8.00s
-         SLOW CINEMATIC EXIT
+         4.35s
+         COPY DISAPPEARS FIRST
+      ===================================================== */
 
-         Very important:
-         long fade prevents abrupt transition.
+      timeline.to(
+        [copy, progress],
+        {
+          autoAlpha: 0,
+          y: -4,
+          duration: 0.35,
+          ease: 'power2.in',
+        },
+        4.35,
+      );
+
+      /* =====================================================
+         4.45s
+         BACKGROUND ELEMENTS SOFTEN
+      ===================================================== */
+
+      timeline.to(
+        [
+          particleElements,
+          hexElements,
+          glow,
+        ],
+        {
+          autoAlpha: 0,
+          duration: 0.65,
+          ease: 'power2.inOut',
+        },
+        4.45,
+      );
+
+      /* =====================================================
+         4.50s
+         LOGO SOFT EXIT
+      ===================================================== */
+
+      timeline.to(
+        logo,
+        {
+          autoAlpha: 0,
+          scale: 1.012,
+          y: -2,
+          duration: 0.7,
+          ease: 'power2.inOut',
+        },
+        4.5,
+      );
+
+      /* =====================================================
+         4.75s - 5.65s
+         FULL OVERLAY DISSOLVE
+
+         Website underneath is revealed smoothly.
       ===================================================== */
 
       timeline.to(
         loader,
         {
           autoAlpha: 0,
-
-          duration: 1.2,
-
-          ease: 'sine.inOut',
+          duration: 0.9,
+          ease: 'power2.inOut',
 
           onComplete: finish,
         },
-        8
+        4.75,
       );
-
-      /* =====================================================
-         AMBIENT PARTICLE MOVEMENT
-
-         Much slower than previous versions.
-      ===================================================== */
-
-      gsap.to(
-        particleElements,
-        {
-          x: '+=4',
-          y: '-=5',
-
-          duration: 7,
-
-          stagger: 0.08,
-
-          ease: 'sine.inOut',
-
-          yoyo: true,
-
-          repeat: -1,
-        }
-      );
-
-      /* =====================================================
-         AMBIENT HEXAGON MOVEMENT
-
-         Very subtle.
-      ===================================================== */
-
-      gsap.to(
-        hexElements,
-        {
-          y: '+=2',
-
-          duration: 6,
-
-          stagger: 0.14,
-
-          ease: 'sine.inOut',
-
-          yoyo: true,
-
-          repeat: -1,
-
-          delay: 3.5,
-        }
-      );
-
-      /*
-       * IMPORTANT:
-       *
-       * There is intentionally NO separate
-       * logo breathing tween here.
-       *
-       * Previous logo breathing animation
-       * was changing scale while the main
-       * timeline was also changing scale.
-       *
-       * That can make the logo feel jerky
-       * or sudden.
-       */
     }, loader);
 
     return () => {
@@ -694,13 +593,11 @@ export function CinematicLoader({
     reducedMotion,
   ]);
 
-  /* =========================================================
-     JSX
-  ========================================================= */
-
   return (
     <div
       ref={loaderRef}
+      role="status"
+      aria-label="Loading M3 Hive"
       className="
         fixed
         inset-0
@@ -710,6 +607,9 @@ export function CinematicLoader({
         overflow-hidden
         bg-[#020202]
       "
+      style={{
+        willChange: 'opacity',
+      }}
     >
       {/* =====================================================
           MAIN GOLDEN GLOW
@@ -730,7 +630,7 @@ export function CinematicLoader({
           -translate-y-1/2
           rounded-full
           bg-[#fdcf09]/10
-          blur-[110px]
+          blur-[100px]
         "
       />
 
@@ -749,7 +649,7 @@ export function CinematicLoader({
           w-[220px]
           rounded-full
           bg-[#f69822]/5
-          blur-[100px]
+          blur-[90px]
         "
       />
 
@@ -774,28 +674,23 @@ export function CinematicLoader({
                 absolute
                 rounded-full
                 bg-[#fbe176]
-                shadow-[0_0_8px_rgba(253,207,9,0.7)]
+                shadow-[0_0_8px_rgba(253,207,9,0.65)]
               "
               style={{
-                left:
-                  particle.left,
-
-                top:
-                  particle.top,
-
-                width:
-                  particle.size,
-
-                height:
-                  particle.size,
+                left: particle.left,
+                top: particle.top,
+                width: particle.size,
+                height: particle.size,
+                willChange:
+                  'transform, opacity',
               }}
             />
-          )
+          ),
         )}
       </div>
 
       {/* =====================================================
-          MAIN CINEMATIC SCENE
+          MAIN SCENE
       ===================================================== */}
 
       <div
@@ -808,12 +703,6 @@ export function CinematicLoader({
           items-center
           justify-center
         "
-        style={{
-          perspective: '1000px',
-
-          transformStyle:
-            'preserve-3d',
-        }}
       >
         <div
           className="
@@ -821,20 +710,13 @@ export function CinematicLoader({
             h-[25rem]
             w-[min(94vw,44rem)]
           "
-          style={{
-            transformStyle:
-              'preserve-3d',
-          }}
         >
           {/* =================================================
               HEXAGONS
           ================================================= */}
 
           {hexagons.map(
-            (
-              hexagon,
-              index
-            ) => (
+            (hexagon, index) => (
               <span
                 key={index}
                 className="
@@ -842,34 +724,30 @@ export function CinematicLoader({
                   pointer-events-none
                   absolute
                   border
-                  border-[#fdcf09]/75
-                  bg-[#f69822]/[0.025]
+                  border-[#fdcf09]/60
+                  bg-[#f69822]/[0.02]
                 "
                 style={{
-                  left:
-                    hexagon.left,
-
-                  top:
-                    hexagon.top,
-
-                  width:
-                    hexagon.size,
-
-                  height:
-                    hexagon.size,
+                  left: hexagon.left,
+                  top: hexagon.top,
+                  width: hexagon.size,
+                  height: hexagon.size,
 
                   clipPath:
                     'polygon(25% 6.7%,75% 6.7%,100% 50%,75% 93.3%,25% 93.3%,0 50%)',
 
-                  transform:
-                    `rotate(${hexagon.rotate}deg)`,
+                  rotate:
+                    `${hexagon.rotate}deg`,
+
+                  willChange:
+                    'transform, opacity',
                 }}
               />
-            )
+            ),
           )}
 
           {/* =================================================
-              CENTER
+              CENTER CONTENT
           ================================================= */}
 
           <div
@@ -910,12 +788,18 @@ export function CinematicLoader({
                   lg:w-[500px]
                   xl:w-[540px]
                 "
+                style={{
+                  willChange:
+                    'transform, opacity',
+                }}
                 src="/assets/brand/m3hive-logo.png"
                 alt="M3 Hive"
                 draggable="false"
               />
 
-              {/* Metallic sweep */}
+              {/* =============================================
+                  LIGHT SWEEP
+              ============================================= */}
 
               <span
                 className="
@@ -925,11 +809,11 @@ export function CinematicLoader({
                   inset-y-[-25%]
                   left-0
                   z-20
-                  w-[28%]
+                  w-[24%]
                   -skew-x-12
                   bg-gradient-to-r
                   from-transparent
-                  via-white/75
+                  via-white/70
                   to-[#fbe176]/20
                   blur-md
                   mix-blend-screen
@@ -938,7 +822,7 @@ export function CinematicLoader({
             </div>
 
             {/* ===============================================
-                INITIALIZING
+                LOADING COPY
             =============================================== */}
 
             <p
@@ -958,9 +842,7 @@ export function CinematicLoader({
               Initializing Experience
 
               <span
-                ref={
-                  percentageRef
-                }
+                ref={percentageRef}
                 className="
                   cinematic-percent
                   ml-3
@@ -1013,7 +895,7 @@ export function CinematicLoader({
           absolute
           inset-0
           z-[30]
-          shadow-[inset_0_0_160px_65px_rgba(0,0,0,0.70)]
+          shadow-[inset_0_0_150px_55px_rgba(0,0,0,0.68)]
         "
       />
     </div>

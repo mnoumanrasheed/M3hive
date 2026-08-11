@@ -180,12 +180,13 @@ export const ServicePageTemplate: React.FC<ServicePageTemplateProps> = ({
 
       {/* DIFFERENTIATORS */}
       {data.differentiators && data.differentiators.length > 0 && (
-        <section className="py-14 sm:py-20 lg:py-24 bg-hive-black text-hive-white border-y border-hive-border">
+        <section className="py-14 sm:py-20 lg:py-24 bg-hive-black border-y border-hive-border">
           <Container size="lg">
             <FadeIn>
               <SectionHeading
                 title={`Why Choose M3 Hive for ${serviceCategoryName}`}
                 description="We bring specialized capability and practical experience to every engagement."
+                variant="dark"
               />
             </FadeIn>
 
@@ -200,7 +201,7 @@ export const ServicePageTemplate: React.FC<ServicePageTemplateProps> = ({
                         {diff.title}
                       </h4>
 
-                      <p className="text-neutral-400 text-sm leading-relaxed">
+                      <p className="text-white/70 text-sm leading-relaxed">
                         {diff.description}
                       </p>
                     </div>

@@ -9,10 +9,9 @@ import { useForm, validators } from '../../hooks/useForm';
 
 export const footerLinkMap = {
   about: '/about',
-  resources: '/resources',
+  ourApproach: '/our-approach',
   careers: '/contact?interest=careers',
   contact: '/contact',
-  caseStudies: '/resources?type=case-study',
   riskCompliance: '/risk-and-compliance',
   esg: '/about#esg',
   privacyNotice: null,
@@ -26,10 +25,9 @@ interface FooterLink { label: string; href: string | null; external?: boolean; }
 const companyLinks: FooterLink[] = [
   { label: 'About Us', href: footerLinkMap.about },
   { label: 'Partners', href: '/partners' },
-  { label: 'Resources', href: footerLinkMap.resources },
+  { label: 'Our Approach', href: footerLinkMap.ourApproach },
   { label: 'Risk & Compliance', href: footerLinkMap.riskCompliance },
   //{ label: 'Careers', href: footerLinkMap.careers },
-  { label: 'Case Studies', href: footerLinkMap.caseStudies },
   // { label: 'ESG', href: footerLinkMap.esg },
   { label: 'Privacy Notice', href: footerLinkMap.privacyNotice, external: true },
   { label: 'Contact Us', href: footerLinkMap.contact },

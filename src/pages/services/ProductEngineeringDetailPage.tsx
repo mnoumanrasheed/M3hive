@@ -1,10 +1,12 @@
 import React, {
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 
 import {
+  Link,
   Navigate,
   useParams,
 } from 'react-router-dom';
@@ -15,66 +17,393 @@ import {
   ArrowRight,
   ChevronRight,
   CheckCircle2,
+  Code2,
+  Layers3,
+  MonitorCog,
+  Rocket,
 } from 'lucide-react';
 
 import { PageShell } from '../../components/layout/PageShell';
 import { Container } from '../../components/ui/Container';
 import { Button } from '../../components/ui/Button';
-import { HeroBackground } from '../../components/ui/HeroBackground';
 import { FadeIn } from '../../components/ui/FadeIn';
 import { SectionHeading } from '../../components/ui/SectionHeading';
+
 import {
   Breadcrumbs,
-  BreadcrumbItem,
+  type BreadcrumbItem,
 } from '../../components/ui/Breadcrumbs';
 
-import { AIHeroNetworkVisual } from '../../components/services/AIHeroNetworkVisual';
+import { productEngineeringData } from '../../data/services/productEngineering';
 
-import { aiServiceDetails } from '../../data/services/aiServiceDetails';
+/* ============================================================
+   TYPES
+============================================================ */
 
-export const AIServiceDetailPage: React.FC = () => {
+interface Capability {
+  title: string;
+  description: string;
+}
+
+interface ApproachStep {
+  stepNumber: string;
+  title: string;
+  description: string;
+}
+
+interface BusinessValue {
+  title: string;
+  description: string;
+}
+
+interface ProductEngineeringDetail {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  intro: string;
+  overview: string;
+  capabilities: Capability[];
+  approach: ApproachStep[];
+  businessValue: BusinessValue[];
+}
+
+/* ============================================================
+   BUILD DETAIL DATA FROM EXISTING PRODUCT ENGINEERING DATA
+
+   IMPORTANT:
+   We use the existing productEngineering.ts file.
+   No missing productEngineeringDetails.ts dependency.
+============================================================ */
+
+const productEngineeringDetails: ProductEngineeringDetail[] =
+  productEngineeringData.offerings.map((offering) => {
+    const commonCapabilities: Capability[] = [
+      {
+        title: 'Discovery & Planning',
+        description:
+          `We assess requirements, business objectives, technical constraints and delivery priorities to establish a clear roadmap for ${offering.title.toLowerCase()}.`,
+      },
+      {
+        title: 'Architecture & Engineering',
+        description:
+          'Our engineering teams apply secure, scalable and maintainable architecture patterns supported by modern development practices.',
+      },
+      {
+        title: 'Quality & Automation',
+        description:
+          'Automated testing, continuous integration and quality engineering help improve reliability while reducing delivery risk.',
+      },
+      {
+        title: 'Continuous Improvement',
+        description:
+          'Performance data, user feedback and operational insight are used to continuously improve the product after release.',
+      },
+    ];
+
+    const commonBusinessValue: BusinessValue[] = [
+      {
+        title: 'Faster Delivery',
+        description:
+          'Structured engineering practices and automation help shorten delivery cycles without compromising quality.',
+      },
+      {
+        title: 'Improved Quality',
+        description:
+          'Continuous testing and engineering standards reduce defects, technical debt and operational risk.',
+      },
+      {
+        title: 'Greater Scalability',
+        description:
+          'Modern architecture provides a stronger foundation for future growth, integration and changing business requirements.',
+      },
+      {
+        title: 'Lower Delivery Risk',
+        description:
+          'Clear governance, technical visibility and predictable delivery practices improve decision-making throughout the lifecycle.',
+      },
+    ];
+
+    return {
+      slug: offering.id,
+      title: offering.title,
+      eyebrow: 'Product Engineering',
+      intro: offering.description,
+      overview: offering.description,
+      capabilities: commonCapabilities,
+      approach: productEngineeringData.deliveryApproach ?? [],
+      businessValue: commonBusinessValue,
+    };
+  });
+
+/* ============================================================
+   PREMIUM HERO VISUAL
+
+   No external/local image dependency.
+   Therefore no broken hero images.
+============================================================ */
+
+const ProductEngineeringHeroVisual: React.FC = () => {
+  return (
+    <div
+      className="
+        relative
+        mx-auto
+        flex
+        h-[360px]
+        w-full
+        max-w-[520px]
+        items-center
+        justify-center
+        overflow-hidden
+      "
+    >
+      {/* Large background glow */}
+
+      <div
+        className="
+          absolute
+          left-1/2
+          top-1/2
+          h-[280px]
+          w-[280px]
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          bg-hive-yellow/10
+          blur-[90px]
+        "
+      />
+
+      {/* Outer ring */}
+
+      <div
+        className="
+          hero-ring
+          absolute
+          h-[300px]
+          w-[300px]
+          rounded-full
+          border
+          border-hive-yellow/20
+        "
+      />
+
+      {/* Middle ring */}
+
+      <div
+        className="
+          hero-ring-reverse
+          absolute
+          h-[230px]
+          w-[230px]
+          rounded-full
+          border
+          border-dashed
+          border-hive-yellow/30
+        "
+      />
+
+      {/* Center card */}
+
+      <div
+        className="
+          relative
+          z-10
+          flex
+          h-[150px]
+          w-[190px]
+          flex-col
+          items-center
+          justify-center
+          rounded-3xl
+          border
+          border-white/10
+          bg-white/[0.06]
+          shadow-[0_25px_70px_rgba(0,0,0,0.45)]
+          backdrop-blur-xl
+        "
+      >
+        <div
+          className="
+            mb-4
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
+            rounded-xl
+            border
+            border-hive-yellow/40
+            bg-hive-yellow/10
+          "
+        >
+          <Code2 className="h-6 w-6 text-hive-yellow" />
+        </div>
+
+        <span
+          className="
+            font-heading
+            text-sm
+            font-bold
+            uppercase
+            tracking-[0.18em]
+            text-white
+          "
+        >
+          Engineering
+        </span>
+      </div>
+
+      {/* Floating card 1 */}
+
+      <div
+        className="
+          hero-float-a
+          absolute
+          left-[3%]
+          top-[18%]
+          flex
+          h-14
+          w-14
+          items-center
+          justify-center
+          rounded-2xl
+          border
+          border-white/10
+          bg-[#151515]
+          shadow-xl
+        "
+      >
+        <Layers3 className="h-5 w-5 text-hive-yellow" />
+      </div>
+
+      {/* Floating card 2 */}
+
+      <div
+        className="
+          hero-float-b
+          absolute
+          right-[5%]
+          top-[23%]
+          flex
+          h-14
+          w-14
+          items-center
+          justify-center
+          rounded-2xl
+          border
+          border-white/10
+          bg-[#151515]
+          shadow-xl
+        "
+      >
+        <MonitorCog className="h-5 w-5 text-hive-yellow" />
+      </div>
+
+      {/* Floating card 3 */}
+
+      <div
+        className="
+          hero-float-c
+          absolute
+          bottom-[14%]
+          left-[17%]
+          flex
+          h-14
+          w-14
+          items-center
+          justify-center
+          rounded-2xl
+          border
+          border-white/10
+          bg-[#151515]
+          shadow-xl
+        "
+      >
+        <Rocket className="h-5 w-5 text-hive-yellow" />
+      </div>
+
+      {/* Connection lines */}
+
+      <div
+        className="
+          absolute
+          left-[20%]
+          top-1/2
+          h-px
+          w-[22%]
+          bg-gradient-to-r
+          from-transparent
+          to-hive-yellow/40
+        "
+      />
+
+      <div
+        className="
+          absolute
+          right-[20%]
+          top-1/2
+          h-px
+          w-[22%]
+          bg-gradient-to-l
+          from-transparent
+          to-hive-yellow/40
+        "
+      />
+    </div>
+  );
+};
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+export const ProductEngineeringDetailPage: React.FC = () => {
   const { slug } = useParams<{
     slug: string;
   }>();
 
-  const service =
-    aiServiceDetails.find(
-      (item) => item.slug === slug,
-    );
+  const service = useMemo(
+    () =>
+      productEngineeringDetails.find(
+        (item) => item.slug === slug,
+      ),
+    [slug],
+  );
+
+  const relatedServices = useMemo(
+    () =>
+      productEngineeringDetails.filter(
+        (item) => item.slug !== slug,
+      ),
+    [slug],
+  );
 
   const heroRef =
-    useRef<HTMLElement>(null);
+    useRef<HTMLElement | null>(null);
 
   const capabilitiesRef =
-    useRef<HTMLDivElement>(null);
+    useRef<HTMLDivElement | null>(null);
 
   const [
     activeCapability,
     setActiveCapability,
   ] = useState(0);
 
-  const breadcrumbs: BreadcrumbItem[] = [
-    {
-      label: 'Services',
-      href: '/services',
-    },
-    {
-      label: 'Artificial Intelligence',
-      href: '/services/artificial-intelligence',
-    },
-    {
-      label:
-        service?.title ||
-        'Service',
-    },
-  ];
-
   /* ============================================================
-     HERO ANIMATION
+     RESET ACTIVE CAPABILITY WHEN PAGE CHANGES
   ============================================================ */
 
   useEffect(() => {
-    if (!service) {
+    setActiveCapability(0);
+  }, [slug]);
+
+  /* ============================================================
+     HERO GSAP
+  ============================================================ */
+
+  useEffect(() => {
+    if (!service || !heroRef.current) {
       return;
     }
 
@@ -94,7 +423,7 @@ export const AIServiceDetailPage: React.FC = () => {
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
+          duration: 0.55,
         },
       )
         .fromTo(
@@ -106,49 +435,87 @@ export const AIServiceDetailPage: React.FC = () => {
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.75,
           },
-          '-=0.4',
+          '-=0.3',
         )
         .fromTo(
-          '.hero-desc',
+          '.hero-intro',
           {
             opacity: 0,
-            y: 20,
+            y: 18,
           },
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.75,
           },
-          '-=0.6',
+          '-=0.5',
         )
         .fromTo(
           '.hero-cta',
           {
             opacity: 0,
-            y: 20,
+            y: 14,
           },
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.65,
           },
-          '-=0.6',
+          '-=0.45',
         )
         .fromTo(
           '.hero-visual',
           {
             opacity: 0,
-            scale: 0.97,
+            scale: 0.96,
           },
           {
             opacity: 1,
             scale: 1,
-            duration: 1,
+            duration: 0.9,
           },
-          '-=0.8',
+          '-=0.75',
         );
+
+      gsap.to('.hero-ring', {
+        rotate: 360,
+        duration: 34,
+        repeat: -1,
+        ease: 'none',
+      });
+
+      gsap.to('.hero-ring-reverse', {
+        rotate: -360,
+        duration: 28,
+        repeat: -1,
+        ease: 'none',
+      });
+
+      gsap.to('.hero-float-a', {
+        y: -8,
+        duration: 3.2,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+
+      gsap.to('.hero-float-b', {
+        y: 8,
+        duration: 3.6,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+
+      gsap.to('.hero-float-c', {
+        y: -6,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
     }, heroRef);
 
     return () => {
@@ -157,11 +524,14 @@ export const AIServiceDetailPage: React.FC = () => {
   }, [service]);
 
   /* ============================================================
-     CAPABILITY PANEL ANIMATION
+     CAPABILITY ANIMATION
   ============================================================ */
 
   useEffect(() => {
-    if (!service) {
+    if (
+      !service ||
+      !capabilitiesRef.current
+    ) {
       return;
     }
 
@@ -170,12 +540,12 @@ export const AIServiceDetailPage: React.FC = () => {
         '.capability-desc',
         {
           opacity: 0,
-          y: 10,
+          y: 8,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.4,
+          duration: 0.35,
           ease: 'power2.out',
         },
       );
@@ -190,17 +560,31 @@ export const AIServiceDetailPage: React.FC = () => {
   ]);
 
   /* ============================================================
-     INVALID SERVICE
+     INVALID SLUG
   ============================================================ */
 
   if (!service) {
     return (
       <Navigate
-        to="/services/artificial-intelligence"
+        to="/services/product-engineering"
         replace
       />
     );
   }
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      label: 'Services',
+      href: '/services',
+    },
+    {
+      label: 'Product Engineering',
+      href: '/services/product-engineering',
+    },
+    {
+      label: service.title,
+    },
+  ];
 
   return (
     <PageShell
@@ -217,21 +601,34 @@ export const AIServiceDetailPage: React.FC = () => {
           relative
           z-0
           flex
+          min-h-[620px]
           flex-col
           overflow-hidden
           border-b
-          border-hive-border
-          bg-hive-black
+          border-white/10
+          bg-[#080808]
         "
-        style={{
-          minHeight:
-            'clamp(600px, calc(100svh - 80px), 720px)',
-        }}
       >
-        <HeroBackground
-          imageUrl={
-            service.heroImage
-          }
+        {/* Premium background */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-[radial-gradient(circle_at_70%_40%,rgba(253,207,9,0.12),transparent_34%)]
+          "
+        />
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            opacity-[0.07]
+            [background-image:linear-gradient(rgba(255,255,255,.15)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.15)_1px,transparent_1px)]
+            [background-size:44px_44px]
+          "
         />
 
         <div
@@ -244,7 +641,8 @@ export const AIServiceDetailPage: React.FC = () => {
             flex-col
             justify-center
             py-24
-            sm:py-32
+            sm:py-28
+            lg:py-32
           "
         >
           <Container size="lg">
@@ -252,10 +650,9 @@ export const AIServiceDetailPage: React.FC = () => {
               items={breadcrumbs}
               variant="dark"
               className="
-                mb-4
+                mb-5
                 border-none
                 pb-0
-                sm:mb-6
               "
             />
 
@@ -266,12 +663,14 @@ export const AIServiceDetailPage: React.FC = () => {
                 items-center
                 gap-12
                 lg:grid-cols-2
+                lg:gap-16
               "
             >
-              <div className="space-y-6 text-left">
+              <div>
                 <div
                   className="
                     hero-label
+                    mb-6
                     inline-flex
                     items-center
                     gap-2
@@ -287,7 +686,6 @@ export const AIServiceDetailPage: React.FC = () => {
                     className="
                       h-2
                       w-2
-                      flex-shrink-0
                       rounded-full
                       bg-hive-yellow
                     "
@@ -301,25 +699,22 @@ export const AIServiceDetailPage: React.FC = () => {
                       uppercase
                       tracking-widest
                       text-white
-                      drop-shadow
                     "
                   >
-                    {
-                      service.eyebrow
-                    }
+                    {service.eyebrow}
                   </span>
                 </div>
 
                 <h1
                   className="
                     hero-title
-                    mb-4
+                    mb-6
+                    max-w-3xl
                     font-heading
                     text-display-md
                     font-bold
-                    leading-[1.15]
+                    leading-[1.12]
                     text-white
-                    drop-shadow-md
                     sm:text-display-lg
                   "
                 >
@@ -328,14 +723,12 @@ export const AIServiceDetailPage: React.FC = () => {
 
                 <p
                   className="
-                    hero-desc
-                    mb-6
-                    max-w-xl
+                    hero-intro
+                    mb-8
+                    max-w-2xl
                     text-base
                     leading-relaxed
-                    text-white/90
-                    drop-shadow
-                    sm:mb-8
+                    text-white/80
                     sm:text-lg
                     md:text-xl
                   "
@@ -343,7 +736,7 @@ export const AIServiceDetailPage: React.FC = () => {
                   {service.intro}
                 </p>
 
-                <div className="hero-cta pt-4">
+                <div className="hero-cta">
                   <Button
                     href="/contact"
                     variant="primary"
@@ -366,19 +759,10 @@ export const AIServiceDetailPage: React.FC = () => {
                 className="
                   hero-visual
                   hidden
-                  items-center
-                  justify-center
-                  lg:flex
+                  lg:block
                 "
               >
-                <AIHeroNetworkVisual
-                  title={
-                    service.title
-                  }
-                  serviceId={
-                    service.slug
-                  }
-                />
+                <ProductEngineeringHeroVisual />
               </div>
             </div>
           </Container>
@@ -426,7 +810,7 @@ export const AIServiceDetailPage: React.FC = () => {
       </section>
 
       {/* ======================================================
-          CAPABILITIES
+          CORE CAPABILITIES
       ====================================================== */}
 
       <section
@@ -441,8 +825,8 @@ export const AIServiceDetailPage: React.FC = () => {
         <Container size="lg">
           <FadeIn>
             <SectionHeading
-              title="Capabilities"
-              description="How we solve complex business challenges with AI."
+              title="Core Capabilities"
+              description="How we deliver value in this area."
               accentBar
             />
           </FadeIn>
@@ -458,8 +842,6 @@ export const AIServiceDetailPage: React.FC = () => {
               lg:gap-12
             "
           >
-            {/* Capability buttons */}
-
             <div
               className="
                 flex
@@ -479,7 +861,9 @@ export const AIServiceDetailPage: React.FC = () => {
 
                   return (
                     <button
-                      key={index}
+                      key={
+                        capability.title
+                      }
                       type="button"
                       onClick={() =>
                         setActiveCapability(
@@ -501,23 +885,10 @@ export const AIServiceDetailPage: React.FC = () => {
                         transition-all
                         duration-300
                         sm:text-lg
-
                         ${
                           isActive
-                            ? `
-                              border-hive-yellow
-                              bg-hive-white
-                              text-hive-black
-                              shadow-hive-md
-                            `
-                            : `
-                              border-transparent
-                              bg-transparent
-                              text-hive-text-muted
-                              hover:border-hive-border
-                              hover:bg-hive-white
-                              hover:text-hive-black
-                            `
+                            ? 'border-hive-yellow bg-hive-white text-hive-black shadow-hive-md'
+                            : 'border-transparent bg-transparent text-hive-text-muted hover:border-hive-border hover:bg-hive-white hover:text-hive-black'
                         }
                       `}
                     >
@@ -533,17 +904,10 @@ export const AIServiceDetailPage: React.FC = () => {
                           w-5
                           transition-all
                           duration-300
-
                           ${
                             isActive
-                              ? `
-                                rotate-90
-                                text-hive-yellow
-                                opacity-100
-                              `
-                              : `
-                                opacity-0
-                              `
+                              ? 'rotate-90 text-hive-yellow opacity-100'
+                              : 'opacity-0'
                           }
                         `}
                       />
@@ -552,8 +916,6 @@ export const AIServiceDetailPage: React.FC = () => {
                 },
               )}
             </div>
-
-            {/* Description card */}
 
             <div className="lg:col-span-7">
               <div
@@ -602,11 +964,12 @@ export const AIServiceDetailPage: React.FC = () => {
                       text-hive-text-muted
                     "
                   >
-                    {service
-                      .capabilities[
-                      activeCapability
-                    ]?.description ||
-                      'We empower organizations to unlock the full potential of this capability through robust integrations, proven methodologies, and domain expertise.'}
+                    {
+                      service
+                        .capabilities[
+                        activeCapability
+                      ]?.description
+                    }
                   </p>
                 </div>
               </div>
@@ -616,9 +979,125 @@ export const AIServiceDetailPage: React.FC = () => {
       </section>
 
       {/* ======================================================
+          APPROACH
+      ====================================================== */}
+
+      <section
+        className="
+          border-b
+          border-hive-border
+          bg-hive-white
+          py-16
+          sm:py-24
+        "
+      >
+        <Container size="lg">
+          <FadeIn>
+            <SectionHeading
+              title="Our Delivery Approach"
+              centered
+              accentBar
+            />
+          </FadeIn>
+
+          <div
+            className="
+              mt-12
+              grid
+              grid-cols-1
+              gap-6
+              md:grid-cols-2
+              lg:grid-cols-3
+            "
+          >
+            {service.approach.map(
+              (step, index) => (
+                <FadeIn
+                  key={
+                    step.stepNumber
+                  }
+                  delay={
+                    index * 0.08
+                  }
+                >
+                  <div
+                    className="
+                      group
+                      h-full
+                      rounded-2xl
+                      border
+                      border-hive-border
+                      bg-hive-warm-white
+                      p-6
+                      transition-all
+                      duration-300
+                      hover:-translate-y-1
+                      hover:border-hive-yellow
+                      hover:shadow-lg
+                    "
+                  >
+                    <div
+                      className="
+                        mb-5
+                        inline-flex
+                        h-12
+                        w-12
+                        items-center
+                        justify-center
+                        rounded-xl
+                        border
+                        border-hive-yellow/30
+                        bg-hive-yellow/15
+                      "
+                    >
+                      <span
+                        className="
+                          font-heading
+                          text-base
+                          font-bold
+                          text-hive-black
+                        "
+                      >
+                        {
+                          step.stepNumber
+                        }
+                      </span>
+                    </div>
+
+                    <h3
+                      className="
+                        mb-3
+                        font-heading
+                        text-lg
+                        font-bold
+                        text-hive-black
+                      "
+                    >
+                      {step.title}
+                    </h3>
+
+                    <p
+                      className="
+                        text-sm
+                        leading-relaxed
+                        text-hive-text-muted
+                      "
+                    >
+                      {
+                        step.description
+                      }
+                    </p>
+                  </div>
+                </FadeIn>
+              ),
+            )}
+          </div>
+        </Container>
+      </section>
+
+      {/* ======================================================
           BUSINESS VALUE
-          
-          FIXED FOR ALL AI SUB-SERVICE PAGES
+          CONTRAST FIXED
       ====================================================== */}
 
       <section
@@ -631,15 +1110,13 @@ export const AIServiceDetailPage: React.FC = () => {
           sm:py-24
         "
       >
-        {/* Background glow */}
-
         <div
           className="
             pointer-events-none
             absolute
             left-1/2
             top-0
-            h-[420px]
+            h-[400px]
             w-[650px]
             -translate-x-1/2
             -translate-y-1/2
@@ -709,8 +1186,7 @@ export const AIServiceDetailPage: React.FC = () => {
               grid-cols-1
               gap-6
               md:grid-cols-2
-              lg:grid-cols-3
-              sm:gap-8
+              lg:grid-cols-4
             "
           >
             {service.businessValue.map(
@@ -719,9 +1195,11 @@ export const AIServiceDetailPage: React.FC = () => {
                 index,
               ) => (
                 <FadeIn
-                  key={index}
+                  key={
+                    value.title
+                  }
                   delay={
-                    index * 0.1
+                    index * 0.08
                   }
                 >
                   <div
@@ -741,11 +1219,8 @@ export const AIServiceDetailPage: React.FC = () => {
                       hover:border-hive-yellow/50
                       hover:bg-[#191919]
                       hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
-                      sm:p-8
                     "
                   >
-                    {/* Yellow top accent */}
-
                     <div
                       className="
                         absolute
@@ -762,8 +1237,6 @@ export const AIServiceDetailPage: React.FC = () => {
                       "
                     />
 
-                    {/* Icon */}
-
                     <div
                       className="
                         mb-6
@@ -775,11 +1248,7 @@ export const AIServiceDetailPage: React.FC = () => {
                         rounded-xl
                         border
                         border-hive-yellow/40
-                        bg-hive-yellow/[0.10]
-                        transition-all
-                        duration-300
-                        group-hover:border-hive-yellow/70
-                        group-hover:bg-hive-yellow/[0.16]
+                        bg-hive-yellow/10
                       "
                     >
                       <CheckCircle2
@@ -790,10 +1259,6 @@ export const AIServiceDetailPage: React.FC = () => {
                         "
                       />
                     </div>
-
-                    {/* IMPORTANT:
-                        explicit white title
-                    */}
 
                     <h3
                       className="
@@ -808,14 +1273,11 @@ export const AIServiceDetailPage: React.FC = () => {
                       {value.title}
                     </h3>
 
-                    {/* Light readable description */}
-
                     <p
                       className="
                         text-[15px]
                         leading-relaxed
                         text-white/75
-                        sm:text-base
                       "
                     >
                       {
@@ -831,170 +1293,119 @@ export const AIServiceDetailPage: React.FC = () => {
       </section>
 
       {/* ======================================================
-          WHY M3 HIVE
+          RELATED SERVICES
       ====================================================== */}
 
-      {service.whyM3Hive &&
-      service.whyM3Hive.length >
-        0 ? (
-        <section
-          className="
-            bg-hive-white
-            py-16
-            sm:py-24
-          "
-        >
-          <Container size="lg">
-            <FadeIn>
-              <SectionHeading
-                title="Why M3 Hive"
-                centered
-                accentBar
-              />
-            </FadeIn>
+      <section
+        className="
+          border-y
+          border-hive-border
+          bg-hive-white
+          py-16
+          sm:py-24
+        "
+      >
+        <Container size="lg">
+          <FadeIn>
+            <SectionHeading
+              title="Explore Other Product Engineering Services"
+              centered
+              accentBar
+            />
+          </FadeIn>
 
-            <div
-              className="
-                mt-16
-                grid
-                grid-cols-1
-                gap-8
-                md:grid-cols-2
-              "
-            >
-              {service.whyM3Hive.map(
+          <div
+            className="
+              mt-12
+              grid
+              grid-cols-1
+              gap-6
+              md:grid-cols-2
+              lg:grid-cols-4
+            "
+          >
+            {relatedServices
+              .slice(0, 4)
+              .map(
                 (
-                  item,
+                  relatedService,
                   index,
                 ) => (
                   <FadeIn
-                    key={index}
+                    key={
+                      relatedService.slug
+                    }
                     delay={
-                      index *
-                      0.1
+                      index * 0.08
                     }
                   >
-                    <div
+                    <Link
+                      to={`/services/product-engineering/${relatedService.slug}`}
                       className="
                         group
+                        block
                         h-full
                         rounded-2xl
                         border
                         border-hive-border
-                        bg-hive-white
+                        bg-hive-warm-white
                         p-6
                         transition-all
                         duration-300
                         hover:-translate-y-1
                         hover:border-hive-yellow
-                        hover:shadow-lg
-                        sm:p-8
+                        hover:shadow-hive-lg
                       "
                     >
-                      <div
+                      <h3
                         className="
-                          mb-5
-                          flex
-                          items-center
-                          gap-3
-                        "
-                      >
-                        <div
-                          className="
-                            h-2.5
-                            w-2.5
-                            rounded-full
-                            bg-hive-yellow
-                            shadow-[0_0_10px_rgba(253,207,9,0.45)]
-                          "
-                        />
-
-                        <div
-                          className="
-                            h-px
-                            w-10
-                            bg-hive-yellow/50
-                          "
-                        />
-                      </div>
-
-                      <h4
-                        className="
-                          mb-3
+                          mb-4
                           font-heading
-                          text-xl
+                          text-lg
                           font-bold
                           text-hive-black
-                        "
-                      >
-                        {item.title}
-                      </h4>
-
-                      <p
-                        className="
-                          leading-relaxed
-                          text-hive-text-muted
+                          transition-colors
+                          duration-300
+                          group-hover:text-hive-orange
                         "
                       >
                         {
-                          item.description
+                          relatedService.title
                         }
-                      </p>
-                    </div>
+                      </h3>
+
+                      <div
+                        className="
+                          flex
+                          items-center
+                          gap-1.5
+                          text-sm
+                          font-semibold
+                          text-hive-text-muted
+                          transition-colors
+                          duration-300
+                          group-hover:text-hive-orange
+                        "
+                      >
+                        Learn More
+
+                        <ChevronRight
+                          className="
+                            h-4
+                            w-4
+                            transition-transform
+                            duration-300
+                            group-hover:translate-x-1
+                          "
+                        />
+                      </div>
+                    </Link>
                   </FadeIn>
                 ),
               )}
-            </div>
-          </Container>
-        </section>
-      ) : (
-        <section
-          className="
-            bg-hive-white
-            py-16
-            sm:py-24
-          "
-        >
-          <Container
-            size="md"
-            className="text-center"
-          >
-            <FadeIn>
-              <h2
-                className="
-                  mb-6
-                  font-heading
-                  text-3xl
-                  font-bold
-                  text-hive-black
-                "
-              >
-                Expertise You Can
-                Trust
-              </h2>
-
-              <p
-                className="
-                  mx-auto
-                  max-w-2xl
-                  text-lg
-                  leading-relaxed
-                  text-hive-text-muted
-                "
-              >
-                Our multidisciplinary
-                teams combine deep
-                technical knowledge
-                with practical
-                business understanding
-                to ensure your AI
-                initiatives deliver
-                measurable success.
-              </p>
-            </FadeIn>
-          </Container>
-        </section>
-      )}
+          </div>
+        </Container>
+      </section>
 
       {/* ======================================================
           FINAL CTA
@@ -1026,10 +1437,7 @@ export const AIServiceDetailPage: React.FC = () => {
 
         <Container
           size="md"
-          className="
-            relative
-            z-10
-          "
+          className="relative z-10"
         >
           <FadeIn>
             <h2
@@ -1042,9 +1450,8 @@ export const AIServiceDetailPage: React.FC = () => {
                 sm:text-4xl
               "
             >
-              Ready to explore
-              what&apos;s possible
-              with AI?
+              Ready to build your
+              next digital product?
             </h2>
 
             <p
@@ -1057,12 +1464,10 @@ export const AIServiceDetailPage: React.FC = () => {
                 text-white/80
               "
             >
-              Let&apos;s discuss how{' '}
-              {service.title} can
-              transform your
-              operations and create
-              new competitive
-              advantages.
+              Talk to our team about
+              your product goals,
+              technical challenges and
+              delivery requirements.
             </p>
 
             <Button

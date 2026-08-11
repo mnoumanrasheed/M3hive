@@ -5,7 +5,6 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { FadeIn } from '../components/ui/FadeIn';
 import { OfficeCard } from '../components/ui/OfficeCard';
 import { aboutPageData } from '../data/about';
-import { leadershipMembers } from '../data/leadership';
 import { officeLocations } from '../data/offices';
 
 import { HeroBackground } from '../components/ui/HeroBackground';
@@ -47,33 +46,6 @@ export const AboutPage: React.FC = () => {
               ))}
             </div>
           </FadeIn>
-        </Container>
-      </section>
-
-      {/* ─── LEADERSHIP ─────────────────────────────────────────── */}
-      <section className="py-14 sm:py-20 lg:py-24 bg-hive-white">
-        <Container size="lg">
-          <FadeIn>
-            <SectionHeading title="Our Leadership" centered accentBar />
-          </FadeIn>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 mt-10 sm:mt-16">
-            {leadershipMembers.map((member, idx) => (
-              <FadeIn key={member.id} delay={idx * 0.1} className="flex">
-                <div className="flex flex-col p-6 sm:p-8 rounded-2xl bg-hive-warm-white border border-hive-border transition-all duration-300 hover:border-hive-yellow/50 hover:shadow-hive-hover h-full w-full">
-                  <h3 className="text-xl font-heading font-bold text-hive-black mb-1">
-                    {member.name}
-                  </h3>
-                  <div className="text-sm font-semibold text-hive-orange mb-6">
-                    {member.title}
-                  </div>
-                  <p className="text-sm text-hive-text-muted leading-relaxed">
-                    {member.bio}
-                  </p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
         </Container>
       </section>
 

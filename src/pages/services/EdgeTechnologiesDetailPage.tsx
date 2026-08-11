@@ -1,10 +1,12 @@
 import React, {
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 
 import {
+  Link,
   Navigate,
   useParams,
 } from 'react-router-dom';
@@ -13,68 +15,544 @@ import gsap from 'gsap';
 
 import {
   ArrowRight,
-  ChevronRight,
   CheckCircle2,
+  ChevronRight,
+  Cpu,
+  Gauge,
+  Network,
+  RadioTower,
+  Router,
+  Wifi,
 } from 'lucide-react';
 
 import { PageShell } from '../../components/layout/PageShell';
 import { Container } from '../../components/ui/Container';
 import { Button } from '../../components/ui/Button';
-import { HeroBackground } from '../../components/ui/HeroBackground';
 import { FadeIn } from '../../components/ui/FadeIn';
 import { SectionHeading } from '../../components/ui/SectionHeading';
+
 import {
   Breadcrumbs,
-  BreadcrumbItem,
+  type BreadcrumbItem,
 } from '../../components/ui/Breadcrumbs';
 
-import { AIHeroNetworkVisual } from '../../components/services/AIHeroNetworkVisual';
+import { edgeTechnologiesDetails } from '../../data/services/edgeTechnologiesDetails';
 
-import { aiServiceDetails } from '../../data/services/aiServiceDetails';
+/* ============================================================
+   EDGE TECHNOLOGIES HERO VISUAL
 
-export const AIServiceDetailPage: React.FC = () => {
+   Shared across ALL Edge Technologies detail pages.
+============================================================ */
+
+interface EdgeHeroVisualProps {
+  title: string;
+  slug: string;
+}
+
+const EdgeHeroVisual: React.FC<EdgeHeroVisualProps> = ({
+  title,
+  slug,
+}) => {
+  const config = useMemo(() => {
+    const value = slug.toLowerCase();
+
+    if (
+      value.includes('iot') ||
+      value.includes('connected')
+    ) {
+      return {
+        center: 'CONNECTED EDGE',
+        nodeA: 'Devices',
+        nodeB: 'Signals',
+        nodeC: 'Insights',
+      };
+    }
+
+    if (
+      value.includes('edge-ai') ||
+      value.includes('ai')
+    ) {
+      return {
+        center: 'EDGE AI',
+        nodeA: 'Sense',
+        nodeB: 'Infer',
+        nodeC: 'Respond',
+      };
+    }
+
+    if (
+      value.includes('embedded') ||
+      value.includes('firmware')
+    ) {
+      return {
+        center: 'EMBEDDED',
+        nodeA: 'Hardware',
+        nodeB: 'Firmware',
+        nodeC: 'Control',
+      };
+    }
+
+    if (
+      value.includes('platform') ||
+      value.includes('gateway')
+    ) {
+      return {
+        center: 'EDGE PLATFORM',
+        nodeA: 'Connect',
+        nodeB: 'Process',
+        nodeC: 'Orchestrate',
+      };
+    }
+
+    return {
+      center: 'EDGE',
+      nodeA: 'Sense',
+      nodeB: 'Process',
+      nodeC: 'Act',
+    };
+  }, [slug]);
+
+  return (
+    <div
+      className="
+        relative
+        mx-auto
+        flex
+        h-[390px]
+        w-full
+        max-w-[560px]
+        items-center
+        justify-center
+        overflow-visible
+      "
+      aria-hidden="true"
+    >
+      {/* Atmospheric glow */}
+
+      <div
+        className="
+          absolute
+          left-1/2
+          top-1/2
+          h-[320px]
+          w-[320px]
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          bg-hive-yellow/[0.09]
+          blur-[100px]
+        "
+      />
+
+      {/* Outer edge network ring */}
+
+      <div
+        className="
+          edge-ring-a
+          absolute
+          h-[320px]
+          w-[320px]
+          rounded-full
+          border
+          border-hive-yellow/20
+        "
+      >
+        <span
+          className="
+            absolute
+            left-1/2
+            top-[-5px]
+            h-2.5
+            w-2.5
+            -translate-x-1/2
+            rounded-full
+            bg-hive-yellow
+            shadow-[0_0_16px_rgba(253,207,9,0.8)]
+          "
+        />
+      </div>
+
+      {/* Middle ring */}
+
+      <div
+        className="
+          edge-ring-b
+          absolute
+          h-[255px]
+          w-[255px]
+          rounded-full
+          border
+          border-dashed
+          border-hive-yellow/25
+        "
+      />
+
+      {/* Inner ring */}
+
+      <div
+        className="
+          edge-ring-c
+          absolute
+          h-[195px]
+          w-[195px]
+          rounded-full
+          border
+          border-white/10
+        "
+      />
+
+      {/* Horizontal connection */}
+
+      <div
+        className="
+          absolute
+          left-[12%]
+          top-1/2
+          h-px
+          w-[76%]
+          -translate-y-1/2
+          bg-gradient-to-r
+          from-transparent
+          via-hive-yellow/30
+          to-transparent
+        "
+      />
+
+      {/* Vertical connection */}
+
+      <div
+        className="
+          absolute
+          left-1/2
+          top-[12%]
+          h-[76%]
+          w-px
+          -translate-x-1/2
+          bg-gradient-to-b
+          from-transparent
+          via-hive-yellow/20
+          to-transparent
+        "
+      />
+
+      {/* Center edge engine */}
+
+      <div
+        className="
+          edge-center
+          relative
+          z-20
+          flex
+          h-[155px]
+          w-[200px]
+          flex-col
+          items-center
+          justify-center
+          rounded-3xl
+          border
+          border-hive-yellow/30
+          bg-[#151515]/95
+          px-5
+          text-center
+          shadow-[0_28px_75px_rgba(0,0,0,0.50)]
+          backdrop-blur-xl
+        "
+      >
+        <div
+          className="
+            mb-4
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
+            rounded-xl
+            border
+            border-hive-yellow/40
+            bg-hive-yellow/10
+          "
+        >
+          <Cpu className="h-6 w-6 text-hive-yellow" />
+        </div>
+
+        <span
+          className="
+            font-heading
+            text-[10px]
+            font-bold
+            uppercase
+            tracking-[0.22em]
+            text-hive-yellow
+          "
+        >
+          {config.center}
+        </span>
+
+        <span
+          className="
+            mt-2
+            max-w-[155px]
+            truncate
+            text-xs
+            text-white/70
+          "
+        >
+          {title}
+        </span>
+      </div>
+
+      {/* Device node */}
+
+      <div
+        className="
+          edge-node-a
+          absolute
+          left-[2%]
+          top-[20%]
+          z-30
+          rounded-2xl
+          border
+          border-white/10
+          bg-[#151515]
+          p-3
+          shadow-xl
+        "
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-lg
+              border
+              border-hive-yellow/30
+              bg-hive-yellow/10
+            "
+          >
+            <Router className="h-4 w-4 text-hive-yellow" />
+          </div>
+
+          <span
+            className="
+              hidden
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-wider
+              text-white/70
+              sm:block
+            "
+          >
+            {config.nodeA}
+          </span>
+        </div>
+      </div>
+
+      {/* Signal node */}
+
+      <div
+        className="
+          edge-node-b
+          absolute
+          right-[2%]
+          top-[28%]
+          z-30
+          rounded-2xl
+          border
+          border-white/10
+          bg-[#151515]
+          p-3
+          shadow-xl
+        "
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-lg
+              border
+              border-hive-yellow/30
+              bg-hive-yellow/10
+            "
+          >
+            <Wifi className="h-4 w-4 text-hive-yellow" />
+          </div>
+
+          <span
+            className="
+              hidden
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-wider
+              text-white/70
+              sm:block
+            "
+          >
+            {config.nodeB}
+          </span>
+        </div>
+      </div>
+
+      {/* Processing node */}
+
+      <div
+        className="
+          edge-node-c
+          absolute
+          bottom-[13%]
+          left-[13%]
+          z-30
+          rounded-2xl
+          border
+          border-white/10
+          bg-[#151515]
+          p-3
+          shadow-xl
+        "
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-lg
+              border
+              border-hive-yellow/30
+              bg-hive-yellow/10
+            "
+          >
+            <Network className="h-4 w-4 text-hive-yellow" />
+          </div>
+
+          <span
+            className="
+              hidden
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-wider
+              text-white/70
+              sm:block
+            "
+          >
+            {config.nodeC}
+          </span>
+        </div>
+      </div>
+
+      {/* Realtime performance node */}
+
+      <div
+        className="
+          edge-node-d
+          absolute
+          bottom-[15%]
+          right-[15%]
+          z-30
+          flex
+          h-12
+          w-12
+          items-center
+          justify-center
+          rounded-2xl
+          border
+          border-hive-yellow/30
+          bg-[#151515]
+          shadow-xl
+        "
+      >
+        <Gauge className="h-5 w-5 text-hive-yellow" />
+      </div>
+
+      {/* Wireless signal */}
+
+      <div
+        className="
+          edge-signal
+          absolute
+          right-[22%]
+          top-[14%]
+          flex
+          h-9
+          w-9
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-hive-yellow/20
+          bg-hive-yellow/[0.06]
+        "
+      >
+        <RadioTower className="h-4 w-4 text-hive-yellow" />
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   PAGE
+============================================================ */
+
+export const EdgeTechnologiesDetailPage: React.FC = () => {
   const { slug } = useParams<{
     slug: string;
   }>();
 
-  const service =
-    aiServiceDetails.find(
-      (item) => item.slug === slug,
-    );
+  const service = useMemo(
+    () =>
+      edgeTechnologiesDetails.find(
+        (item) => item.slug === slug,
+      ),
+    [slug],
+  );
+
+  const relatedServices = useMemo(
+    () =>
+      edgeTechnologiesDetails.filter(
+        (item) => item.slug !== slug,
+      ),
+    [slug],
+  );
 
   const heroRef =
-    useRef<HTMLElement>(null);
+    useRef<HTMLElement | null>(null);
 
   const capabilitiesRef =
-    useRef<HTMLDivElement>(null);
+    useRef<HTMLDivElement | null>(null);
 
   const [
     activeCapability,
     setActiveCapability,
   ] = useState(0);
 
-  const breadcrumbs: BreadcrumbItem[] = [
-    {
-      label: 'Services',
-      href: '/services',
-    },
-    {
-      label: 'Artificial Intelligence',
-      href: '/services/artificial-intelligence',
-    },
-    {
-      label:
-        service?.title ||
-        'Service',
-    },
-  ];
+  /* ============================================================
+     RESET ACTIVE CAPABILITY
+  ============================================================ */
+
+  useEffect(() => {
+    setActiveCapability(0);
+  }, [slug]);
 
   /* ============================================================
      HERO ANIMATION
   ============================================================ */
 
   useEffect(() => {
-    if (!service) {
+    if (
+      !service ||
+      !heroRef.current
+    ) {
       return;
     }
 
@@ -94,61 +572,170 @@ export const AIServiceDetailPage: React.FC = () => {
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
+          duration: 0.55,
         },
       )
         .fromTo(
           '.hero-title',
           {
             opacity: 0,
-            y: 20,
+            y: 22,
           },
           {
             opacity: 1,
             y: 0,
             duration: 0.8,
           },
-          '-=0.4',
+          '-=0.3',
         )
         .fromTo(
-          '.hero-desc',
+          '.hero-intro',
           {
             opacity: 0,
-            y: 20,
+            y: 18,
           },
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.75,
           },
-          '-=0.6',
+          '-=0.5',
         )
         .fromTo(
           '.hero-cta',
           {
             opacity: 0,
-            y: 20,
+            y: 14,
           },
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.65,
           },
-          '-=0.6',
+          '-=0.45',
         )
         .fromTo(
           '.hero-visual',
           {
             opacity: 0,
-            scale: 0.97,
+            scale: 0.96,
+            x: 12,
           },
           {
             opacity: 1,
             scale: 1,
-            duration: 1,
+            x: 0,
+            duration: 0.9,
           },
-          '-=0.8',
+          '-=0.7',
         );
+
+      /* Network rings */
+
+      gsap.to(
+        '.edge-ring-a',
+        {
+          rotation: 360,
+          duration: 36,
+          repeat: -1,
+          ease: 'none',
+        },
+      );
+
+      gsap.to(
+        '.edge-ring-b',
+        {
+          rotation: -360,
+          duration: 29,
+          repeat: -1,
+          ease: 'none',
+        },
+      );
+
+      gsap.to(
+        '.edge-ring-c',
+        {
+          rotation: 360,
+          duration: 45,
+          repeat: -1,
+          ease: 'none',
+        },
+      );
+
+      /* Floating nodes */
+
+      gsap.to(
+        '.edge-node-a',
+        {
+          y: -8,
+          x: 3,
+          duration: 3.2,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        },
+      );
+
+      gsap.to(
+        '.edge-node-b',
+        {
+          y: 8,
+          x: -3,
+          duration: 3.7,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        },
+      );
+
+      gsap.to(
+        '.edge-node-c',
+        {
+          y: -6,
+          duration: 3.1,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        },
+      );
+
+      gsap.to(
+        '.edge-node-d',
+        {
+          y: 6,
+          duration: 3.4,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        },
+      );
+
+      /* Center processor */
+
+      gsap.to(
+        '.edge-center',
+        {
+          y: -4,
+          duration: 3,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        },
+      );
+
+      /* Radio signal pulse */
+
+      gsap.to(
+        '.edge-signal',
+        {
+          scale: 1.12,
+          opacity: 0.55,
+          duration: 1.8,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        },
+      );
     }, heroRef);
 
     return () => {
@@ -157,11 +744,14 @@ export const AIServiceDetailPage: React.FC = () => {
   }, [service]);
 
   /* ============================================================
-     CAPABILITY PANEL ANIMATION
+     CAPABILITY ANIMATION
   ============================================================ */
 
   useEffect(() => {
-    if (!service) {
+    if (
+      !service ||
+      !capabilitiesRef.current
+    ) {
       return;
     }
 
@@ -196,11 +786,25 @@ export const AIServiceDetailPage: React.FC = () => {
   if (!service) {
     return (
       <Navigate
-        to="/services/artificial-intelligence"
+        to="/services/edge-technologies"
         replace
       />
     );
   }
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      label: 'Services',
+      href: '/services',
+    },
+    {
+      label: 'Edge Technologies',
+      href: '/services/edge-technologies',
+    },
+    {
+      label: service.title,
+    },
+  ];
 
   return (
     <PageShell
@@ -217,21 +821,36 @@ export const AIServiceDetailPage: React.FC = () => {
           relative
           z-0
           flex
+          min-h-[620px]
           flex-col
           overflow-hidden
           border-b
-          border-hive-border
-          bg-hive-black
+          border-white/10
+          bg-[#080808]
         "
-        style={{
-          minHeight:
-            'clamp(600px, calc(100svh - 80px), 720px)',
-        }}
       >
-        <HeroBackground
-          imageUrl={
-            service.heroImage
-          }
+        {/* Golden glow */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-[radial-gradient(circle_at_72%_42%,rgba(253,207,9,0.12),transparent_34%)]
+          "
+        />
+
+        {/* Grid */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            opacity-[0.065]
+            [background-image:linear-gradient(rgba(255,255,255,.13)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.13)_1px,transparent_1px)]
+            [background-size:44px_44px]
+          "
         />
 
         <div
@@ -244,7 +863,8 @@ export const AIServiceDetailPage: React.FC = () => {
             flex-col
             justify-center
             py-24
-            sm:py-32
+            sm:py-28
+            lg:py-32
           "
         >
           <Container size="lg">
@@ -252,10 +872,9 @@ export const AIServiceDetailPage: React.FC = () => {
               items={breadcrumbs}
               variant="dark"
               className="
-                mb-4
+                mb-5
                 border-none
                 pb-0
-                sm:mb-6
               "
             />
 
@@ -266,12 +885,14 @@ export const AIServiceDetailPage: React.FC = () => {
                 items-center
                 gap-12
                 lg:grid-cols-2
+                lg:gap-16
               "
             >
-              <div className="space-y-6 text-left">
+              <div>
                 <div
                   className="
                     hero-label
+                    mb-6
                     inline-flex
                     items-center
                     gap-2
@@ -287,9 +908,9 @@ export const AIServiceDetailPage: React.FC = () => {
                     className="
                       h-2
                       w-2
-                      flex-shrink-0
                       rounded-full
                       bg-hive-yellow
+                      shadow-[0_0_10px_rgba(253,207,9,0.6)]
                     "
                   />
 
@@ -301,25 +922,21 @@ export const AIServiceDetailPage: React.FC = () => {
                       uppercase
                       tracking-widest
                       text-white
-                      drop-shadow
                     "
                   >
-                    {
-                      service.eyebrow
-                    }
+                    {service.eyebrow}
                   </span>
                 </div>
 
                 <h1
                   className="
                     hero-title
-                    mb-4
+                    mb-6
                     font-heading
                     text-display-md
                     font-bold
-                    leading-[1.15]
+                    leading-[1.12]
                     text-white
-                    drop-shadow-md
                     sm:text-display-lg
                   "
                 >
@@ -328,14 +945,12 @@ export const AIServiceDetailPage: React.FC = () => {
 
                 <p
                   className="
-                    hero-desc
-                    mb-6
-                    max-w-xl
+                    hero-intro
+                    mb-8
+                    max-w-2xl
                     text-base
                     leading-relaxed
-                    text-white/90
-                    drop-shadow
-                    sm:mb-8
+                    text-white/80
                     sm:text-lg
                     md:text-xl
                   "
@@ -343,7 +958,7 @@ export const AIServiceDetailPage: React.FC = () => {
                   {service.intro}
                 </p>
 
-                <div className="hero-cta pt-4">
+                <div className="hero-cta">
                   <Button
                     href="/contact"
                     variant="primary"
@@ -351,13 +966,7 @@ export const AIServiceDetailPage: React.FC = () => {
                   >
                     Start a Conversation
 
-                    <ArrowRight
-                      className="
-                        ml-2
-                        h-4
-                        w-4
-                      "
-                    />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -366,18 +975,12 @@ export const AIServiceDetailPage: React.FC = () => {
                 className="
                   hero-visual
                   hidden
-                  items-center
-                  justify-center
-                  lg:flex
+                  lg:block
                 "
               >
-                <AIHeroNetworkVisual
-                  title={
-                    service.title
-                  }
-                  serviceId={
-                    service.slug
-                  }
+                <EdgeHeroVisual
+                  title={service.title}
+                  slug={service.slug}
                 />
               </div>
             </div>
@@ -389,13 +992,7 @@ export const AIServiceDetailPage: React.FC = () => {
           OVERVIEW
       ====================================================== */}
 
-      <section
-        className="
-          bg-hive-white
-          py-16
-          sm:py-24
-        "
-      >
+      <section className="bg-hive-white py-16 sm:py-24">
         <Container size="md">
           <FadeIn>
             <h2
@@ -442,7 +1039,7 @@ export const AIServiceDetailPage: React.FC = () => {
           <FadeIn>
             <SectionHeading
               title="Capabilities"
-              description="How we solve complex business challenges with AI."
+              description="How we deliver value in this area."
               accentBar
             />
           </FadeIn>
@@ -458,8 +1055,6 @@ export const AIServiceDetailPage: React.FC = () => {
               lg:gap-12
             "
           >
-            {/* Capability buttons */}
-
             <div
               className="
                 flex
@@ -479,12 +1074,10 @@ export const AIServiceDetailPage: React.FC = () => {
 
                   return (
                     <button
-                      key={index}
+                      key={capability.title}
                       type="button"
                       onClick={() =>
-                        setActiveCapability(
-                          index,
-                        )
+                        setActiveCapability(index)
                       }
                       className={`
                         flex
@@ -501,30 +1094,15 @@ export const AIServiceDetailPage: React.FC = () => {
                         transition-all
                         duration-300
                         sm:text-lg
-
                         ${
                           isActive
-                            ? `
-                              border-hive-yellow
-                              bg-hive-white
-                              text-hive-black
-                              shadow-hive-md
-                            `
-                            : `
-                              border-transparent
-                              bg-transparent
-                              text-hive-text-muted
-                              hover:border-hive-border
-                              hover:bg-hive-white
-                              hover:text-hive-black
-                            `
+                            ? 'border-hive-yellow bg-hive-white text-hive-black shadow-hive-md'
+                            : 'border-transparent bg-transparent text-hive-text-muted hover:border-hive-border hover:bg-hive-white hover:text-hive-black'
                         }
                       `}
                     >
                       <span>
-                        {
-                          capability.title
-                        }
+                        {capability.title}
                       </span>
 
                       <ChevronRight
@@ -533,17 +1111,10 @@ export const AIServiceDetailPage: React.FC = () => {
                           w-5
                           transition-all
                           duration-300
-
                           ${
                             isActive
-                              ? `
-                                rotate-90
-                                text-hive-yellow
-                                opacity-100
-                              `
-                              : `
-                                opacity-0
-                              `
+                              ? 'rotate-90 text-hive-yellow opacity-100'
+                              : 'opacity-0'
                           }
                         `}
                       />
@@ -552,8 +1123,6 @@ export const AIServiceDetailPage: React.FC = () => {
                 },
               )}
             </div>
-
-            {/* Description card */}
 
             <div className="lg:col-span-7">
               <div
@@ -572,12 +1141,7 @@ export const AIServiceDetailPage: React.FC = () => {
                   sm:p-12
                 "
               >
-                <div
-                  className="
-                    capability-desc
-                    w-full
-                  "
-                >
+                <div className="capability-desc w-full">
                   <h3
                     className="
                       mb-6
@@ -588,8 +1152,7 @@ export const AIServiceDetailPage: React.FC = () => {
                     "
                   >
                     {
-                      service
-                        .capabilities[
+                      service.capabilities[
                         activeCapability
                       ]?.title
                     }
@@ -602,11 +1165,11 @@ export const AIServiceDetailPage: React.FC = () => {
                       text-hive-text-muted
                     "
                   >
-                    {service
-                      .capabilities[
-                      activeCapability
-                    ]?.description ||
-                      'We empower organizations to unlock the full potential of this capability through robust integrations, proven methodologies, and domain expertise.'}
+                    {
+                      service.capabilities[
+                        activeCapability
+                      ]?.description
+                    }
                   </p>
                 </div>
               </div>
@@ -617,8 +1180,7 @@ export const AIServiceDetailPage: React.FC = () => {
 
       {/* ======================================================
           BUSINESS VALUE
-          
-          FIXED FOR ALL AI SUB-SERVICE PAGES
+          CONTRAST FIXED FOR ALL CARDS
       ====================================================== */}
 
       <section
@@ -631,8 +1193,6 @@ export const AIServiceDetailPage: React.FC = () => {
           sm:py-24
         "
       >
-        {/* Background glow */}
-
         <div
           className="
             pointer-events-none
@@ -719,10 +1279,8 @@ export const AIServiceDetailPage: React.FC = () => {
                 index,
               ) => (
                 <FadeIn
-                  key={index}
-                  delay={
-                    index * 0.1
-                  }
+                  key={value.title}
+                  delay={index * 0.1}
                 >
                   <div
                     className="
@@ -744,8 +1302,6 @@ export const AIServiceDetailPage: React.FC = () => {
                       sm:p-8
                     "
                   >
-                    {/* Yellow top accent */}
-
                     <div
                       className="
                         absolute
@@ -762,8 +1318,6 @@ export const AIServiceDetailPage: React.FC = () => {
                       "
                     />
 
-                    {/* Icon */}
-
                     <div
                       className="
                         mb-6
@@ -775,25 +1329,14 @@ export const AIServiceDetailPage: React.FC = () => {
                         rounded-xl
                         border
                         border-hive-yellow/40
-                        bg-hive-yellow/[0.10]
+                        bg-hive-yellow/10
                         transition-all
                         duration-300
-                        group-hover:border-hive-yellow/70
                         group-hover:bg-hive-yellow/[0.16]
                       "
                     >
-                      <CheckCircle2
-                        className="
-                          h-6
-                          w-6
-                          text-hive-yellow
-                        "
-                      />
+                      <CheckCircle2 className="h-6 w-6 text-hive-yellow" />
                     </div>
-
-                    {/* IMPORTANT:
-                        explicit white title
-                    */}
 
                     <h3
                       className="
@@ -808,8 +1351,6 @@ export const AIServiceDetailPage: React.FC = () => {
                       {value.title}
                     </h3>
 
-                    {/* Light readable description */}
-
                     <p
                       className="
                         text-[15px]
@@ -818,9 +1359,7 @@ export const AIServiceDetailPage: React.FC = () => {
                         sm:text-base
                       "
                     >
-                      {
-                        value.description
-                      }
+                      {value.description}
                     </p>
                   </div>
                 </FadeIn>
@@ -831,14 +1370,14 @@ export const AIServiceDetailPage: React.FC = () => {
       </section>
 
       {/* ======================================================
-          WHY M3 HIVE
+          RELATED SERVICES
       ====================================================== */}
 
-      {service.whyM3Hive &&
-      service.whyM3Hive.length >
-        0 ? (
+      {relatedServices.length > 0 && (
         <section
           className="
+            border-y
+            border-hive-border
             bg-hive-white
             py-16
             sm:py-24
@@ -847,7 +1386,7 @@ export const AIServiceDetailPage: React.FC = () => {
           <Container size="lg">
             <FadeIn>
               <SectionHeading
-                title="Why M3 Hive"
+                title="Explore Other Edge Technology Services"
                 centered
                 accentBar
               />
@@ -855,143 +1394,85 @@ export const AIServiceDetailPage: React.FC = () => {
 
             <div
               className="
-                mt-16
+                mt-12
                 grid
                 grid-cols-1
-                gap-8
+                gap-6
                 md:grid-cols-2
               "
             >
-              {service.whyM3Hive.map(
+              {relatedServices.map(
                 (
-                  item,
+                  relatedService,
                   index,
                 ) => (
                   <FadeIn
-                    key={index}
-                    delay={
-                      index *
-                      0.1
-                    }
+                    key={relatedService.slug}
+                    delay={index * 0.1}
                   >
-                    <div
+                    <Link
+                      to={`/services/edge-technologies/${relatedService.slug}`}
                       className="
                         group
+                        block
                         h-full
                         rounded-2xl
                         border
                         border-hive-border
-                        bg-hive-white
+                        bg-hive-warm-white
                         p-6
                         transition-all
                         duration-300
                         hover:-translate-y-1
-                        hover:border-hive-yellow
-                        hover:shadow-lg
-                        sm:p-8
+                        hover:border-hive-yellow/70
+                        hover:shadow-hive-lg
                       "
                     >
-                      <div
-                        className="
-                          mb-5
-                          flex
-                          items-center
-                          gap-3
-                        "
-                      >
-                        <div
-                          className="
-                            h-2.5
-                            w-2.5
-                            rounded-full
-                            bg-hive-yellow
-                            shadow-[0_0_10px_rgba(253,207,9,0.45)]
-                          "
-                        />
-
-                        <div
-                          className="
-                            h-px
-                            w-10
-                            bg-hive-yellow/50
-                          "
-                        />
-                      </div>
-
-                      <h4
+                      <h3
                         className="
                           mb-3
                           font-heading
-                          text-xl
+                          text-lg
                           font-bold
                           text-hive-black
+                          transition-colors
+                          duration-300
+                          group-hover:text-hive-orange
                         "
                       >
-                        {item.title}
-                      </h4>
+                        {relatedService.title}
+                      </h3>
 
-                      <p
+                      <div
                         className="
-                          leading-relaxed
+                          flex
+                          items-center
+                          gap-1.5
+                          text-sm
+                          font-semibold
                           text-hive-text-muted
+                          transition-colors
+                          duration-300
+                          group-hover:text-hive-orange
                         "
                       >
-                        {
-                          item.description
-                        }
-                      </p>
-                    </div>
+                        Learn More
+
+                        <ChevronRight
+                          className="
+                            h-4
+                            w-4
+                            transition-transform
+                            duration-300
+                            group-hover:translate-x-1
+                          "
+                        />
+                      </div>
+                    </Link>
                   </FadeIn>
                 ),
               )}
             </div>
-          </Container>
-        </section>
-      ) : (
-        <section
-          className="
-            bg-hive-white
-            py-16
-            sm:py-24
-          "
-        >
-          <Container
-            size="md"
-            className="text-center"
-          >
-            <FadeIn>
-              <h2
-                className="
-                  mb-6
-                  font-heading
-                  text-3xl
-                  font-bold
-                  text-hive-black
-                "
-              >
-                Expertise You Can
-                Trust
-              </h2>
-
-              <p
-                className="
-                  mx-auto
-                  max-w-2xl
-                  text-lg
-                  leading-relaxed
-                  text-hive-text-muted
-                "
-              >
-                Our multidisciplinary
-                teams combine deep
-                technical knowledge
-                with practical
-                business understanding
-                to ensure your AI
-                initiatives deliver
-                measurable success.
-              </p>
-            </FadeIn>
           </Container>
         </section>
       )}
@@ -1026,10 +1507,7 @@ export const AIServiceDetailPage: React.FC = () => {
 
         <Container
           size="md"
-          className="
-            relative
-            z-10
-          "
+          className="relative z-10"
         >
           <FadeIn>
             <h2
@@ -1042,9 +1520,7 @@ export const AIServiceDetailPage: React.FC = () => {
                 sm:text-4xl
               "
             >
-              Ready to explore
-              what&apos;s possible
-              with AI?
+              Ready to bring intelligence closer to the edge?
             </h2>
 
             <p
@@ -1057,12 +1533,8 @@ export const AIServiceDetailPage: React.FC = () => {
                 text-white/80
               "
             >
-              Let&apos;s discuss how{' '}
-              {service.title} can
-              transform your
-              operations and create
-              new competitive
-              advantages.
+              Talk to our team about your connected products,
+              edge platforms and real-time technology requirements.
             </p>
 
             <Button
@@ -1072,13 +1544,7 @@ export const AIServiceDetailPage: React.FC = () => {
             >
               Start a Conversation
 
-              <ArrowRight
-                className="
-                  ml-2
-                  h-4
-                  w-4
-                "
-              />
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </FadeIn>
         </Container>

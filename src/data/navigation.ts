@@ -53,8 +53,8 @@ export const mainNavItems: NavItem[] = [
     href: '/partners',
   },
   {
-    label: 'Resources',
-    href: '/resources',
+    label: 'Our Approach',
+    href: '/our-approach',
   },
   {
     label: 'Risk & Compliance',

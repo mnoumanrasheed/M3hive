@@ -15,16 +15,22 @@ export const cloudPlatformsData: ServicePageData = {
       id: 'cloud-engineering',
       title: 'Cloud Engineering',
       description: 'Design, build, migrate, and optimise secure cloud platforms without the limitations of legacy infrastructure. Our engineers work as an extension of your team to simplify complexity and create measurable operational value.',
+      ctaLabel: 'Explore Details',
+      ctaHref: '/services/cloud-platforms/cloud-engineering',
     },
     {
       id: 'salesforce',
       title: 'Salesforce',
       description: 'Create a Salesforce environment that reflects how your organisation sells, markets, and supports customers. We centralise data, automate workflows, improve adoption, and configure the platform around real business processes.',
+      ctaLabel: 'Explore Details',
+      ctaHref: '/services/cloud-platforms/salesforce',
     },
     {
       id: 'devops',
       title: 'DevOps',
       description: 'Connect development and operations to accelerate releases, improve quality, and strengthen reliability. Automation, continuous delivery, observability, and infrastructure as code help organisations scale with confidence.',
+      ctaLabel: 'Explore Details',
+      ctaHref: '/services/cloud-platforms/devops',
     },
   ],
   deliveryApproach: [

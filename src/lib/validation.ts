@@ -2,8 +2,6 @@ import { allServicesData } from '../data/services/servicesIndex';
 import { officeLocations } from '../data/offices';
 import { partnersData } from '../data/partners';
 import { testimonialsData } from '../data/testimonials';
-import { resourcesData } from '../data/resources';
-import { leadershipMembers } from '../data/leadership';
 import { compliancePillars } from '../data/compliance';
 
 export function runDevContentValidation(): void {
@@ -66,25 +64,9 @@ export function runDevContentValidation(): void {
     }
   });
 
-  // 5. Check Resources
-  const resourceIds = new Set<string>();
-  resourcesData.forEach((r) => {
-    if (resourceIds.has(r.id)) {
-      warnings.push(`Duplicate resource ID found: "${r.id}".`);
-    } else {
-      resourceIds.add(r.id);
-    }
-  });
+ 
 
-  // 6. Check Leadership
-  const leaderIds = new Set<string>();
-  leadershipMembers.forEach((m) => {
-    if (leaderIds.has(m.id)) {
-      warnings.push(`Duplicate leadership member ID found: "${m.id}".`);
-    } else {
-      leaderIds.add(m.id);
-    }
-  });
+ 
 
   // 7. Check Compliance
   const complianceIds = new Set<string>();

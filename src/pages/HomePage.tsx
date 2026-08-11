@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { PageShell } from '../components/layout/PageShell';
 import { Container } from '../components/ui/Container';
@@ -10,13 +11,12 @@ import { PartnersMarquee } from '../components/home/PartnersMarquee';
 import { DiscoveryForm } from '../components/home/DiscoveryForm';
 import { HeroCarousel } from '../components/home/HeroCarousel';
 
-/*
- * IMPORTANT:
- * This is the NEW auto-rotating testimonial carousel.
- */
 import TestimonialsCarousel from '../components/TestimonialsCarousel';
 
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+} from 'lucide-react';
 
 import { homepageData } from '../data/homepage';
 
@@ -27,7 +27,15 @@ import { homepageData } from '../data/homepage';
 const ServiceSummaryCard: React.FC<{
   service: any;
   index: number;
-}> = ({ service, index }) => {
+}> = ({
+  service,
+  index,
+}) => {
+  const serviceHref =
+    service.ctaHref ||
+    service.href ||
+    '/services';
+
   return (
     <div
       className="
@@ -91,8 +99,8 @@ const ServiceSummaryCard: React.FC<{
       </p>
 
       {/* CTA */}
-      <a
-        href={service.ctaHref || service.href || '#'}
+      <Link
+        to={serviceHref}
         className="
           inline-flex
           items-center
@@ -117,7 +125,7 @@ const ServiceSummaryCard: React.FC<{
             group-hover:-translate-y-1
           "
         />
-      </a>
+      </Link>
 
       {/* Bottom hover accent */}
       <div
@@ -252,7 +260,7 @@ export const HomePage: React.FC = () => {
                     index={idx}
                   />
                 </FadeIn>
-              )
+              ),
             )}
           </div>
         </Container>
@@ -287,7 +295,6 @@ export const HomePage: React.FC = () => {
           </div>
 
           <FadeIn delay={0.2}>
-            {/* NEW PREMIUM AUTO-ROTATING CAROUSEL */}
             <TestimonialsCarousel />
           </FadeIn>
         </Container>
