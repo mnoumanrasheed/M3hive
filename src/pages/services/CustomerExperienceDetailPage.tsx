@@ -132,7 +132,8 @@ const CustomerExperienceHeroVisual: React.FC<
           -translate-y-1/2
           rounded-full
           bg-hive-yellow/[0.09]
-          blur-[95px]
+          blur-[48px]
+          md:blur-[95px]
         "
       />
 
@@ -246,8 +247,10 @@ const CustomerExperienceHeroVisual: React.FC<
           bg-[#151515]/95
           px-5
           text-center
-          shadow-[0_25px_70px_rgba(0,0,0,0.50)]
-          backdrop-blur-xl
+          shadow-lg
+          md:shadow-[0_25px_70px_rgba(0,0,0,0.50)]
+          backdrop-blur-sm
+          md:backdrop-blur-xl
         "
       >
         <div
@@ -853,13 +856,13 @@ export const CustomerExperienceDetailPage: React.FC = () => {
           relative
           z-0
           flex
-          min-h-[620px]
           flex-col
           overflow-hidden
           border-b
           border-white/10
           bg-[#080808]
         "
+        style={{ minHeight: 'max(620px, calc(100svh - 80px))' }}
       >
         {/* Golden atmospheric background */}
 
@@ -884,7 +887,8 @@ export const CustomerExperienceDetailPage: React.FC = () => {
             w-[340px]
             rounded-full
             bg-hive-orange/[0.04]
-            blur-[110px]
+            blur-[55px]
+            md:blur-[110px]
           "
         />
 
@@ -925,9 +929,9 @@ export const CustomerExperienceDetailPage: React.FC = () => {
             flex-1
             flex-col
             justify-center
-            py-24
-            sm:py-28
-            lg:py-32
+            py-16
+            sm:py-20
+            lg:py-24
           "
         >
           <Container size="lg">
@@ -1001,12 +1005,10 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                     mb-6
                     max-w-3xl
                     font-heading
-                    text-display-md
                     font-bold
-                    leading-[1.12]
                     text-white
-                    sm:text-display-lg
                   "
+                  style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: '1.12' }}
                 >
                   {service.title}
                 </h1>
@@ -1155,16 +1157,19 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                     index;
 
                   return (
-                    <button
+                    <FadeIn
                       key={
                         capability.title
                       }
-                      type="button"
-                      onClick={() =>
-                        setActiveCapability(
-                          index,
-                        )
-                      }
+                      delay={index * 0.08}
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveCapability(
+                            index,
+                          )
+                        }
                       className={`
                         flex
                         items-center
@@ -1184,7 +1189,7 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                         ${
                           isActive
                             ? 'border-hive-yellow bg-hive-white text-hive-black shadow-hive-md'
-                            : 'border-transparent bg-transparent text-hive-text-muted hover:border-hive-border hover:bg-hive-white hover:text-hive-black'
+                            : 'border-transparent bg-transparent text-hive-text-muted md:hover:border-hive-border md:hover:bg-hive-white md:hover:text-hive-black'
                         }
                       `}
                     >
@@ -1209,7 +1214,8 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                         `}
                       />
                     </button>
-                  );
+                  </FadeIn>
+                );
                 },
               )}
             </div>
@@ -1301,7 +1307,8 @@ export const CustomerExperienceDetailPage: React.FC = () => {
             -translate-y-1/2
             rounded-full
             bg-hive-yellow/[0.06]
-            blur-[120px]
+            blur-[60px]
+            md:blur-[120px]
           "
         />
 
@@ -1393,10 +1400,10 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                       p-7
                       transition-all
                       duration-300
-                      hover:-translate-y-1
-                      hover:border-hive-yellow/50
-                      hover:bg-[#191919]
-                      hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow/50
+                      md:hover:bg-[#191919]
+                      md:hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
                       sm:p-8
                     "
                   >
@@ -1412,7 +1419,7 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                         to-hive-yellow
                         transition-all
                         duration-500
-                        group-hover:w-full
+                        md:group-hover:w-full
                       "
                     />
 
@@ -1430,8 +1437,8 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                         bg-hive-yellow/10
                         transition-all
                         duration-300
-                        group-hover:border-hive-yellow/70
-                        group-hover:bg-hive-yellow/[0.16]
+                        md:group-hover:border-hive-yellow/70
+                        md:group-hover:bg-hive-yellow/[0.16]
                       "
                     >
                       <CheckCircle2
@@ -1533,9 +1540,9 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                       p-6
                       transition-all
                       duration-300
-                      hover:-translate-y-1
-                      hover:border-hive-yellow/70
-                      hover:shadow-hive-lg
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow/70
+                      md:hover:shadow-hive-lg
                     "
                   >
                     <h3
@@ -1547,7 +1554,7 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                         text-hive-black
                         transition-colors
                         duration-300
-                        group-hover:text-hive-orange
+                        md:group-hover:text-hive-orange
                       "
                     >
                       {
@@ -1565,7 +1572,7 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                         text-hive-text-muted
                         transition-colors
                         duration-300
-                        group-hover:text-hive-orange
+                        md:group-hover:text-hive-orange
                       "
                     >
                       Learn More

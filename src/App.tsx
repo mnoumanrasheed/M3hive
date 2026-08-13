@@ -6,7 +6,6 @@ import { ScrollToTop } from './components/animation/ScrollToTop';
 // Main navigation pages - static imports for instant navigation
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
-import { PartnersPage } from './pages/PartnersPage';
 import { OurApproachPage } from './pages/OurApproachPage';
 import { RiskCompliancePage } from './pages/RiskCompliancePage';
 import { ContactPage } from './pages/ContactPage';
@@ -47,7 +46,6 @@ export const App: React.FC = () => {
             {/* Main Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/partners" element={<PartnersPage />} />
             <Route path="/our-approach" element={<OurApproachPage />} />
             <Route path="/our-approach/:slug" element={<OurApproachDetailPage />} />
             <Route path="/risk-and-compliance" element={<RiskCompliancePage />} />

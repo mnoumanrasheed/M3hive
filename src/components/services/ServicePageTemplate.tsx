@@ -14,8 +14,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { AnimatedTimeline } from '../animation/AnimatedTimeline';
-import { CinematicServiceHero } from './CinematicServiceHero';
-import { ServiceHeroContent } from './ServiceHeroContent';
+import { ServiceHeroMotion } from './ServiceHeroMotion';
 
 interface ServicePageTemplateProps {
   data: ServicePageData;
@@ -87,61 +86,23 @@ export const ServicePageTemplate: React.FC<
           bg-black
         "
         style={{
-          minHeight:
-            'clamp(600px, calc(100svh - 80px), 720px)',
+          minHeight: 'max(600px, calc(100svh - 80px))',
         }}
       >
         {/* ===============================================
-            CINEMATIC BACKGROUND
+            PREMIUM MOVING SERVICE HERO
 
-            IMPORTANT:
-            key forces animation component to remount
-            whenever service category changes.
-
-            This means useLayoutEffect / GSAP animation
-            starts again when moving:
-
-            AI -> Product Engineering -> Edge etc.
+            Background image pans/zooms continuously.
+            Decorative motion stays behind the copy.
+            Text itself remains stable.
         =============================================== */}
 
         {heroImageUrl && (
-          <div
-            className="
-              absolute
-              inset-0
-              z-0
-              overflow-hidden
-            "
-            aria-hidden="true"
-          >
-            <CinematicServiceHero
-              key={`${serviceCategoryName}-${heroImageUrl}`}
-              imageUrl={heroImageUrl}
-            />
-          </div>
+          <ServiceHeroMotion
+            key={`service-motion-${serviceCategoryName}-${heroImageUrl}`}
+            imageUrl={heroImageUrl}
+          />
         )}
-
-        {/* ===============================================
-            SAFETY OVERLAY
-
-            Keeps text readable without blocking
-            background movement.
-        =============================================== */}
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            z-[5]
-
-            bg-gradient-to-r
-            from-black/75
-            via-black/35
-            to-black/20
-          "
-          aria-hidden="true"
-        />
 
         {/* ===============================================
             HERO CONTENT
@@ -158,9 +119,9 @@ export const ServicePageTemplate: React.FC<
             flex-col
             justify-center
 
-            py-24
-            sm:py-28
-            lg:py-32
+            py-16
+            sm:py-20
+            lg:py-24
           "
         >
           <Container size="md">
@@ -177,86 +138,77 @@ export const ServicePageTemplate: React.FC<
               "
             />
 
-            {/* Animated hero text */}
+            {/* Stable hero content.
+                Only a short entrance reveal is used here.
+                Continuous movement stays in the background only. */}
 
-            <ServiceHeroContent
-              key={`hero-content-${serviceCategoryName}`}
-            >
+            <div className="max-w-5xl">
               {/* =========================================
                   HEADING
               ========================================= */}
 
-              <h1
-                className="
-                  hero-heading
-
-                  mb-4
-
-                  max-w-full
-
-                  whitespace-nowrap
-
-                  font-heading
-                  font-bold
-
-                  text-white
-
-                  drop-shadow-md
-                "
-                style={{
-                  fontSize:
-                    'clamp(1.65rem, 4.4vw, 4.5rem)',
-
-                  lineHeight: '1.08',
-                }}
-              >
-                {data.title}
-              </h1>
+              <FadeIn>
+                <h1
+                  className="
+                    mb-4
+                    max-w-full
+                    font-heading
+                    font-bold
+                    tracking-[-0.02em]
+                    text-white
+                    drop-shadow-md
+                  "
+                  style={{
+                    fontSize:
+                      'clamp(1.65rem, 4.4vw, 4.5rem)',
+                    lineHeight: '1.08',
+                  }}
+                >
+                  {data.title}
+                </h1>
+              </FadeIn>
 
               {/* =========================================
                   SUBTITLE
               ========================================= */}
 
-              <p
-                className="
-                  hero-subtitle
-
-                  mb-6
-                  max-w-3xl
-
-                  text-base
-                  leading-relaxed
-
-                  text-white/90
-
-                  drop-shadow
-
-                  sm:mb-8
-                  sm:text-lg
-                  md:text-xl
-                "
-              >
-                {data.subtitle}
-              </p>
+              <FadeIn delay={0.12}>
+                <p
+                  className="
+                    mb-6
+                    max-w-3xl
+                    text-base
+                    leading-relaxed
+                    text-white/90
+                    drop-shadow
+                    sm:mb-8
+                    sm:text-lg
+                    md:text-xl
+                  "
+                >
+                  {data.subtitle}
+                </p>
+              </FadeIn>
 
               {/* =========================================
                   CTA
               ========================================= */}
 
               {data.heroCta && (
-                <div className="hero-cta">
-                  <Button
-                    href={data.heroCta.href}
-                    variant="primary"
-                    size="lg"
-                  >
-                    {data.heroCta.label}
-
-                    <ArrowRight className="ml-1 h-4 w-4" />
-                  </Button>
-                </div>
+                <FadeIn delay={0.22}>
+                  <div>
+                    <Button
+                      href={data.heroCta.href}
+                      variant="primary"
+                      size="lg"
+                    >
+                      {data.heroCta.label}
+                      <ArrowRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </div>
+                </FadeIn>
               )}
-            </ServiceHeroContent>
+            </div>
           </Container>
         </div>
       </section>
@@ -318,9 +270,9 @@ export const ServicePageTemplate: React.FC<
                       transition-all
                       duration-300
 
-                      hover:-translate-y-1
-                      hover:border-hive-yellow/70
-                      hover:shadow-hive-lg
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow/70
+                      md:hover:shadow-hive-lg
 
                       sm:p-8
                     "
@@ -381,7 +333,7 @@ export const ServicePageTemplate: React.FC<
                           transition-colors
                           duration-300
 
-                          group-hover:text-hive-yellow
+                          group-md:hover:text-hive-yellow
                         "
                       >
                         {offering.ctaLabel}
@@ -394,7 +346,7 @@ export const ServicePageTemplate: React.FC<
                             transition-transform
                             duration-300
 
-                            group-hover:translate-x-1
+                            group-md:hover:translate-x-1
                           "
                         />
                       </div>

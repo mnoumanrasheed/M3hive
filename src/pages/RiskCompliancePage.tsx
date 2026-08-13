@@ -15,7 +15,10 @@ export const RiskCompliancePage: React.FC = () => {
   return (
     <PageShell title={compliancePageData.title}>
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+      <section 
+        className="relative overflow-hidden border-b border-hive-border z-0 flex flex-col justify-center"
+        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
+      >
         <HeroBackground imageUrl="/assets/heroes/hero-risk-compliance.jpg" />
         <PremiumHeroMotion variant="risk" />
         <Container size="md" className="relative z-10 text-center">
@@ -26,7 +29,10 @@ export const RiskCompliancePage: React.FC = () => {
                 Governance
               </span>
             </div>
-            <h1 className="text-display-md sm:text-display-lg font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6">
+            <h1 
+              className="font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6"
+              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: '1.1' }}
+            >
               {compliancePageData.title}
             </h1>
             <p className="text-base sm:text-lg text-white/90 drop-shadow leading-relaxed">
@@ -65,7 +71,7 @@ export const RiskCompliancePage: React.FC = () => {
               <FadeIn key={pillar.id} delay={idx * 0.1} className="flex">
                 <Link 
                   to={pillar.ctaHref || '#'}
-                  className="group flex flex-col p-6 sm:p-8 rounded-2xl bg-hive-white border border-hive-border transition-all duration-300 hover:border-hive-yellow/50 hover:shadow-hive-hover h-full w-full cursor-pointer relative -top-0 hover:-top-1"
+                  className="group flex flex-col p-6 sm:p-8 rounded-2xl bg-hive-white border border-hive-border transition-all duration-300 md:hover:border-hive-yellow/50 md:hover:shadow-hive-hover h-full w-full cursor-pointer relative -top-0 md:hover:-top-1"
                 >
                   <div className="w-12 h-12 mb-6 rounded-xl flex items-center justify-center bg-hive-warm-white border border-hive-border">
                     <span className="font-heading font-bold text-hive-black text-lg">{idx + 1}</span>
@@ -78,9 +84,9 @@ export const RiskCompliancePage: React.FC = () => {
                   </p>
                   
                   {pillar.ctaLabel && (
-                    <div className="flex items-center text-sm font-heading font-semibold text-hive-black transition-colors duration-300 group-hover:text-hive-orange mt-auto">
+                    <div className="flex items-center text-sm font-heading font-semibold text-hive-black transition-colors duration-300 group-md:hover:text-hive-orange mt-auto">
                       {pillar.ctaLabel}
-                      {pillar.ctaHref && <ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />}
+                      {pillar.ctaHref && <ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-md:hover:translate-x-1" />}
                     </div>
                   )}
                 </Link>
@@ -111,7 +117,7 @@ export const RiskCompliancePage: React.FC = () => {
                 <Button 
                   href={compliancePageData.whistleblowerCta.href || undefined}
                   variant="outline" 
-                  className="text-white border-neutral-700 hover:bg-neutral-900"
+                  className="text-white border-neutral-700 md:hover:bg-neutral-900"
                   isExternal={!!compliancePageData.whistleblowerCta.href}
                 >
                   {compliancePageData.whistleblowerCta.label}

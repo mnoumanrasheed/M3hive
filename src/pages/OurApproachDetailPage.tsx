@@ -166,9 +166,9 @@ export const OurApproachDetailPage: React.FC = () => {
         <div className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-r from-white/[0.10] via-transparent to-transparent" />
 
         {/* Ambient glows */}
-        <div className="approach-glow-one pointer-events-none absolute left-[43%] top-[10%] z-[3] hidden h-[380px] w-[380px] rounded-full bg-hive-yellow/20 blur-[120px] sm:block" />
+        <div className="approach-glow-one pointer-events-none absolute left-[43%] top-[10%] z-[3] hidden h-[380px] w-[380px] rounded-full bg-hive-yellow/20 blur-[60px] md:blur-[120px] sm:block" />
 
-        <div className="approach-glow-two pointer-events-none absolute right-[1%] top-[35%] z-[3] hidden h-[330px] w-[330px] rounded-full bg-hive-orange/15 blur-[120px] sm:block" />
+        <div className="approach-glow-two pointer-events-none absolute right-[1%] top-[35%] z-[3] hidden h-[330px] w-[330px] rounded-full bg-hive-orange/15 blur-[60px] md:blur-[120px] sm:block" />
 
         {/* Grid */}
         <div
@@ -714,7 +714,7 @@ export const OurApproachDetailPage: React.FC = () => {
                 delay={idx * 0.1}
                 className="flex"
               >
-                <div className="group flex h-full w-full items-start gap-4 rounded-xl border border-hive-border bg-hive-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-hive-yellow/60 hover:shadow-hive-lg">
+                <div className="group flex h-full w-full items-start gap-4 rounded-xl border border-hive-border bg-hive-white p-6 transition-all duration-300 md:hover:-translate-y-1 md:hover:border-hive-yellow/60 md:hover:shadow-hive-lg">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-hive-yellow" />
 
                   <p className="text-sm leading-relaxed text-hive-text-muted">
@@ -733,7 +733,7 @@ export const OurApproachDetailPage: React.FC = () => {
 
       <section className="relative overflow-hidden bg-[#080808] py-16 text-white sm:py-24">
 
-        <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-hive-yellow/[0.06] blur-[120px]" />
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-hive-yellow/[0.06] blur-[60px] md:blur-[120px]" />
 
         <Container size="lg" className="relative z-10">
           <FadeIn>
@@ -758,9 +758,9 @@ export const OurApproachDetailPage: React.FC = () => {
                 delay={idx * 0.1}
                 className="flex"
               >
-                <div className="group relative h-full w-full overflow-hidden rounded-2xl border border-white/[0.14] bg-[#151515] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-hive-yellow/50 hover:bg-[#191919] hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)] sm:p-8">
+                <div className="group relative h-full w-full overflow-hidden rounded-2xl border border-white/[0.14] bg-[#151515] p-7 transition-all duration-300 md:hover:-translate-y-1 md:hover:border-hive-yellow/50 md:hover:bg-[#191919] md:hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)] sm:p-8">
 
-                  <div className="absolute left-0 top-0 h-[2px] w-0 bg-gradient-to-r from-hive-orange to-hive-yellow transition-all duration-500 group-hover:w-full" />
+                  <div className="absolute left-0 top-0 h-[2px] w-0 bg-gradient-to-r from-hive-orange to-hive-yellow transition-all duration-500 group-md:hover:w-full" />
 
                   <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-hive-yellow/40 bg-hive-yellow/10">
                     <CheckCircle2 className="h-6 w-6 text-hive-yellow" />
@@ -801,7 +801,7 @@ export const OurApproachDetailPage: React.FC = () => {
                   delay={idx * 0.1}
                   className="flex"
                 >
-                  <div className="group relative flex h-full w-full flex-col rounded-2xl border border-hive-border bg-hive-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-hive-yellow/70 hover:shadow-hive-lg sm:p-8">
+                  <div className="group relative flex h-full w-full flex-col rounded-2xl border border-hive-border bg-hive-white p-6 transition-all duration-300 md:hover:-translate-y-1 md:hover:border-hive-yellow/70 md:hover:shadow-hive-lg sm:p-8">
 
                     <Link
                       to={`/our-approach/${related.slug}`}
@@ -817,10 +817,10 @@ export const OurApproachDetailPage: React.FC = () => {
                       {related.intro}
                     </p>
 
-                    <div className="flex items-center gap-1.5 text-sm font-semibold text-hive-text-muted transition-colors duration-300 group-hover:text-hive-yellow">
+                    <div className="flex items-center gap-1.5 text-sm font-semibold text-hive-text-muted transition-colors duration-300 group-md:hover:text-hive-yellow">
                       Explore Details
 
-                      <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      <ChevronRight className="h-4 w-4 transition-transform duration-300 group-md:hover:translate-x-1" />
                     </div>
                   </div>
                 </FadeIn>

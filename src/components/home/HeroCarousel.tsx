@@ -925,8 +925,7 @@ export const HeroCarousel: React.FC = () => {
       aria-roledescription="carousel"
       className="relative w-full overflow-hidden flex flex-col"
       style={{
-        minHeight:
-          'clamp(600px, calc(100svh - 80px), 720px)',
+        minHeight: 'max(600px, calc(100svh - 80px))',
       }}
       onMouseEnter={() => {
         pausedRef.current =

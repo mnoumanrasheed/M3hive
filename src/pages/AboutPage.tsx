@@ -50,13 +50,11 @@ export const AboutPage: React.FC = () => {
           overflow-hidden
           border-b
           border-hive-border
-          pb-12
-          pt-20
-          sm:pb-16
-          sm:pt-24
-          lg:pb-24
-          lg:pt-32
+          flex
+          flex-col
+          justify-center
         "
+        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
       >
         <HeroBackground imageUrl="/assets/heroes/hero-about.jpg" />
         <PremiumHeroMotion variant="about" />
@@ -108,13 +106,12 @@ export const AboutPage: React.FC = () => {
               className="
                 mb-4
                 font-heading
-                text-display-md
                 font-bold
                 text-white
                 drop-shadow-md
                 sm:mb-6
-                sm:text-display-lg
               "
+              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: '1.1' }}
             >
               {aboutPageData.title}
             </h1>
@@ -211,7 +208,8 @@ export const AboutPage: React.FC = () => {
             -translate-y-1/2
             rounded-full
             bg-hive-yellow/5
-            blur-3xl
+            blur-xl
+            md:blur-3xl
           "
         />
 
@@ -227,7 +225,8 @@ export const AboutPage: React.FC = () => {
             w-80
             rounded-full
             bg-hive-orange/5
-            blur-3xl
+            blur-xl
+            md:blur-3xl
           "
         />
 
@@ -377,7 +376,7 @@ export const AboutPage: React.FC = () => {
                     outline-none
                     transition-all
                     duration-300
-                    hover:border-hive-yellow/30
+                    md:hover:border-hive-yellow/30
                     focus-visible:ring-2
                     focus-visible:ring-hive-yellow
                   "
@@ -471,7 +470,7 @@ export const AboutPage: React.FC = () => {
                         transition-transform
                         duration-700
                         ease-out
-                        group-hover:scale-[1.01]
+                        group-md:hover:scale-[1.01]
                       "
                       src="/videos/who-we-are.mp4"
                       poster="/assets/heroes/hero-about.jpg"
@@ -588,7 +587,7 @@ export const AboutPage: React.FC = () => {
       </section>
 
       {/* =========================================================
-          CLIENTS & PARTNERS
+          CLIENTS SECTION
       ========================================================= */}
 
       <section
@@ -617,7 +616,7 @@ export const AboutPage: React.FC = () => {
                   text-hive-black
                 "
               >
-                {aboutPageData.clientsPartnersTitle}
+                {aboutPageData.clientsTitle}
               </h2>
 
               <p
@@ -627,7 +626,7 @@ export const AboutPage: React.FC = () => {
                   text-hive-text-muted
                 "
               >
-                {aboutPageData.clientsPartnersDescription}
+                {aboutPageData.clientsDescription}
               </p>
             </div>
           </FadeIn>
@@ -800,8 +799,8 @@ export const AboutPage: React.FC = () => {
                       p-6
                       transition-all
                       duration-300
-                      hover:border-hive-yellow/50
-                      hover:shadow-hive-hover
+                      md:hover:border-hive-yellow/50
+                      md:hover:shadow-hive-hover
                       sm:p-8
                     "
                   >
@@ -917,7 +916,8 @@ export const AboutPage: React.FC = () => {
             -translate-y-1/2
             rounded-full
             bg-hive-yellow/5
-            blur-3xl
+            blur-xl
+            md:blur-3xl
           "
         />
 

@@ -7,7 +7,6 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { Button } from '../components/ui/Button';
 import { FadeIn } from '../components/ui/FadeIn';
 
-import { PartnersMarquee } from '../components/home/PartnersMarquee';
 import { DiscoveryForm } from '../components/home/DiscoveryForm';
 import { HeroCarousel } from '../components/home/HeroCarousel';
 
@@ -110,7 +109,7 @@ const ServiceSummaryCard: React.FC<{
           text-hive-black
           transition-colors
           duration-300
-          group-hover:text-hive-orange
+          md:group-hover:text-hive-orange
         "
       >
         {service.ctaLabel}
@@ -121,8 +120,8 @@ const ServiceSummaryCard: React.FC<{
             w-4
             transition-transform
             duration-300
-            group-hover:translate-x-1
-            group-hover:-translate-y-1
+            md:group-hover:translate-x-1
+            md:group-hover:-translate-y-1
           "
         />
       </Link>
@@ -140,7 +139,7 @@ const ServiceSummaryCard: React.FC<{
           to-hive-yellow
           transition-all
           duration-500
-          group-hover:w-full
+          md:group-hover:w-full
         "
       />
     </div>
@@ -301,12 +300,6 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ======================================================
-          PARTNERS
-      ====================================================== */}
-
-      <PartnersMarquee />
-
-      {/* ======================================================
           CONTACT CTA
       ====================================================== */}
 
@@ -341,7 +334,8 @@ export const HomePage: React.FC = () => {
                   translate-x-1/3
                   rounded-full
                   bg-hive-yellow/10
-                  blur-3xl
+                  blur-xl
+                  md:blur-3xl
                 "
               />
 
@@ -356,7 +350,8 @@ export const HomePage: React.FC = () => {
                   translate-y-1/2
                   rounded-full
                   bg-hive-orange/10
-                  blur-3xl
+                  blur-xl
+                  md:blur-3xl
                 "
               />
 

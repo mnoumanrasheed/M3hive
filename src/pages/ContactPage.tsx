@@ -143,7 +143,10 @@ export const ContactPage: React.FC = () => {
   return (
     <PageShell title={contactPageData.title}>
       {/* HEADER */}
-      <section className="relative z-0 overflow-hidden border-b border-hive-border pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24">
+      <section 
+        className="relative z-0 overflow-hidden border-b border-hive-border flex flex-col justify-center"
+        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
+      >
         <HeroBackground imageUrl="/assets/heroes/hero-contact.jpg" />
         <PremiumHeroMotion variant="contact" />
 
@@ -152,7 +155,10 @@ export const ContactPage: React.FC = () => {
           className="relative z-10 text-center"
         >
           <FadeIn>
-            <h1 className="mb-4 font-heading text-display-md font-bold text-white drop-shadow-md sm:mb-6 sm:text-display-lg">
+            <h1 
+              className="mb-4 font-heading font-bold text-white drop-shadow-md sm:mb-6"
+              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: '1.1' }}
+            >
               {contactPageData.title}
             </h1>
 

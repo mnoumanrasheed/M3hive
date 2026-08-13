@@ -24,13 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 | CONFIGURATION
 |--------------------------------------------------------------------------
 |
-| IMPORTANT:
-| Replace the two placeholder values below with your real keys.
-| Do not commit real secret keys to GitHub.
+| Secrets are loaded from server environment variables.
+| Never hard-code or commit real secret keys to GitHub.
 |
 */
 
 $resendApiKey = getenv('RESEND_API_KEY');
+$recaptchaSecretKey = getenv('RECAPTCHA_SECRET_KEY');
 
 if (!$resendApiKey) {
     http_response_code(500);
@@ -40,7 +40,15 @@ if (!$resendApiKey) {
     ]);
     exit;
 }
-$RECAPTCHA_SECRET_KEY = '6LdYD4ItAAAAAJxx7gY2QOL8gfJ8trQT5EmF_9EZ';
+
+if (!$recaptchaSecretKey) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Security service is not configured.'
+    ]);
+    exit;
+}
 
 $CONTACT_EMAIL = 'hello@m3hive.com';
 $FROM_EMAIL = 'M3 Hive Website <website@m3hive.com>';
@@ -150,7 +158,7 @@ if ($recaptchaToken === '') {
 */
 
 $recaptchaPostData = http_build_query([
-    'secret' => $RECAPTCHA_SECRET_KEY,
+    'secret' => $recaptchaSecretKey,
     'response' => $recaptchaToken,
     'remoteip' => $_SERVER['REMOTE_ADDR'] ?? ''
 ]);
@@ -424,7 +432,7 @@ curl_setopt_array($resendCurl, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT => 20,
     CURLOPT_HTTPHEADER => [
-        'Authorization: Bearer ' . $RESEND_API_KEY,
+        'Authorization: Bearer ' . $resendApiKey,
         'Content-Type: application/json'
     ]
 ]);

@@ -15,7 +15,10 @@ export const OurApproachPage: React.FC = () => {
       description="Let's accelerate to tomorrow, together. M3 Hive brings people, technology and collaboration together to help organisations explore opportunities, develop innovative solutions and move their digital journey forward."
     >
       {/* HERO */}
-      <section className="relative overflow-hidden pt-16 pb-10 sm:pt-20 sm:pb-12 lg:pt-24 lg:pb-16 border-b border-hive-border z-0">
+      <section 
+        className="relative overflow-hidden border-b border-hive-border z-0 flex flex-col justify-center"
+        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
+      >
         <HeroBackground imageUrl="/assets/heroes/hero-resources.jpg" />
         <PremiumHeroMotion variant="approach" />
 
@@ -32,7 +35,10 @@ export const OurApproachPage: React.FC = () => {
               </span>
             </div>
 
-            <h1 className="mx-auto mb-3 max-w-4xl font-heading text-4xl font-bold text-white drop-shadow-md sm:text-5xl">
+            <h1 
+              className="mx-auto mb-3 max-w-4xl font-heading font-bold text-white drop-shadow-md"
+              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: '1.1' }}
+            >
               Your Experience with M3 Hive
             </h1>
 
@@ -56,7 +62,7 @@ export const OurApproachPage: React.FC = () => {
                 delay={idx * 0.1}
                 className="flex"
               >
-                <div className="group relative flex h-full w-full flex-col rounded-2xl border border-hive-border bg-hive-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-hive-yellow/70 hover:shadow-hive-lg sm:p-8">
+                <div className="group relative flex h-full w-full flex-col rounded-2xl border border-hive-border bg-hive-white p-6 transition-all duration-300 md:hover:-translate-y-1 md:hover:border-hive-yellow/70 md:hover:shadow-hive-lg sm:p-8">
                   <Link
                     to={offering.ctaHref}
                     className="absolute inset-0 z-10"
@@ -71,10 +77,10 @@ export const OurApproachPage: React.FC = () => {
                     {offering.description}
                   </p>
 
-                  <div className="mt-6 flex items-center gap-1.5 text-sm font-semibold text-hive-text-muted transition-colors duration-300 group-hover:text-hive-yellow">
+                  <div className="mt-6 flex items-center gap-1.5 text-sm font-semibold text-hive-text-muted transition-colors duration-300 group-md:hover:text-hive-yellow">
                     {offering.ctaLabel}
 
-                    <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    <ChevronRight className="h-4 w-4 transition-transform duration-300 group-md:hover:translate-x-1" />
                   </div>
                 </div>
               </FadeIn>

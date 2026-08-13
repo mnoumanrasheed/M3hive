@@ -220,7 +220,8 @@ const ProductEngineeringHeroVisual: React.FC = () => {
           border-white/10
           bg-white/[0.06]
           shadow-[0_25px_70px_rgba(0,0,0,0.45)]
-          backdrop-blur-xl
+          backdrop-blur-sm
+          md:backdrop-blur-xl
         "
       >
         <div
@@ -601,13 +602,13 @@ export const ProductEngineeringDetailPage: React.FC = () => {
           relative
           z-0
           flex
-          min-h-[620px]
           flex-col
           overflow-hidden
           border-b
           border-white/10
           bg-[#080808]
         "
+        style={{ minHeight: 'max(620px, calc(100svh - 80px))' }}
       >
         {/* Premium background */}
 
@@ -640,9 +641,9 @@ export const ProductEngineeringDetailPage: React.FC = () => {
             flex-1
             flex-col
             justify-center
-            py-24
-            sm:py-28
-            lg:py-32
+            py-16
+            sm:py-20
+            lg:py-24
           "
         >
           <Container size="lg">
@@ -711,12 +712,10 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                     mb-6
                     max-w-3xl
                     font-heading
-                    text-display-md
                     font-bold
-                    leading-[1.12]
                     text-white
-                    sm:text-display-lg
                   "
+                  style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: '1.12' }}
                 >
                   {service.title}
                 </h1>
@@ -860,16 +859,19 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                     index;
 
                   return (
-                    <button
+                    <FadeIn
                       key={
                         capability.title
                       }
-                      type="button"
-                      onClick={() =>
-                        setActiveCapability(
-                          index,
-                        )
-                      }
+                      delay={index * 0.08}
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveCapability(
+                            index,
+                          )
+                        }
                       className={`
                         flex
                         items-center
@@ -888,7 +890,7 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                         ${
                           isActive
                             ? 'border-hive-yellow bg-hive-white text-hive-black shadow-hive-md'
-                            : 'border-transparent bg-transparent text-hive-text-muted hover:border-hive-border hover:bg-hive-white hover:text-hive-black'
+                            : 'border-transparent bg-transparent text-hive-text-muted md:hover:border-hive-border md:hover:bg-hive-white md:hover:text-hive-black'
                         }
                       `}
                     >
@@ -912,7 +914,8 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                         `}
                       />
                     </button>
-                  );
+                  </FadeIn>
+                );
                 },
               )}
             </div>
@@ -1031,9 +1034,9 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                       p-6
                       transition-all
                       duration-300
-                      hover:-translate-y-1
-                      hover:border-hive-yellow
-                      hover:shadow-lg
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow
+                      md:hover:shadow-lg
                     "
                   >
                     <div
@@ -1215,9 +1218,9 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                       p-7
                       transition-all
                       duration-300
-                      hover:-translate-y-1
-                      hover:border-hive-yellow/50
-                      hover:bg-[#191919]
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow/50
+                      md:hover:bg-[#191919]
                       hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
                     "
                   >
@@ -1233,7 +1236,7 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                         to-hive-yellow
                         transition-all
                         duration-500
-                        group-hover:w-full
+                        md:group-hover:w-full
                       "
                     />
 
@@ -1366,7 +1369,7 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                           text-hive-black
                           transition-colors
                           duration-300
-                          group-hover:text-hive-orange
+                          md:group-hover:text-hive-orange
                         "
                       >
                         {
@@ -1384,7 +1387,7 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                           text-hive-text-muted
                           transition-colors
                           duration-300
-                          group-hover:text-hive-orange
+                          md:group-hover:text-hive-orange
                         "
                       >
                         Learn More
@@ -1395,7 +1398,7 @@ export const ProductEngineeringDetailPage: React.FC = () => {
                             w-4
                             transition-transform
                             duration-300
-                            group-hover:translate-x-1
+                            md:group-hover:translate-x-1
                           "
                         />
                       </div>

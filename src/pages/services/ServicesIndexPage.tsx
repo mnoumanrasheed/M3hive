@@ -14,7 +14,10 @@ export const ServicesIndexPage: React.FC = () => {
   return (
     <PageShell title="Services Overview" description="Comprehensive capabilities to transform operations">
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
+      <section 
+        className="relative overflow-hidden border-b border-hive-border z-0 flex flex-col justify-center"
+        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
+      >
         <HeroBackground imageUrl="/assets/heroes/hero-services.jpg" />
         <PremiumHeroMotion variant="services" />
         <Container size="md" className="relative z-10 text-center">
@@ -25,7 +28,10 @@ export const ServicesIndexPage: React.FC = () => {
                 Capabilities
               </span>
             </div>
-            <h1 className="text-display-md sm:text-display-lg font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6">
+            <h1 
+              className="font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6"
+              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: '1.1' }}
+            >
               Our Services Overview
             </h1>
             <p className="text-base sm:text-lg text-white/90 drop-shadow leading-relaxed">

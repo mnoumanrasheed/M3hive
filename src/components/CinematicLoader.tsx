@@ -630,7 +630,8 @@ export function CinematicLoader({
           -translate-y-1/2
           rounded-full
           bg-[#fdcf09]/10
-          blur-[100px]
+          blur-[50px]
+          md:blur-[100px]
         "
       />
 
@@ -649,7 +650,8 @@ export function CinematicLoader({
           w-[220px]
           rounded-full
           bg-[#f69822]/5
-          blur-[90px]
+          blur-[45px]
+          md:blur-[90px]
         "
       />
 

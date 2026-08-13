@@ -8,7 +8,6 @@ import gsap from 'gsap';
 type HeroMotionVariant =
   | 'services'
   | 'about'
-  | 'partners'
   | 'approach'
   | 'risk'
   | 'contact';
@@ -33,13 +32,6 @@ const labels: Record<
     'Culture',
     'Ideas',
     'Impact',
-  ],
-
-  partners: [
-    'Connect',
-    'Collaborate',
-    'Innovate',
-    'Grow',
   ],
 
   approach: [
@@ -404,7 +396,8 @@ export const PremiumHeroMotion: React.FC<
           rounded-full
           bg-hive-yellow/10
           opacity-[0.07]
-          blur-[100px]
+          blur-[50px]
+          md:blur-[100px]
         "
       />
 
@@ -425,7 +418,8 @@ export const PremiumHeroMotion: React.FC<
           rounded-full
           bg-hive-orange/10
           opacity-[0.07]
-          blur-[110px]
+          blur-[55px]
+          md:blur-[110px]
         "
       />
 

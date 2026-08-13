@@ -9,8 +9,8 @@ export const aboutPageData: AboutPageData = {
     'With a team of more than 02 dozens of engineers, experience-design specialists, and consultants, M3 Hive helps clients move from ambition to execution. We develop technology that is practical, scalable, and designed to create lasting value.',
     'For more than two decades, global enterprises and digital disruptors have trusted M3 Hive to modernise operations, build high-performing digital products, and respond confidently to changing markets.',
   ],
-  clientsPartnersTitle: 'Our Clients Are Our Partners',
-  clientsPartnersDescription: 'We build long-term partnerships based on shared objectives, open communication, and measurable results. Our teams work closely with clients to understand their priorities, address their most important challenges, and deliver solutions that support sustainable growth.',
+  clientsTitle: 'Our Clients Drive Our Mission',
+  clientsDescription: 'We build long-term relationships based on shared objectives, open communication, and measurable results. Our teams work closely with clients to understand their priorities, address their most important challenges, and deliver solutions that support sustainable growth.',
   valuesTitle: 'Our Values',
   values: [
     {

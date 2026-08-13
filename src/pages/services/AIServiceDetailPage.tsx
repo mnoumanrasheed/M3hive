@@ -478,14 +478,17 @@ export const AIServiceDetailPage: React.FC = () => {
                     index;
 
                   return (
-                    <button
+                    <FadeIn
                       key={index}
-                      type="button"
-                      onClick={() =>
-                        setActiveCapability(
-                          index,
-                        )
-                      }
+                      delay={index * 0.08}
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveCapability(
+                            index,
+                          )
+                        }
                       className={`
                         flex
                         items-center
@@ -514,9 +517,9 @@ export const AIServiceDetailPage: React.FC = () => {
                               border-transparent
                               bg-transparent
                               text-hive-text-muted
-                              hover:border-hive-border
-                              hover:bg-hive-white
-                              hover:text-hive-black
+                              md:hover:border-hive-border
+                              md:hover:bg-hive-white
+                              md:hover:text-hive-black
                             `
                         }
                       `}
@@ -548,7 +551,8 @@ export const AIServiceDetailPage: React.FC = () => {
                         `}
                       />
                     </button>
-                  );
+                  </FadeIn>
+                );
                 },
               )}
             </div>
@@ -737,10 +741,10 @@ export const AIServiceDetailPage: React.FC = () => {
                       p-7
                       transition-all
                       duration-300
-                      hover:-translate-y-1
-                      hover:border-hive-yellow/50
-                      hover:bg-[#191919]
-                      hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow/50
+                      md:hover:bg-[#191919]
+                      md:hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
                       sm:p-8
                     "
                   >
@@ -758,7 +762,7 @@ export const AIServiceDetailPage: React.FC = () => {
                         to-hive-yellow
                         transition-all
                         duration-500
-                        group-hover:w-full
+                        group-md:hover:w-full
                       "
                     />
 
@@ -778,8 +782,8 @@ export const AIServiceDetailPage: React.FC = () => {
                         bg-hive-yellow/[0.10]
                         transition-all
                         duration-300
-                        group-hover:border-hive-yellow/70
-                        group-hover:bg-hive-yellow/[0.16]
+                        group-md:hover:border-hive-yellow/70
+                        group-md:hover:bg-hive-yellow/[0.16]
                       "
                     >
                       <CheckCircle2
@@ -885,9 +889,9 @@ export const AIServiceDetailPage: React.FC = () => {
                         p-6
                         transition-all
                         duration-300
-                        hover:-translate-y-1
-                        hover:border-hive-yellow
-                        hover:shadow-lg
+                        md:hover:-translate-y-1
+                        md:hover:border-hive-yellow
+                        md:hover:shadow-lg
                         sm:p-8
                       "
                     >

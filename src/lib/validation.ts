@@ -1,6 +1,5 @@
 import { allServicesData } from '../data/services/servicesIndex';
 import { officeLocations } from '../data/offices';
-import { partnersData } from '../data/partners';
 import { testimonialsData } from '../data/testimonials';
 import { compliancePillars } from '../data/compliance';
 
@@ -44,17 +43,7 @@ export function runDevContentValidation(): void {
     }
   });
 
-  // 3. Check Partners
-  const partnerIds = new Set<string>();
-  partnersData.forEach((partner) => {
-    if (partnerIds.has(partner.id)) {
-      warnings.push(`Duplicate partner ID found: "${partner.id}".`);
-    } else {
-      partnerIds.add(partner.id);
-    }
-  });
-
-  // 4. Check Testimonials
+  // 3. Check Testimonials
   const testimonialIds = new Set<string>();
   testimonialsData.forEach((t) => {
     if (testimonialIds.has(t.id)) {
@@ -79,7 +68,7 @@ export function runDevContentValidation(): void {
   });
 
   if (warnings.length === 0) {
-    console.log('✅ [M3 Hive Data Validation] All 13 content modules passed validation with zero errors.');
+    console.log('✅ [M3 Hive Data Validation] All content modules passed validation with zero errors.');
   } else {
     console.warn(`⚠️ [M3 Hive Data Validation] Found ${warnings.length} warning(s):`, warnings);
   }

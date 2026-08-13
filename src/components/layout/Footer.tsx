@@ -28,7 +28,6 @@ interface FooterLink {
 
 const companyLinks: FooterLink[] = [
   { label: 'About Us', href: footerLinkMap.about },
-  { label: 'Partners', href: '/partners' },
   { label: 'Our Approach', href: footerLinkMap.ourApproach },
   { label: 'Risk & Compliance', href: footerLinkMap.riskCompliance },
   // { label: 'Careers', href: footerLinkMap.careers },
@@ -231,7 +230,7 @@ export const Footer: React.FC = () => {
                 "
               >
                 <Linkedin
-                  className="w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110"
+                  className="w-3.5 h-3.5 transition-transform duration-200 md:group-hover:scale-110"
                   aria-hidden="true"
                 />
               </a>
@@ -261,7 +260,7 @@ export const Footer: React.FC = () => {
                 "
               >
                 <Instagram
-                  className="w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110"
+                  className="w-3.5 h-3.5 transition-transform duration-200 md:group-hover:scale-110"
                   aria-hidden="true"
                 />
               </a>

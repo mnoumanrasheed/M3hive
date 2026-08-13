@@ -250,7 +250,8 @@ const AutomationHeroVisual: React.FC<
           px-5
           text-center
           shadow-[0_28px_75px_rgba(0,0,0,0.50)]
-          backdrop-blur-xl
+          backdrop-blur-sm
+          md:backdrop-blur-xl
         "
       >
         <div
@@ -856,13 +857,13 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
           relative
           z-0
           flex
-          min-h-[620px]
           flex-col
           overflow-hidden
           border-b
           border-white/10
           bg-[#080808]
         "
+        style={{ minHeight: 'max(620px, calc(100svh - 80px))' }}
       >
         {/* Glow */}
 
@@ -897,9 +898,9 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
             flex-1
             flex-col
             justify-center
-            py-24
-            sm:py-28
-            lg:py-32
+            py-16
+            sm:py-20
+            lg:py-24
           "
         >
           <Container size="lg">
@@ -971,13 +972,12 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                   className="
                     hero-title
                     mb-6
+                    max-w-3xl
                     font-heading
-                    text-display-md
                     font-bold
-                    leading-[1.12]
                     text-white
-                    sm:text-display-lg
                   "
+                  style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: '1.12' }}
                 >
                   {service.title}
                 </h1>
@@ -1133,16 +1133,19 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                     index;
 
                   return (
-                    <button
+                    <FadeIn
                       key={
                         capability.title
                       }
-                      type="button"
-                      onClick={() =>
-                        setActiveCapability(
-                          index,
-                        )
-                      }
+                      delay={index * 0.08}
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveCapability(
+                            index,
+                          )
+                        }
                       className={`
                         flex
                         items-center
@@ -1162,7 +1165,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         ${
                           isActive
                             ? 'border-hive-yellow bg-hive-white text-hive-black shadow-hive-md'
-                            : 'border-transparent bg-transparent text-hive-text-muted hover:border-hive-border hover:bg-hive-white hover:text-hive-black'
+                            : 'border-transparent bg-transparent text-hive-text-muted md:hover:border-hive-border md:hover:bg-hive-white md:hover:text-hive-black'
                         }
                       `}
                     >
@@ -1186,7 +1189,8 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         `}
                       />
                     </button>
-                  );
+                  </FadeIn>
+                );
                 },
               )}
             </div>
@@ -1375,10 +1379,10 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                       p-7
                       transition-all
                       duration-300
-                      hover:-translate-y-1
-                      hover:border-hive-yellow/50
-                      hover:bg-[#191919]
-                      hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow/50
+                      md:hover:bg-[#191919]
+                      md:hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)]
                       sm:p-8
                     "
                   >
@@ -1394,7 +1398,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         to-hive-yellow
                         transition-all
                         duration-500
-                        group-hover:w-full
+                        group-md:hover:w-full
                       "
                     />
 
@@ -1412,7 +1416,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         bg-hive-yellow/10
                         transition-all
                         duration-300
-                        group-hover:bg-hive-yellow/[0.16]
+                        group-md:hover:bg-hive-yellow/[0.16]
                       "
                     >
                       <CheckCircle2
@@ -1516,9 +1520,9 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                       p-6
                       transition-all
                       duration-300
-                      hover:-translate-y-1
-                      hover:border-hive-yellow/70
-                      hover:shadow-hive-lg
+                      md:hover:-translate-y-1
+                      md:hover:border-hive-yellow/70
+                      md:hover:shadow-hive-lg
                     "
                   >
                     <h3
@@ -1530,7 +1534,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         text-hive-black
                         transition-colors
                         duration-300
-                        group-hover:text-hive-orange
+                        group-md:hover:text-hive-orange
                       "
                     >
                       {
@@ -1548,7 +1552,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         text-hive-text-muted
                         transition-colors
                         duration-300
-                        group-hover:text-hive-orange
+                        group-md:hover:text-hive-orange
                       "
                     >
                       Learn More
@@ -1559,7 +1563,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                           w-4
                           transition-transform
                           duration-300
-                          group-hover:translate-x-1
+                          group-md:hover:translate-x-1
                         "
                       />
                     </div>

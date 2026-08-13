@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
+
 import { gsap } from '../../lib/gsap';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
@@ -15,8 +16,8 @@ interface FadeInProps {
 export const FadeIn: React.FC<FadeInProps> = ({
   children,
   delay = 0,
-  duration = 0.8,
-  y = 40,
+  duration = 0.7,
+  y = 32,
   className = '',
   stagger = 0,
 }) => {
@@ -27,36 +28,125 @@ export const FadeIn: React.FC<FadeInProps> = ({
     () => {
       if (reducedMotion) return;
 
-      const elements = container.current?.children;
-      if (!elements || elements.length === 0) return;
+      const element = container.current;
 
-      gsap.fromTo(
-        elements,
-        { opacity: 0, y },
-        {
-          opacity: 1,
-          y: 0,
-          duration,
-          delay,
-          stagger,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: container.current,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
+      if (!element) return;
+
+      const childrenElements = element.children;
+
+      if (!childrenElements.length) return;
+
+      const mm = gsap.matchMedia();
+
+      /*
+       * MOBILE
+       *
+       * Smaller movement + faster duration
+       * keeps scrolling responsive.
+       */
+      mm.add('(max-width: 767px)', () => {
+        gsap.fromTo(
+          childrenElements,
+          {
+            opacity: 0,
+            y: 18,
           },
-        }
-      );
+          {
+            opacity: 1,
+            y: 0,
+
+            duration: 0.5,
+            delay: Math.min(delay, 0.15),
+            stagger: Math.min(stagger, 0.08),
+
+            ease: 'power2.out',
+
+            scrollTrigger: {
+              trigger: element,
+
+              /*
+               * Trigger slightly earlier
+               * on small screens.
+               */
+              start: 'top 92%',
+
+              /*
+               * Animate only once.
+               * Helps reduce ScrollTrigger work
+               * on long mobile pages.
+               */
+              once: true,
+
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      });
+
+      /*
+       * TABLET / DESKTOP
+       */
+      mm.add('(min-width: 768px)', () => {
+        gsap.fromTo(
+          childrenElements,
+          {
+            opacity: 0,
+            y,
+          },
+          {
+            opacity: 1,
+            y: 0,
+
+            duration,
+            delay,
+            stagger,
+
+            ease: 'power3.out',
+
+            scrollTrigger: {
+              trigger: element,
+              start: 'top 85%',
+              once: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      });
+
+      return () => {
+        mm.revert();
+      };
     },
-    { scope: container, dependencies: [reducedMotion, delay, duration, y, stagger] }
+    {
+      scope: container,
+      dependencies: [
+        reducedMotion,
+        delay,
+        duration,
+        y,
+        stagger,
+      ],
+    }
   );
 
+  /*
+   * Accessibility:
+   * if Reduce Motion is enabled,
+   * show content normally.
+   */
   if (reducedMotion) {
-    return <div className={className}>{children}</div>;
+    return (
+      <div className={className}>
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div ref={container} className={className}>
+    <div
+      ref={container}
+      className={className}
+    >
       {children}
     </div>
   );

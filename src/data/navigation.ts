@@ -47,12 +47,6 @@ export const mainNavItems: NavItem[] = [
     label: 'Approach',
     href: '/our-approach',
   },
-  
-  {
-    label: 'Partners',
-    href: '/partners',
-  },
-  
   {
     label: 'Risk & Compliance',
     href: '/risk-and-compliance',

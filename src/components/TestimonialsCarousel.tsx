@@ -286,7 +286,7 @@ export default function TestimonialsCarousel() {
                         transition-opacity
                         duration-500
 
-                        group-hover:opacity-100
+                        md:group-hover:opacity-100
                       "
                     />
 
@@ -318,7 +318,7 @@ export default function TestimonialsCarousel() {
                             transition-transform
                             duration-500
 
-                            group-hover:scale-105
+                            md:group-hover:scale-105
                           "
                         />
                       ) : (
@@ -341,7 +341,7 @@ export default function TestimonialsCarousel() {
                             transition-transform
                             duration-500
 
-                            group-hover:scale-105
+                            md:group-hover:scale-105
                           "
                           style={{
                             clipPath:

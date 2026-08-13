@@ -168,14 +168,23 @@ export const CinematicServiceHero: React.FC<
        * zooms slightly
        *
        * Then smoothly returns.
+       * 
+       * Reduced movement on mobile for performance.
        */
 
-      gsap.to(camera, {
-        x: 28,
-        y: 10,
-        scale: 1.13,
+      // Mobile-friendly movement values
+      const isMobile = window.innerWidth < 768;
+      const xMovement = isMobile ? 14 : 28;
+      const yMovement = isMobile ? 5 : 10;
+      const scaleMax = isMobile ? 1.08 : 1.13;
+      const duration = isMobile ? 10 : 8.5;
 
-        duration: 8.5,
+      gsap.to(camera, {
+        x: xMovement,
+        y: yMovement,
+        scale: scaleMax,
+
+        duration: duration,
 
         ease: 'sine.inOut',
 
@@ -204,13 +213,19 @@ export const CinematicServiceHero: React.FC<
           force3D: true,
         });
 
+        // Reduced glow movement on mobile
+        const glowXMovement = isMobile ? 60 : 110;
+        const glowYMovement = isMobile ? -20 : -35;
+        const glowOpacity = isMobile ? 0.12 : 0.18;
+        const glowDuration = isMobile ? 9 : 7.5;
+
         gsap.to(glowMove, {
-          x: 110,
-          y: -35,
+          x: glowXMovement,
+          y: glowYMovement,
 
-          opacity: 0.18,
+          opacity: glowOpacity,
 
-          duration: 7.5,
+          duration: glowDuration,
 
           ease: 'sine.inOut',
 
@@ -228,10 +243,14 @@ export const CinematicServiceHero: React.FC<
        */
 
       if (sweep) {
+        // Less frequent sweeps on mobile
+        const sweepDelay = isMobile ? 8 : 4.5;
+        const sweepOpacity = isMobile ? 0.1 : 0.16;
+        
         const sweepTimeline =
           gsap.timeline({
             repeat: -1,
-            repeatDelay: 4.5,
+            repeatDelay: sweepDelay,
           });
 
         sweepTimeline
@@ -243,7 +262,7 @@ export const CinematicServiceHero: React.FC<
           .to(sweep, {
             xPercent: 250,
 
-            opacity: 0.16,
+            opacity: sweepOpacity,
 
             duration: 3,
 

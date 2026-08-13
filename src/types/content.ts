@@ -56,16 +56,6 @@ export interface ServicePageData {
   successStories?: string[];
 }
 
-export interface Partner {
-  id: string;
-  name: string;
-  description: string | null;
-  ctaLabel: string | null;
-  ctaHref: string | null;
-  logo: string | null;
-  enabled: boolean;
-}
-
 export interface OfficeLocation {
   id: string;
   country: string;
@@ -205,8 +195,8 @@ export interface AboutPageData {
   subtitle: string;
   whoWeAreTitle: string;
   whoWeAreDescription: string[];
-  clientsPartnersTitle: string;
-  clientsPartnersDescription: string;
+  clientsTitle: string;
+  clientsDescription: string;
   valuesTitle: string;
   values: {
     title: string;

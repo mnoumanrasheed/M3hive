@@ -178,9 +178,9 @@ export const RiskPolicyDetailPage: React.FC = () => {
         />
 
         {/* Glows - right side only */}
-        <div className="risk-glow-one pointer-events-none absolute right-[24%] top-[10%] z-[3] hidden h-[330px] w-[330px] rounded-full bg-hive-yellow/20 blur-[120px] lg:block" />
+        <div className="risk-glow-one pointer-events-none absolute right-[24%] top-[10%] z-[3] hidden h-[330px] w-[330px] rounded-full bg-hive-yellow/20 blur-[60px] md:blur-[120px] lg:block" />
 
-        <div className="risk-glow-two pointer-events-none absolute right-[2%] bottom-[-20%] z-[3] hidden h-[300px] w-[300px] rounded-full bg-hive-orange/15 blur-[120px] lg:block" />
+        <div className="risk-glow-two pointer-events-none absolute right-[2%] bottom-[-20%] z-[3] hidden h-[300px] w-[300px] rounded-full bg-hive-orange/15 blur-[60px] md:blur-[120px] lg:block" />
 
         {/* ================================================= */}
         {/* ANIMATION — RIGHT SIDE ONLY */}
