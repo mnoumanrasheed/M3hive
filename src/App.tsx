@@ -3,34 +3,33 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ScrollToTop } from './components/animation/ScrollToTop';
 
-// Critical path: HomePage is loaded immediately
+// Main navigation pages - static imports for instant navigation
 import { HomePage } from './pages/HomePage';
+import { AboutPage } from './pages/AboutPage';
+import { PartnersPage } from './pages/PartnersPage';
+import { OurApproachPage } from './pages/OurApproachPage';
+import { RiskCompliancePage } from './pages/RiskCompliancePage';
+import { ContactPage } from './pages/ContactPage';
+import { ServicesIndexPage } from './pages/services/ServicesIndexPage';
+import { AIServicesPage } from './pages/services/AIServicesPage';
+import { ProductEngineeringPage } from './pages/services/ProductEngineeringPage';
+import { CustomerExperiencePage } from './pages/services/CustomerExperiencePage';
+import { IntelligentAutomationPage } from './pages/services/IntelligentAutomationPage';
+import { DataAnalyticsPage } from './pages/services/DataAnalyticsPage';
+import { CloudPlatformsPage } from './pages/services/CloudPlatformsPage';
+import { EdgeTechnologiesPage } from './pages/services/EdgeTechnologiesPage';
 
-// Lazy loaded routes
-const AboutPage = React.lazy(() => import('./pages/AboutPage').then(module => ({ default: module.AboutPage })));
-const PartnersPage = React.lazy(() => import('./pages/PartnersPage').then(module => ({ default: module.PartnersPage })));
-const OurApproachPage = React.lazy(() => import('./pages/OurApproachPage').then(module => ({ default: module.OurApproachPage })));
+// Detail pages and deeper routes - lazy loaded
 const OurApproachDetailPage = React.lazy(() => import('./pages/OurApproachDetailPage').then(module => ({ default: module.OurApproachDetailPage })));
-const RiskCompliancePage = React.lazy(() => import('./pages/RiskCompliancePage').then(module => ({ default: module.RiskCompliancePage })));
 const RiskPolicyDetailPage = React.lazy(() => import('./pages/risk-and-compliance/RiskPolicyDetailPage').then(module => ({ default: module.RiskPolicyDetailPage })));
-const ContactPage = React.lazy(() => import('./pages/ContactPage').then(module => ({ default: module.ContactPage })));
-const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then(module => ({ default: module.NotFoundPage })));
-
-const ServicesIndexPage = React.lazy(() => import('./pages/services/ServicesIndexPage').then(module => ({ default: module.ServicesIndexPage })));
-const AIServicesPage = React.lazy(() => import('./pages/services/AIServicesPage').then(module => ({ default: module.AIServicesPage })));
 const AIServiceDetailPage = React.lazy(() => import('./pages/services/AIServiceDetailPage').then(module => ({ default: module.AIServiceDetailPage })));
-const ProductEngineeringPage = React.lazy(() => import('./pages/services/ProductEngineeringPage').then(module => ({ default: module.ProductEngineeringPage })));
 const ProductEngineeringDetailPage = React.lazy(() => import('./pages/services/ProductEngineeringDetailPage').then(module => ({ default: module.ProductEngineeringDetailPage })));
-const CustomerExperiencePage = React.lazy(() => import('./pages/services/CustomerExperiencePage').then(module => ({ default: module.CustomerExperiencePage })));
 const CustomerExperienceDetailPage = React.lazy(() => import('./pages/services/CustomerExperienceDetailPage').then(module => ({ default: module.CustomerExperienceDetailPage })));
-const IntelligentAutomationPage = React.lazy(() => import('./pages/services/IntelligentAutomationPage').then(module => ({ default: module.IntelligentAutomationPage })));
 const IntelligentAutomationDetailPage = React.lazy(() => import('./pages/services/IntelligentAutomationDetailPage').then(module => ({ default: module.IntelligentAutomationDetailPage })));
-const DataAnalyticsPage = React.lazy(() => import('./pages/services/DataAnalyticsPage').then(module => ({ default: module.DataAnalyticsPage })));
 const DataAnalyticsDetailPage = React.lazy(() => import('./pages/services/DataAnalyticsDetailPage').then(module => ({ default: module.DataAnalyticsDetailPage })));
-const CloudPlatformsPage = React.lazy(() => import('./pages/services/CloudPlatformsPage').then(module => ({ default: module.CloudPlatformsPage })));
 const CloudPlatformsDetailPage = React.lazy(() => import('./pages/services/CloudPlatformsDetailPage').then(module => ({ default: module.CloudPlatformsDetailPage })));
-const EdgeTechnologiesPage = React.lazy(() => import('./pages/services/EdgeTechnologiesPage').then(module => ({ default: module.EdgeTechnologiesPage })));
 const EdgeTechnologiesDetailPage = React.lazy(() => import('./pages/services/EdgeTechnologiesDetailPage').then(module => ({ default: module.EdgeTechnologiesDetailPage })));
+const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then(module => ({ default: module.NotFoundPage })));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-hive-white">

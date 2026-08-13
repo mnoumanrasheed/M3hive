@@ -42,23 +42,24 @@ export const mainNavItems: NavItem[] = [
   {
     label: 'Services',
     href: '/services',
-    dropdown: serviceNavItems,
   },
   {
-    label: 'About',
-    href: '/about',
+    label: 'Approach',
+    href: '/our-approach',
   },
+  
   {
     label: 'Partners',
     href: '/partners',
   },
-  {
-    label: 'Our Approach',
-    href: '/our-approach',
-  },
+  
   {
     label: 'Risk & Compliance',
     href: '/risk-and-compliance',
+  },
+  {
+    label: 'About',
+    href: '/about',
   },
   {
     label: 'Contact',

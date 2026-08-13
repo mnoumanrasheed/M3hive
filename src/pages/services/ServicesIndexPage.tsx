@@ -1,4 +1,5 @@
 import React from 'react';
+import { PremiumHeroMotion } from '../../components/ui/PremiumHeroMotion';
 import { PageShell } from '../../components/layout/PageShell';
 import { Container } from '../../components/ui/Container';
 import { SectionHeading } from '../../components/ui/SectionHeading';
@@ -8,12 +9,14 @@ import { allServicesData } from '../../data/services/servicesIndex';
 import { ArrowRight, Settings2 } from 'lucide-react';
 import { HeroBackground } from '../../components/ui/HeroBackground';
 
+
 export const ServicesIndexPage: React.FC = () => {
   return (
     <PageShell title="Services Overview" description="Comprehensive capabilities to transform operations">
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
         <HeroBackground imageUrl="/assets/heroes/hero-services.jpg" />
+        <PremiumHeroMotion variant="services" />
         <Container size="md" className="relative z-10 text-center">
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-4 sm:mb-6">

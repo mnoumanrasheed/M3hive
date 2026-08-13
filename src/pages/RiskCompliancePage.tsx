@@ -7,6 +7,7 @@ import { FadeIn } from '../components/ui/FadeIn';
 import { Button } from '../components/ui/Button';
 import { compliancePageData, compliancePillars } from '../data/compliance';
 import { ShieldCheck, Mail, ArrowRight } from 'lucide-react';
+import { PremiumHeroMotion } from '../components/ui/PremiumHeroMotion';
 
 import { HeroBackground } from '../components/ui/HeroBackground';
 
@@ -16,6 +17,7 @@ export const RiskCompliancePage: React.FC = () => {
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
         <HeroBackground imageUrl="/assets/heroes/hero-risk-compliance.jpg" />
+        <PremiumHeroMotion variant="risk" />
         <Container size="md" className="relative z-10 text-center">
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-4 sm:mb-6">

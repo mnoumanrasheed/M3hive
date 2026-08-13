@@ -8,7 +8,7 @@ interface BrandLogoProps {
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = '',
-  imgClassName = 'h-10 w-auto object-contain',
+  imgClassName = 'h-10 w-auto',
 }) => {
   return (
     <Link
@@ -19,15 +19,14 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <img
         src="/assets/brand/m3hive-logo.png"
         alt="M3 Hive Logo"
-        className={`block max-w-full h-auto object-contain ${imgClassName}`}
+        width={5401}
+        height={2399}
+        className={`block object-contain ${imgClassName}`}
         draggable={false}
         loading="eager"
         decoding="async"
         style={{
           imageRendering: 'auto',
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-          transform: 'translateZ(0)',
         }}
       />
     </Link>

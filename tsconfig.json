@@ -19,9 +19,12 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
 
+    "types": ["node"],
+
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+
+  "include": ["src", "api"]
 }

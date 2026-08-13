@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {
+  useRef,
+  useState,
+} from 'react';
 
 import { PageShell } from '../components/layout/PageShell';
 import { Container } from '../components/ui/Container';
@@ -6,15 +9,38 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { FadeIn } from '../components/ui/FadeIn';
 import { OfficeCard } from '../components/ui/OfficeCard';
 import { HeroBackground } from '../components/ui/HeroBackground';
+import { PremiumHeroMotion } from '../components/ui/PremiumHeroMotion';
 
 import { aboutPageData } from '../data/about';
 import { officeLocations } from '../data/offices';
 
 export const AboutPage: React.FC = () => {
+  const videoRef =
+    useRef<HTMLVideoElement | null>(null);
+
+  const [isMuted, setIsMuted] =
+    useState(true);
+
+  const toggleVideoSound = () => {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    const nextMuted = !video.muted;
+
+    video.muted = nextMuted;
+
+    setIsMuted(nextMuted);
+
+    if (video.paused) {
+      video.play().catch(() => {});
+    }
+  };
+
   return (
     <PageShell title="About M3 Hive">
       {/* =========================================================
-          HERO SECTION
+          HERO
       ========================================================= */}
 
       <section
@@ -33,6 +59,7 @@ export const AboutPage: React.FC = () => {
         "
       >
         <HeroBackground imageUrl="/assets/heroes/hero-about.jpg" />
+        <PremiumHeroMotion variant="about" />
 
         <Container
           size="md"
@@ -58,7 +85,6 @@ export const AboutPage: React.FC = () => {
                 className="
                   h-2
                   w-2
-                  flex-shrink-0
                   rounded-full
                   bg-hive-yellow
                 "
@@ -72,7 +98,6 @@ export const AboutPage: React.FC = () => {
                   uppercase
                   tracking-widest
                   text-white
-                  drop-shadow
                 "
               >
                 About Us
@@ -99,7 +124,6 @@ export const AboutPage: React.FC = () => {
                 text-base
                 leading-relaxed
                 text-white/90
-                drop-shadow
                 sm:text-lg
               "
             >
@@ -138,7 +162,10 @@ export const AboutPage: React.FC = () => {
               "
             >
               {aboutPageData.whoWeAreDescription.map(
-                (para, index) => (
+                (
+                  paragraph,
+                  index,
+                ) => (
                   <p
                     key={index}
                     className="
@@ -148,12 +175,415 @@ export const AboutPage: React.FC = () => {
                       last:mb-0
                     "
                   >
-                    {para}
+                    {paragraph}
                   </p>
                 ),
               )}
             </div>
           </FadeIn>
+        </Container>
+      </section>
+
+      {/* =========================================================
+          M3 HIVE VIDEO STORY
+      ========================================================= */}
+
+      <section
+        className="
+          relative
+          overflow-hidden
+          bg-[#090909]
+          py-16
+          sm:py-20
+          lg:py-24
+        "
+      >
+        {/* Background glow */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            right-0
+            top-1/2
+            h-96
+            w-96
+            -translate-y-1/2
+            rounded-full
+            bg-hive-yellow/5
+            blur-3xl
+          "
+        />
+
+        {/* Secondary background glow */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            bottom-[-160px]
+            left-[-100px]
+            h-80
+            w-80
+            rounded-full
+            bg-hive-orange/5
+            blur-3xl
+          "
+        />
+
+        <Container
+          size="lg"
+          className="relative z-10"
+        >
+          <div
+            className="
+              grid
+              grid-cols-1
+              items-center
+              gap-12
+              lg:grid-cols-12
+              lg:gap-16
+            "
+          >
+            {/* LEFT CONTENT */}
+
+            <div className="lg:col-span-4">
+              <FadeIn>
+                <div
+                  className="
+                    mb-5
+                    inline-flex
+                    items-center
+                    gap-2
+                    rounded-full
+                    border
+                    border-hive-yellow/30
+                    bg-hive-yellow/10
+                    px-3
+                    py-1.5
+                  "
+                >
+                  <span
+                    className="
+                      h-2
+                      w-2
+                      rounded-full
+                      bg-hive-yellow
+                      shadow-[0_0_10px_rgba(253,207,9,0.8)]
+                    "
+                  />
+
+                  <span
+                    className="
+                      font-heading
+                      text-xs
+                      font-bold
+                      uppercase
+                      tracking-widest
+                      text-hive-yellow
+                    "
+                  >
+                    Inside M3 Hive
+                  </span>
+                </div>
+
+                <h2
+                  className="
+                    mb-6
+                    font-heading
+                    text-3xl
+                    font-bold
+                    leading-tight
+                    text-white
+                    sm:text-4xl
+                  "
+                >
+                  Technology with purpose.
+                  <br />
+                  People with impact.
+                </h2>
+
+                <p
+                  className="
+                    text-base
+                    leading-relaxed
+                    text-white/75
+                    sm:text-lg
+                  "
+                >
+                  Discover how our people,
+                  technology and global
+                  capabilities come together
+                  to create meaningful digital
+                  experiences and lasting
+                  business value.
+                </p>
+
+                <div
+                  className="
+                    mt-8
+                    flex
+                    items-center
+                    gap-3
+                    text-sm
+                    text-white/60
+                  "
+                >
+                  <span
+                    className="
+                      h-px
+                      w-10
+                      bg-hive-yellow
+                    "
+                  />
+
+                  Our story in motion
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* RIGHT VIDEO */}
+
+            <div className="lg:col-span-8">
+              <FadeIn delay={0.15}>
+                <div
+                  onClick={toggleVideoSound}
+                  onKeyDown={(event) => {
+                    if (
+                      event.key === 'Enter' ||
+                      event.key === ' '
+                    ) {
+                      event.preventDefault();
+                      toggleVideoSound();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={
+                    isMuted
+                      ? 'Turn video sound on'
+                      : 'Turn video sound off'
+                  }
+                  className="
+                    group
+                    relative
+                    cursor-pointer
+                    overflow-hidden
+                    rounded-3xl
+                    border
+                    border-white/10
+                    bg-black
+                    shadow-[0_30px_90px_rgba(0,0,0,0.50)]
+                    outline-none
+                    transition-all
+                    duration-300
+                    hover:border-hive-yellow/30
+                    focus-visible:ring-2
+                    focus-visible:ring-hive-yellow
+                  "
+                >
+                  {/* Yellow top accent */}
+
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      left-0
+                      top-0
+                      z-30
+                      h-0.5
+                      w-full
+                      bg-gradient-to-r
+                      from-transparent
+                      via-hive-yellow
+                      to-transparent
+                    "
+                  />
+
+                  {/* Sound indicator */}
+
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      right-4
+                      top-4
+                      z-40
+                      flex
+                      items-center
+                      gap-2
+                      rounded-full
+                      border
+                      border-white/20
+                      bg-black/55
+                      px-4
+                      py-2.5
+                      text-xs
+                      font-semibold
+                      text-white
+                      shadow-lg
+                      backdrop-blur-md
+                      transition-all
+                      duration-300
+                      sm:right-5
+                      sm:top-5
+                    "
+                  >
+                    <span
+                      className={`
+                        h-2
+                        w-2
+                        rounded-full
+                        transition-all
+                        duration-300
+                        ${
+                          isMuted
+                            ? 'bg-white/50'
+                            : 'bg-hive-yellow shadow-[0_0_10px_rgba(253,207,9,0.95)]'
+                        }
+                      `}
+                    />
+
+                    {isMuted
+                      ? 'Click for Sound'
+                      : 'Sound On'}
+                  </div>
+
+                  {/* Video ratio */}
+
+                  <div
+                    className="
+                      relative
+                      aspect-video
+                      w-full
+                      overflow-hidden
+                      bg-black
+                    "
+                  >
+                    <video
+                      ref={videoRef}
+                      className="
+                        absolute
+                        inset-0
+                        h-full
+                        w-full
+                        object-cover
+                        transition-transform
+                        duration-700
+                        ease-out
+                        group-hover:scale-[1.01]
+                      "
+                      src="/videos/who-we-are.mp4"
+                      poster="/assets/heroes/hero-about.jpg"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                    />
+
+                    {/* Cinematic video overlay */}
+
+                    <div
+                      className="
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        bg-gradient-to-t
+                        from-black/60
+                        via-transparent
+                        to-black/10
+                      "
+                    />
+
+                    {/* Subtle yellow highlight */}
+
+                    <div
+                      className="
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        bg-[radial-gradient(circle_at_72%_25%,rgba(253,207,9,0.08),transparent_40%)]
+                      "
+                    />
+
+                    {/* Bottom caption */}
+
+                    <div
+                      className="
+                        pointer-events-none
+                        absolute
+                        bottom-0
+                        left-0
+                        right-0
+                        z-20
+                        flex
+                        items-end
+                        justify-between
+                        p-5
+                        sm:p-7
+                      "
+                    >
+                      <div>
+                        <p
+                          className="
+                            font-heading
+                            text-base
+                            font-bold
+                            text-white
+                            sm:text-lg
+                          "
+                        >
+                          M3 Hive
+                        </p>
+
+                        <p
+                          className="
+                            mt-1
+                            text-xs
+                            text-white/70
+                            sm:text-sm
+                          "
+                        >
+                          Building what comes next
+                        </p>
+                      </div>
+
+                      <div
+                        className="
+                          flex
+                          h-11
+                          w-11
+                          items-center
+                          justify-center
+                          rounded-full
+                          border
+                          border-white/20
+                          bg-black/40
+                          backdrop-blur-md
+                        "
+                      >
+                        <span
+                          className={`
+                            h-2.5
+                            w-2.5
+                            rounded-full
+                            transition-all
+                            duration-300
+                            ${
+                              isMuted
+                                ? 'bg-white/50'
+                                : 'bg-hive-yellow shadow-[0_0_12px_rgba(253,207,9,0.9)]'
+                            }
+                          `}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
         </Container>
       </section>
 
@@ -240,7 +670,10 @@ export const AboutPage: React.FC = () => {
             "
           >
             {aboutPageData.values.map(
-              (value, index) => (
+              (
+                value,
+                index,
+              ) => (
                 <FadeIn
                   key={index}
                   delay={index * 0.1}
@@ -345,7 +778,10 @@ export const AboutPage: React.FC = () => {
             "
           >
             {aboutPageData.pillars.map(
-              (pillar, index) => (
+              (
+                pillar,
+                index,
+              ) => (
                 <FadeIn
                   key={index}
                   delay={index * 0.1}
@@ -433,10 +869,16 @@ export const AboutPage: React.FC = () => {
             "
           >
             {officeLocations.map(
-              (office, index) => (
+              (
+                office,
+                index,
+              ) => (
                 <FadeIn
                   key={office.id}
-                  delay={(index % 3) * 0.1}
+                  delay={
+                    (index % 3) *
+                    0.1
+                  }
                 >
                   <OfficeCard office={office} />
                 </FadeIn>
@@ -448,7 +890,6 @@ export const AboutPage: React.FC = () => {
 
       {/* =========================================================
           ESG COMMITMENT
-          CONTRAST FIXED
       ========================================================= */}
 
       <section
@@ -464,21 +905,19 @@ export const AboutPage: React.FC = () => {
           lg:py-24
         "
       >
-        {/* Subtle glow */}
-
         <div
           className="
             pointer-events-none
             absolute
             left-1/2
             top-0
-            h-[360px]
-            w-[620px]
+            h-80
+            w-96
             -translate-x-1/2
             -translate-y-1/2
             rounded-full
-            bg-hive-yellow/[0.05]
-            blur-[120px]
+            bg-hive-yellow/5
+            blur-3xl
           "
         />
 
@@ -514,7 +953,6 @@ export const AboutPage: React.FC = () => {
                   leading-tight
                   text-white
                   sm:text-4xl
-                  lg:text-4xl
                 "
               >
                 Environmental, Social and Governance Commitment

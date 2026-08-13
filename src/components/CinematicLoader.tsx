@@ -839,7 +839,7 @@ export function CinematicLoader({
                 sm:text-[10px]
               "
             >
-              Initializing Experience
+              Reprogramming the world
 
               <span
                 ref={percentageRef}

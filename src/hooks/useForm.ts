@@ -59,7 +59,7 @@ export const useForm = <T extends Record<string, string>>(
 
     if (!validate()) {
       setStatus('error');
-      setStatusMessage('Please fix the errors below.');
+      setStatusMessage('Please add correct information');
       return;
     }
 
@@ -70,7 +70,7 @@ export const useForm = <T extends Record<string, string>>(
     try {
       await submitFn(values);
       setStatus('success');
-      setStatusMessage('Thank you. Form submission integration will be connected before launch.');
+      setStatusMessage('Thank you! This feature is coming soon. Stay tuned for updates.');
       setValues(initialValues); // Reset form
     } catch (err) {
       setStatus('error');

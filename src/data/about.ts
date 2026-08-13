@@ -6,7 +6,7 @@ export const aboutPageData: AboutPageData = {
   whoWeAreTitle: 'Who We Are',
   whoWeAreDescription: [
     'Experience Engineering brings technology, design, data, and business strategy together to create meaningful outcomes for organisations and the people they serve.',
-    'With a global team of more than 4,000 engineers, experience-design specialists, and consultants, M3 Hive helps clients move from ambition to execution. We develop technology that is practical, scalable, and designed to create lasting value.',
+    'With a team of more than 02 dozens of engineers, experience-design specialists, and consultants, M3 Hive helps clients move from ambition to execution. We develop technology that is practical, scalable, and designed to create lasting value.',
     'For more than two decades, global enterprises and digital disruptors have trusted M3 Hive to modernise operations, build high-performing digital products, and respond confidently to changing markets.',
   ],
   clientsPartnersTitle: 'Our Clients Are Our Partners',

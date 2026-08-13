@@ -6,7 +6,7 @@ import { FadeIn } from '../components/ui/FadeIn';
 import { PartnerTile } from '../components/ui/PartnerTile';
 import { PartnerMarquee } from '../components/ui/PartnerMarquee';
 import { partnersData } from '../data/partners';
-
+import { PremiumHeroMotion } from '../components/ui/PremiumHeroMotion';
 import { HeroBackground } from '../components/ui/HeroBackground';
 
 export const PartnersPage: React.FC = () => {
@@ -18,6 +18,7 @@ export const PartnersPage: React.FC = () => {
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24 border-b border-hive-border z-0">
         <HeroBackground imageUrl="/assets/heroes/hero-partners.jpg" />
+        <PremiumHeroMotion variant="partners" />
         <Container size="md" className="relative z-10 text-center">
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-4 sm:mb-6">

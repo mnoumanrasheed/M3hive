@@ -1,442 +1,520 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
-import {
-  ChevronLeft,
-  ChevronRight,
-  Quote,
-} from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Quote } from "lucide-react";
+import gsap from "gsap";
 
 import { homepageTestimonialsData } from "../data/testimonials";
-
-const AUTOPLAY_DELAY = 4500;
 
 export default function TestimonialsCarousel() {
   const testimonials = homepageTestimonialsData;
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
-  const activeIndexRef = useRef(0);
-  const pausedRef = useRef(false);
-
-  const total = testimonials.length;
-
-  const goTo = useCallback(
-    (index: number) => {
-      const normalizedIndex =
-        ((index % total) + total) % total;
-
-      activeIndexRef.current = normalizedIndex;
-      setActiveIndex(normalizedIndex);
-    },
-    [total]
-  );
-
-  const goNext = useCallback(() => {
-    goTo(activeIndexRef.current + 1);
-  }, [goTo]);
-
-  const goPrevious = useCallback(() => {
-    goTo(activeIndexRef.current - 1);
-  }, [goTo]);
-
-  /*
-   * AUTOPLAY
-   */
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      if (pausedRef.current) return;
+    const container = containerRef.current;
+    const track = trackRef.current;
 
-      goTo(activeIndexRef.current + 1);
-    }, AUTOPLAY_DELAY);
+    if (!container || !track || testimonials.length === 0) {
+      return;
+    }
 
-    return () => {
-      window.clearInterval(interval);
-    };
-  }, [goTo]);
+    const ctx = gsap.context(() => {
+      /*
+       * Same smooth continuous technique
+       * used by the Partners marquee.
+       *
+       * Two identical groups are rendered.
+       * Moving exactly 50% creates a seamless loop.
+       */
+      const tween = gsap.fromTo(
+        track,
+        {
+          xPercent: -50,
+        },
+        {
+          xPercent: 0,
 
-  /*
-   * Pause when browser tab is hidden.
-   */
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      pausedRef.current = document.hidden;
-    };
+          /*
+           * Bigger number = slower movement.
+           *
+           * 5.5 gives a smooth premium speed
+           * for testimonial cards.
+           */
+          duration: Math.max(
+            testimonials.length * 5.5,
+            35
+          ),
 
-    document.addEventListener(
-      "visibilitychange",
-      handleVisibilityChange
-    );
-
-    return () => {
-      document.removeEventListener(
-        "visibilitychange",
-        handleVisibilityChange
+          ease: "none",
+          repeat: -1,
+        }
       );
+
+      /*
+       * Slow down nicely when hovered instead
+       * of abruptly stopping.
+       */
+      const slowDown = () => {
+        gsap.to(tween, {
+          timeScale: 0.25,
+          duration: 0.6,
+          ease: "power2.out",
+        });
+      };
+
+      const resume = () => {
+        gsap.to(tween, {
+          timeScale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+        });
+      };
+
+      container.addEventListener(
+        "mouseenter",
+        slowDown
+      );
+
+      container.addEventListener(
+        "mouseleave",
+        resume
+      );
+
+      container.addEventListener(
+        "focusin",
+        slowDown
+      );
+
+      container.addEventListener(
+        "focusout",
+        resume
+      );
+
+      return () => {
+        container.removeEventListener(
+          "mouseenter",
+          slowDown
+        );
+
+        container.removeEventListener(
+          "mouseleave",
+          resume
+        );
+
+        container.removeEventListener(
+          "focusin",
+          slowDown
+        );
+
+        container.removeEventListener(
+          "focusout",
+          resume
+        );
+      };
+    }, container);
+
+    return () => {
+      ctx.revert();
     };
-  }, []);
+  }, [testimonials.length]);
 
-  /*
-   * Determine where each card sits relative
-   * to active card.
-   */
-  const getPosition = (index: number) => {
-    let difference = index - activeIndex;
-
-    if (difference > total / 2) {
-      difference -= total;
-    }
-
-    if (difference < -total / 2) {
-      difference += total;
-    }
-
-    return difference;
-  };
+  if (!testimonials.length) {
+    return null;
+  }
 
   return (
     <section
-      className="relative w-full overflow-hidden py-10"
-      onMouseEnter={() => {
-        pausedRef.current = true;
-      }}
-      onMouseLeave={() => {
-        pausedRef.current = false;
-      }}
-      onFocus={() => {
-        pausedRef.current = true;
-      }}
-      onBlur={() => {
-        pausedRef.current = false;
-      }}
+      className="
+        relative
+        w-full
+        overflow-hidden
+        py-10
+      "
     >
-      {/* ===================================
-          CAROUSEL
-      =================================== */}
+      {/* ==================================================
+          FADE EDGES
+      ================================================== */}
 
-      <div className="relative mx-auto h-[455px] max-w-[1250px] overflow-hidden px-4 sm:h-[470px]">
-        {testimonials.map((testimonial, index) => {
-          const position = getPosition(index);
+      <div
+        className="
+          pointer-events-none
+          absolute
+          bottom-0
+          left-0
+          top-0
+          z-20
+          hidden
+          w-[10%]
+          bg-gradient-to-r
+          from-white
+          via-white/80
+          to-transparent
+          md:block
+        "
+      />
 
-          const isActive = position === 0;
-          const isLeft = position === -1;
-          const isRight = position === 1;
+      <div
+        className="
+          pointer-events-none
+          absolute
+          bottom-0
+          right-0
+          top-0
+          z-20
+          hidden
+          w-[10%]
+          bg-gradient-to-l
+          from-white
+          via-white/80
+          to-transparent
+          md:block
+        "
+      />
 
-          const isVisible =
-            isActive || isLeft || isRight;
+      {/* ==================================================
+          MARQUEE VIEWPORT
+      ================================================== */}
 
-          let transform =
-            "translateX(0%) scale(0.82)";
+      <div
+        ref={containerRef}
+        className="
+          relative
+          w-full
+          overflow-hidden
+          py-6
+        "
+      >
+        {/* ==================================================
+            MOVING TRACK
+        ================================================== */}
 
-          if (isLeft) {
-            transform =
-              "translateX(-108%) scale(0.91)";
-          }
-
-          if (isRight) {
-            transform =
-              "translateX(108%) scale(0.91)";
-          }
-
-          if (isActive) {
-            transform =
-              "translateX(0%) scale(1)";
-          }
-
-          return (
-            <article
-              key={testimonial.id}
-              aria-hidden={!isVisible}
-              className={`
-                absolute
-                left-1/2
-                top-1/2
+        <div
+          ref={trackRef}
+          className="
+            flex
+            w-max
+            transform-gpu
+            will-change-transform
+          "
+        >
+          {/*
+           * Two identical groups create
+           * the seamless infinite loop.
+           */}
+          {[0, 1].map((groupIndex) => (
+            <div
+              key={groupIndex}
+              className="
                 flex
-                h-[405px]
-                w-[calc(100%-32px)]
-                max-w-[405px]
-                -translate-x-1/2
-                -translate-y-1/2
-                flex-col
-                rounded-[18px]
-                border
-                bg-[#fffdf7]
-                p-6
-                sm:h-[420px]
-                sm:p-7
-                lg:max-w-[405px]
-                
-                transition-[transform,opacity,filter,box-shadow,border-color]
-                duration-700
-                ease-[cubic-bezier(0.22,1,0.36,1)]
-                
-                ${
-                  isActive
-                    ? `
-                      z-30
-                      border-[#F5C400]
-                      opacity-100
-                      shadow-[0_20px_55px_rgba(0,0,0,0.10)]
-                    `
-                    : `
-                      z-10
-                      border-[#eee9dc]
-                      opacity-45
-                      shadow-[0_10px_30px_rgba(0,0,0,0.05)]
-                    `
-                }
+                items-stretch
+                gap-5
+                px-2.5
 
-                ${
-                  isVisible
-                    ? "visible"
-                    : "pointer-events-none invisible opacity-0"
-                }
-              `}
-              style={{
-                transform: `
-                  translate(-50%, -50%)
-                  ${transform}
-                `,
-              }}
+                sm:gap-6
+                sm:px-3
+
+                lg:gap-7
+                lg:px-3.5
+              "
             >
-              {/* Top accent */}
-              <div
-                className={`
-                  absolute
-                  left-5
-                  right-5
-                  top-0
-                  h-[3px]
-                  rounded-full
-                  bg-gradient-to-r
-                  from-[#FF9D22]
-                  via-[#FFD000]
-                  to-[#FFE889]
-
-                  transition-opacity
-                  duration-700
-
-                  ${
-                    isActive
-                      ? "opacity-100"
-                      : "opacity-55"
-                  }
-                `}
-              />
-
-              {/* Logo / fallback icon */}
-              <div className="mb-7 mt-1 flex h-14 items-center">
-                {testimonial.logo ? (
-                  <img
-                    src={testimonial.logo}
-                    alt={`${testimonial.clientName} logo`}
-                    loading="lazy"
+              {testimonials.map(
+                (testimonial) => (
+                  <article
+                    key={`${groupIndex}-${testimonial.id}`}
+                    tabIndex={0}
                     className="
-                      max-h-14
-                      max-w-[100px]
-                      object-contain
-                    "
-                  />
-                ) : (
-                  <div
-                    className="
+                      group
+
+                      relative
                       flex
-                      h-12
-                      w-12
-                      items-center
-                      justify-center
-                      bg-[#FFD000]
-                      text-sm
-                      font-bold
-                      text-black
+                      min-h-[470px]
+                      w-[310px]
+                      flex-shrink-0
+                      flex-col
+
+                      overflow-hidden
+                      rounded-[18px]
+
+                      border
+                      border-[#eee9dc]
+
+                      bg-[#fffdf7]
+
+                      p-6
+
+                      shadow-[0_12px_35px_rgba(0,0,0,0.06)]
+
+                      transition-[transform,box-shadow,border-color]
+                      duration-500
+                      ease-[cubic-bezier(0.22,1,0.36,1)]
+
+                      hover:-translate-y-[6px]
+                      hover:border-[#F5C400]
+                      hover:shadow-[0_22px_55px_rgba(0,0,0,0.12)]
+
+                      focus:outline-none
+                      focus:border-[#F5C400]
+
+                      sm:min-h-[490px]
+                      sm:w-[350px]
+                      sm:p-7
+
+                      lg:w-[390px]
                     "
-                    style={{
-                      clipPath:
-                        "polygon(25% 6.7%,75% 6.7%,100% 50%,75% 93.3%,25% 93.3%,0% 50%)",
-                    }}
                   >
-                    {testimonial.clientName
-                      .split(" ")
-                      .map((word) => word[0])
-                      .join("")
-                      .slice(0, 2)
-                      .toUpperCase()}
-                  </div>
-                )}
-              </div>
+                    {/* ======================================
+                        TOP ACCENT
+                    ====================================== */}
 
-              {/* Category */}
-              <p
-                className="
-                  mb-3
-                  text-[11px]
-                  font-semibold
-                  uppercase
-                  tracking-[0.22em]
-                  text-[#F59E3D]
-                "
-              >
-                Client Project
-              </p>
+                    <div
+                      className="
+                        absolute
+                        left-5
+                        right-5
+                        top-0
 
-              {/* Client */}
-              <h3
-                className="
-                  text-[24px]
-                  font-semibold
-                  leading-tight
-                  tracking-[-0.02em]
-                  text-[#171717]
-                "
-              >
-                {testimonial.clientName}
-              </h3>
+                        h-[3px]
+                        rounded-full
 
-              <div className="my-5 h-px bg-[#ebe7dc]" />
+                        bg-gradient-to-r
+                        from-[#FF9D22]
+                        via-[#FFD000]
+                        to-[#FFE889]
 
-              {/* Quote */}
-              <Quote
-                size={25}
-                strokeWidth={1.8}
-                className="mb-3 text-[#F4C500]"
-              />
+                        opacity-70
 
-              <p
-                className="
-                  line-clamp-5
-                  text-[15px]
-                  leading-[1.6]
-                  text-[#77736b]
-                "
-              >
-                “{testimonial.text}”
-              </p>
+                        transition-opacity
+                        duration-500
 
-              <div className="mt-auto border-t border-[#ebe7dc] pt-5">
-                {testimonial.authorName ? (
-                  <>
-                    <p className="text-sm font-semibold text-[#353535]">
-                      {testimonial.authorName}
+                        group-hover:opacity-100
+                      "
+                    />
+
+                    {/* ======================================
+                        LOGO
+                    ====================================== */}
+
+                    <div
+                      className="
+                        mb-6
+                        mt-1
+
+                        flex
+                        h-14
+                        shrink-0
+                        items-center
+                      "
+                    >
+                      {testimonial.logo ? (
+                        <img
+                          src={testimonial.logo}
+                          alt={`${testimonial.clientName} logo`}
+                          loading="lazy"
+                          className="
+                            max-h-14
+                            max-w-[110px]
+                            object-contain
+
+                            transition-transform
+                            duration-500
+
+                            group-hover:scale-105
+                          "
+                        />
+                      ) : (
+                        <div
+                          className="
+                            flex
+                            h-12
+                            w-12
+                            shrink-0
+
+                            items-center
+                            justify-center
+
+                            bg-[#FFD000]
+
+                            text-sm
+                            font-bold
+                            text-black
+
+                            transition-transform
+                            duration-500
+
+                            group-hover:scale-105
+                          "
+                          style={{
+                            clipPath:
+                              "polygon(25% 6.7%,75% 6.7%,100% 50%,75% 93.3%,25% 93.3%,0% 50%)",
+                          }}
+                        >
+                          {testimonial.clientName
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word[0]
+                            )
+                            .join("")
+                            .slice(0, 2)
+                            .toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* ======================================
+                        CATEGORY
+                    ====================================== */}
+
+                    <p
+                      className="
+                        mb-3
+                        shrink-0
+
+                        text-[10px]
+                        font-semibold
+                        uppercase
+
+                        tracking-[0.22em]
+
+                        text-[#F59E3D]
+
+                        sm:text-[11px]
+                      "
+                    >
+                      Client Project
                     </p>
 
-                    {testimonial.authorRole && (
-                      <p className="mt-1 text-xs text-[#8b877f]">
-                        {testimonial.authorRole}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-xs text-[#8b877f]">
-                    M3 Hive client project
-                  </p>
-                )}
-              </div>
-            </article>
-          );
-        })}
-      </div>
+                    {/* ======================================
+                        CLIENT NAME
+                    ====================================== */}
 
-      {/* ===================================
-          CONTROLS
-      =================================== */}
+                    <h3
+                      className="
+                        shrink-0
 
-      <div className="mt-3 flex items-center justify-center gap-5">
-        <button
-          type="button"
-          onClick={goPrevious}
-          aria-label="Previous testimonial"
-          className="
-            flex
-            h-11
-            w-11
-            items-center
-            justify-center
-            rounded-full
-            border
-            border-[#e7e3d8]
-            bg-white
-            text-black
-            shadow-sm
-            transition-all
-            duration-300
-            hover:-translate-y-0.5
-            hover:border-[#F5C400]
-            hover:bg-[#fffaf0]
-            hover:shadow-md
-            focus:outline-none
-            focus:ring-2
-            focus:ring-[#F5C400]/40
-          "
-        >
-          <ChevronLeft size={19} />
-        </button>
+                        text-[21px]
+                        font-semibold
+                        leading-tight
 
-        {/* Dots */}
-        <div
-          className="
-            flex
-            max-w-[260px]
-            items-center
-            justify-center
-            gap-[5px]
-            overflow-hidden
-          "
-        >
-          {testimonials.map((testimonial, index) => (
-            <button
-              type="button"
-              key={testimonial.id}
-              onClick={() => goTo(index)}
-              aria-label={`View ${testimonial.clientName}`}
-              className={`
-                h-[6px]
-                rounded-full
-                transition-all
-                duration-500
+                        tracking-[-0.02em]
 
-                ${
-                  activeIndex === index
-                    ? "w-6 bg-[#F5C400]"
-                    : "w-[6px] bg-[#deddd7] hover:bg-[#bbb8ae]"
-                }
-              `}
-            />
+                        text-[#171717]
+
+                        sm:text-[23px]
+                      "
+                    >
+                      {testimonial.clientName}
+                    </h3>
+
+                    {/* Divider */}
+
+                    <div
+                      className="
+                        my-5
+                        h-px
+                        shrink-0
+                        bg-[#ebe7dc]
+                      "
+                    />
+
+                    {/* ======================================
+                        QUOTE
+                    ====================================== */}
+
+                    <Quote
+                      size={25}
+                      strokeWidth={1.8}
+                      className="
+                        mb-3
+                        shrink-0
+                        text-[#F4C500]
+                      "
+                    />
+
+                    {/* ======================================
+                        FULL TESTIMONIAL TEXT
+                    ======================================
+
+                        IMPORTANT:
+                        No line-clamp.
+                        No text clipping.
+                    */}
+
+                    <p
+                      className="
+                        mb-5
+
+                        text-[14px]
+                        leading-[1.65]
+
+                        text-[#77736b]
+
+                        sm:text-[15px]
+                      "
+                    >
+                      “{testimonial.text}”
+                    </p>
+
+                    {/* ======================================
+                        AUTHOR
+                    ====================================== */}
+
+                    <div
+                      className="
+                        mt-auto
+                        shrink-0
+
+                        border-t
+                        border-[#ebe7dc]
+
+                        pt-5
+                      "
+                    >
+                      {testimonial.authorName ? (
+                        <>
+                          <p
+                            className="
+                              text-sm
+                              font-semibold
+                              text-[#353535]
+                            "
+                          >
+                            {
+                              testimonial.authorName
+                            }
+                          </p>
+
+                          {testimonial.authorRole && (
+                            <p
+                              className="
+                                mt-1
+                                text-xs
+                                text-[#8b877f]
+                              "
+                            >
+                              {
+                                testimonial.authorRole
+                              }
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <p
+                          className="
+                            text-xs
+                            text-[#8b877f]
+                          "
+                        >
+                          M3 Hive client project
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                )
+              )}
+            </div>
           ))}
         </div>
-
-        <button
-          type="button"
-          onClick={goNext}
-          aria-label="Next testimonial"
-          className="
-            flex
-            h-11
-            w-11
-            items-center
-            justify-center
-            rounded-full
-            border
-            border-[#e7e3d8]
-            bg-white
-            text-black
-            shadow-sm
-            transition-all
-            duration-300
-            hover:-translate-y-0.5
-            hover:border-[#F5C400]
-            hover:bg-[#fffaf0]
-            hover:shadow-md
-            focus:outline-none
-            focus:ring-2
-            focus:ring-[#F5C400]/40
-          "
-        >
-          <ChevronRight size={19} />
-        </button>
       </div>
     </section>
   );
