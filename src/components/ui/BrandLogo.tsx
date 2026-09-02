@@ -19,11 +19,12 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <img
         src="/assets/brand/m3hive-logo.png"
         alt="M3 Hive Logo"
-        width={5401}
-        height={2399}
+        width={270}
+        height={120}
         className={`block object-contain ${imgClassName}`}
         draggable={false}
         loading="eager"
+        fetchPriority="high"
         decoding="async"
         style={{
           imageRendering: 'auto',

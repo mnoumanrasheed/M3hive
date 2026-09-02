@@ -20,11 +20,11 @@ const SLIDES = [
     heading: 'Engineering Digital Experiences\nThat Move Business Forward',
     description:
       'AI-powered product engineering, intelligent automation, data, cloud, and experience design—built to improve how people live, work, and engage with technology.',
-    cta: 'Start a Conversation',
+    cta: 'Start a Project',
     href: '/contact',
     secondaryCta: 'Discover M3 Hive',
     secondaryHref: '/about',
-    image: '/assets/heroes/hero-home.jpg',
+    image: '/assets/heroes/hero-home.webp',
     accent: '#FDCF09',
   },
   {
@@ -35,7 +35,7 @@ const SLIDES = [
       'Design, deploy, and scale AI solutions that integrate seamlessly into existing operations—delivering measurable impact across every layer of the business.',
     cta: 'Explore Artificial Intelligence',
     href: '/services/artificial-intelligence',
-    image: '/assets/heroes/hero-artificial-intelligence.jpg',
+    image: '/assets/heroes/hero-artificial-intelligence.webp',
     accent: '#FDCF09',
   },
   {
@@ -46,7 +46,7 @@ const SLIDES = [
       'From concept through to production, we architect and engineer digital products built for performance, reliability, and long-term scalability.',
     cta: 'Explore Product Engineering',
     href: '/services/product-engineering',
-    image: '/assets/heroes/hero-product-engineering.jpg',
+    image: '/assets/heroes/hero-product-engineering.webp',
     accent: '#F69822',
   },
   {
@@ -57,7 +57,7 @@ const SLIDES = [
       'End-to-end customer experiences combining strategy, design, and technology to drive loyalty, satisfaction, and commercial outcomes.',
     cta: 'Explore Customer Experience',
     href: '/services/customer-experience',
-    image: '/assets/heroes/hero-customer-experience.jpg',
+    image: '/assets/heroes/hero-customer-experience.webp',
     accent: '#FDCF09',
   },
   {
@@ -68,7 +68,7 @@ const SLIDES = [
       'Automate complex, high-volume processes by combining RPA with AI—eliminating inefficiency and scaling without adding headcount.',
     cta: 'Explore Intelligent Automation',
     href: '/services/intelligent-automation',
-    image: '/assets/heroes/hero-intelligent-automation.jpg',
+    image: '/assets/heroes/hero-intelligent-automation.webp',
     accent: '#F69822',
   },
   {
@@ -79,7 +79,7 @@ const SLIDES = [
       'Unify, govern, and activate your data—building the platforms and analytics capabilities needed to make confident, evidence-based decisions.',
     cta: 'Explore Data & Analytics',
     href: '/services/data-and-analytics',
-    image: '/assets/heroes/hero-data-analytics.jpg',
+    image: '/assets/heroes/hero-data-analytics.webp',
     accent: '#FDCF09',
   },
   {
@@ -90,7 +90,7 @@ const SLIDES = [
       'Plan, execute, and manage cloud transformations across AWS, Azure, and GCP—building secure, resilient, and cost-efficient cloud estates.',
     cta: 'Explore Cloud Platforms',
     href: '/services/cloud-platforms',
-    image: '/assets/heroes/hero-cloud-platforms.jpg',
+    image: '/assets/heroes/hero-cloud-platforms.webp',
     accent: '#F69822',
   },
   {
@@ -101,7 +101,7 @@ const SLIDES = [
       'Build extended-reality experiences, IoT ecosystems, and immersive simulations that connect physical and digital worlds to unlock new value.',
     cta: 'Explore Edge Technologies',
     href: '/services/edge-technologies',
-    image: '/assets/heroes/hero-edge-technologies.jpg',
+    image: '/assets/heroes/hero-edge-technologies.webp',
     accent: '#FDCF09',
   },
 ] as const;

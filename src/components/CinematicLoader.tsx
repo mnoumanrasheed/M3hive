@@ -227,7 +227,7 @@ export function CinematicLoader({
             autoAlpha: 1,
             scale: 1,
             y: 0,
-            duration: 0.35,
+            duration: 0.12,
             ease: 'power2.out',
           },
           0,
@@ -248,7 +248,7 @@ export function CinematicLoader({
           progressFill,
           {
             scaleX: 1,
-            duration: 0.65,
+            duration: 0.22,
             ease: 'sine.inOut',
           },
           0.3,
@@ -258,7 +258,7 @@ export function CinematicLoader({
           counter,
           {
             value: 100,
-            duration: 0.65,
+            duration: 0.22,
             ease: 'sine.inOut',
 
             onUpdate: () => {
@@ -282,11 +282,11 @@ export function CinematicLoader({
           loader,
           {
             autoAlpha: 0,
-            duration: 0.4,
+            duration: 0.25,
             ease: 'power2.inOut',
             onComplete: finish,
           },
-          1.15,
+          0.45,
         );
 
         return;
@@ -316,7 +316,7 @@ export function CinematicLoader({
         {
           autoAlpha: 1,
           scale: 1,
-          duration: 1.6,
+          duration: 0.45,
           ease: 'sine.out',
         },
         0,
@@ -333,7 +333,7 @@ export function CinematicLoader({
           autoAlpha: 0.4,
           scale: 1,
           y: 0,
-          duration: 1.3,
+          duration: 0.12,
           stagger: 0.035,
           ease: 'power2.out',
         },
@@ -351,7 +351,7 @@ export function CinematicLoader({
           autoAlpha: 0.7,
           scale: 1,
           y: 0,
-          duration: 1.3,
+          duration: 0.12,
           stagger: 0.065,
           ease: 'power2.out',
         },
@@ -369,10 +369,10 @@ export function CinematicLoader({
           autoAlpha: 1,
           scale: 1,
           y: 0,
-          duration: 1.25,
+          duration: 0.32,
           ease: 'power3.out',
         },
-        0.55,
+        0.08,
       );
 
       /* =====================================================
@@ -385,11 +385,11 @@ export function CinematicLoader({
         {
           autoAlpha: 1,
           y: 0,
-          duration: 0.65,
+          duration: 0.22,
           stagger: 0.08,
           ease: 'power2.out',
         },
-        1.4,
+        0.18,
       );
 
       /* =====================================================
@@ -401,17 +401,17 @@ export function CinematicLoader({
         progressFill,
         {
           scaleX: 1,
-          duration: 2.5,
+          duration: 0.4,
           ease: 'power2.inOut',
         },
-        1.65,
+        0.24,
       );
 
       timeline.to(
         counter,
         {
           value: 100,
-          duration: 2.5,
+          duration: 0.4,
           ease: 'power2.inOut',
 
           onUpdate: () => {
@@ -428,7 +428,7 @@ export function CinematicLoader({
             }
           },
         },
-        1.65,
+        0.24,
       );
 
       /* =====================================================
@@ -443,27 +443,27 @@ export function CinematicLoader({
           duration: 0.25,
           ease: 'sine.out',
         },
-        2,
+        0.28,
       );
 
       timeline.to(
         shine,
         {
           xPercent: 180,
-          duration: 1.55,
+          duration: 0.34,
           ease: 'power2.inOut',
         },
-        2.05,
+        0.3,
       );
 
       timeline.to(
         shine,
         {
           autoAlpha: 0,
-          duration: 0.3,
+          duration: 0.14,
           ease: 'sine.out',
         },
-        3.4,
+        0.58,
       );
 
       /* =====================================================
@@ -477,22 +477,22 @@ export function CinematicLoader({
         particleElements,
         {
           y: -3,
-          duration: 2.2,
+          duration: 0.45,
           stagger: 0.02,
           ease: 'sine.inOut',
         },
-        1.2,
+        0.24,
       );
 
       timeline.to(
         hexElements,
         {
           y: -2,
-          duration: 2.3,
+          duration: 0.45,
           stagger: 0.03,
           ease: 'sine.inOut',
         },
-        1.3,
+        0.24,
       );
 
       /* =====================================================
@@ -504,10 +504,10 @@ export function CinematicLoader({
         scene,
         {
           scale: 1.004,
-          duration: 0.35,
+          duration: 0.12,
           ease: 'sine.inOut',
         },
-        4.15,
+        0.64,
       );
 
       /* =====================================================
@@ -520,10 +520,10 @@ export function CinematicLoader({
         {
           autoAlpha: 0,
           y: -4,
-          duration: 0.35,
+          duration: 0.12,
           ease: 'power2.in',
         },
-        4.35,
+        0.68,
       );
 
       /* =====================================================
@@ -539,10 +539,10 @@ export function CinematicLoader({
         ],
         {
           autoAlpha: 0,
-          duration: 0.65,
+          duration: 0.22,
           ease: 'power2.inOut',
         },
-        4.45,
+        0.7,
       );
 
       /* =====================================================
@@ -556,10 +556,10 @@ export function CinematicLoader({
           autoAlpha: 0,
           scale: 1.012,
           y: -2,
-          duration: 0.7,
+          duration: 0.22,
           ease: 'power2.inOut',
         },
-        4.5,
+        0.7,
       );
 
       /* =====================================================
@@ -573,12 +573,12 @@ export function CinematicLoader({
         loader,
         {
           autoAlpha: 0,
-          duration: 0.9,
+          duration: 0.24,
           ease: 'power2.inOut',
 
           onComplete: finish,
         },
-        4.75,
+        0.76,
       );
     }, loader);
 

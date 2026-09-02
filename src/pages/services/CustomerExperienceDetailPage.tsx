@@ -1034,7 +1034,7 @@ export const CustomerExperienceDetailPage: React.FC = () => {
                     variant="primary"
                     size="lg"
                   >
-                    Start a Conversation
+                    Start a Project
 
                     <ArrowRight
                       className="
@@ -1666,7 +1666,7 @@ export const CustomerExperienceDetailPage: React.FC = () => {
               variant="primary"
               size="lg"
             >
-              Start a Conversation
+              Start a Project
 
               <ArrowRight
                 className="

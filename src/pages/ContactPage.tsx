@@ -30,10 +30,10 @@ export const ContactPage: React.FC = () => {
           HERO BANNER — M3 HIVE HERO WITH SEAMLESS GRADIENT BLEND
       ============================================================ */}
       <section
-        className="relative z-0 flex flex-col justify-center overflow-hidden border-b border-hive-border"
+        className="relative z-0 flex flex-col justify-center overflow-hidden border-b border-hive-border px-0 pt-20"
         style={{ minHeight: '92svh' }}
       >
-        <HeroBackground imageUrl="/assets/heroes/hero-contact.jpg" />
+        <HeroBackground imageUrl="/assets/heroes/hero-contact.jpg" priority />
         <PremiumHeroMotion variant="contact" />
 
         <Container size="md" className="relative z-10 text-center">
@@ -191,7 +191,7 @@ export const ContactPage: React.FC = () => {
           <FadeIn>
             <SectionHeading
               title="Our Global Offices"
-              description="M3 Hive operates 14+ offices and development centres across the world."
+              description="M3 Hive operates through offices and development centres across global markets."
             />
           </FadeIn>
 

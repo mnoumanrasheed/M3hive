@@ -4,7 +4,7 @@ export const homepageData: HomepageData = {
   hero: {
     title: 'Engineering Digital Experiences That Move Business Forward',
     description: 'AI-powered product engineering, intelligent automation, data, cloud, and experience design—built to improve how people live, work, and engage with technology.',
-    ctaLabel: 'Start a Conversation',
+    ctaLabel: 'Start a Project',
     ctaHref: '/contact',
   },
   intro: {

@@ -121,6 +121,26 @@ const initialFormState: StartProjectFormState = {
   honeypot: '',
 };
 
+const ErrorSlot: React.FC<{
+  message?: string;
+  className?: string;
+}> = ({
+  message,
+  className = '',
+}) => {
+  if (!message) return null;
+
+  return (
+    <p
+      className={`text-[10px] font-semibold leading-[18px] text-red-400 ${className}`}
+      role="alert"
+      aria-live="polite"
+    >
+      {message}
+    </p>
+  );
+};
+
 interface StartProjectWorkflowProps {
   initialService?: string;
 }
@@ -182,8 +202,8 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
     recaptchaLoaded.current = true;
   }, [recaptchaSiteKey]);
 
-  const scrollToTop = () => {
-    if (formTopRef.current && !reducedMotion) {
+  const scrollToTop = (force = false) => {
+    if (formTopRef.current && !reducedMotion && force) {
       formTopRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
@@ -277,27 +297,23 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
   const handleNext = () => {
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => Math.min(prev + 1, 4));
-      scrollToTop();
     }
   };
 
   const handleBack = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
     setValidationErrors({});
-    scrollToTop();
   };
 
   const jumpToStep = (targetStep: number) => {
     if (targetStep < currentStep) {
       setCurrentStep(targetStep);
       setValidationErrors({});
-      scrollToTop();
     } else if (targetStep > currentStep) {
       for (let s = currentStep; s < targetStep; s++) {
         if (!validateStep(s)) return;
       }
       setCurrentStep(targetStep);
-      scrollToTop();
     }
   };
 
@@ -396,7 +412,7 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
       }
 
       setSubmitStatus('success');
-      scrollToTop();
+      scrollToTop(true);
     } catch (err) {
       setSubmitStatus('error');
       setErrorMessage(
@@ -528,7 +544,7 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
             RIGHT COLUMN: The Sleek Multi-Step Card (Technyder Style)
         ============================================================ */}
         <div className="lg:col-span-7">
-          <div className="relative overflow-hidden rounded-3xl border border-white/[0.1] bg-[#0c0c0c]/95 p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.05)] backdrop-blur-xl">
+          <div className="relative overflow-hidden rounded-3xl border border-white/[0.1] bg-[#0c0c0c]/95 p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.05)] backdrop-blur-xl sm:p-8">
             
             {/* Ambient subtle glow inside card */}
             <div
@@ -581,7 +597,7 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} noValidate className="relative z-10 space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="relative z-10">
               
               {/* Honeypot */}
               <div className="absolute -z-50 h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
@@ -597,11 +613,16 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
 
               {/* Error Banner */}
               {submitStatus === 'error' && errorMessage && (
-                <div className="flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-200">
+                <div
+                  className="mb-4 flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-200"
+                  aria-live="polite"
+                >
                   <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
                   <div>{errorMessage}</div>
                 </div>
               )}
+
+              <div className="form-step-content">
 
               {/* ============================================================
                   STEP 1: What are you looking to build? (Pill Chips)
@@ -617,11 +638,10 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                     </p>
                   </div>
 
-                  {validationErrors.services && (
-                    <p className="text-xs font-semibold text-red-400" role="alert">
-                      {validationErrors.services}
-                    </p>
-                  )}
+                  <ErrorSlot
+                    message={validationErrors.services}
+                    className="text-xs"
+                  />
 
                   {/* Technyder style Pill Chips wrap */}
                   <div className="flex flex-wrap gap-2.5 pt-1">
@@ -669,11 +689,10 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                     </p>
                   </div>
 
-                  {validationErrors.journeyStage && (
-                    <p className="text-xs font-semibold text-red-400" role="alert">
-                      {validationErrors.journeyStage}
-                    </p>
-                  )}
+                  <ErrorSlot
+                    message={validationErrors.journeyStage}
+                    className="text-xs"
+                  />
 
                   <div className="flex flex-wrap gap-2.5 pt-1">
                     {step2Options.map((opt) => {
@@ -720,11 +739,10 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                     </p>
                   </div>
 
-                  {validationErrors.message && (
-                    <p className="text-xs font-semibold text-red-400" role="alert">
-                      {validationErrors.message}
-                    </p>
-                  )}
+                  <ErrorSlot
+                    message={validationErrors.message}
+                    className="text-xs"
+                  />
 
                   <div className="space-y-3">
                     <textarea
@@ -777,7 +795,7 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <div>
+                    <div className="flex flex-col">
                       <label className="block text-[11px] font-semibold text-neutral-300">
                         First Name <span className="text-hive-yellow">*</span>
                       </label>
@@ -789,12 +807,10 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                         placeholder="Alex"
                         className="mt-1 w-full rounded-lg border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-neutral-500 focus:border-hive-yellow focus:outline-none transition-all"
                       />
-                      {validationErrors.firstName && (
-                        <p className="mt-1 text-[10px] text-red-400">{validationErrors.firstName}</p>
-                      )}
+                      <ErrorSlot message={validationErrors.firstName} />
                     </div>
 
-                    <div>
+                    <div className="flex flex-col">
                       <label className="block text-[11px] font-semibold text-neutral-300">
                         Last Name <span className="text-hive-yellow">*</span>
                       </label>
@@ -806,12 +822,10 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                         placeholder="Morgan"
                         className="mt-1 w-full rounded-lg border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-neutral-500 focus:border-hive-yellow focus:outline-none transition-all"
                       />
-                      {validationErrors.lastName && (
-                        <p className="mt-1 text-[10px] text-red-400">{validationErrors.lastName}</p>
-                      )}
+                      <ErrorSlot message={validationErrors.lastName} />
                     </div>
 
-                    <div>
+                    <div className="flex flex-col">
                       <label className="block text-[11px] font-semibold text-neutral-300">
                         Work Email <span className="text-hive-yellow">*</span>
                       </label>
@@ -823,12 +837,10 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                         placeholder="alex@company.com"
                         className="mt-1 w-full rounded-lg border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-neutral-500 focus:border-hive-yellow focus:outline-none transition-all"
                       />
-                      {validationErrors.email && (
-                        <p className="mt-1 text-[10px] text-red-400">{validationErrors.email}</p>
-                      )}
+                      <ErrorSlot message={validationErrors.email} />
                     </div>
 
-                    <div>
+                    <div className="flex flex-col">
                       <label className="block text-[11px] font-semibold text-neutral-300">
                         Company Name
                       </label>
@@ -840,9 +852,10 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                         placeholder="Acme Corp"
                         className="mt-1 w-full rounded-lg border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-neutral-500 focus:border-hive-yellow focus:outline-none transition-all"
                       />
+                      <ErrorSlot />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div className="flex flex-col sm:col-span-2">
                       <label className="block text-[11px] font-semibold text-neutral-300">
                         Phone <span className="text-neutral-500">(optional)</span>
                       </label>
@@ -854,6 +867,7 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                         placeholder="+44 20 7946 0912"
                         className="mt-1 w-full rounded-lg border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder:text-neutral-500 focus:border-hive-yellow focus:outline-none transition-all"
                       />
+                      <ErrorSlot />
                     </div>
                   </div>
 
@@ -863,27 +877,29 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                 </div>
               )}
 
+              </div>
+
               {/* Card Bottom Controls (Technyder Style) */}
-              <div className="flex items-center justify-between border-t border-white/[0.08] pt-4">
+              <div className="mt-6 flex items-center justify-between gap-3 border-t border-white/[0.08] pt-4">
                 {currentStep > 1 ? (
                   <button
                     type="button"
                     onClick={handleBack}
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-4 py-2 font-heading text-xs font-semibold text-neutral-300 transition-colors hover:bg-white/10 hover:text-white"
+                    className="inline-flex min-w-[92px] items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-4 py-2 font-heading text-xs font-semibold text-neutral-300 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-60"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
                     <span>Back</span>
                   </button>
                 ) : (
-                  <div />
+                  <div className="min-w-[92px]" />
                 )}
 
                 {currentStep < 4 ? (
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-hive-yellow px-5 py-2 font-heading text-xs font-bold text-hive-black shadow-md shadow-hive-yellow/15 transition-all hover:bg-hive-orange hover:text-white hover:scale-[1.02] active:scale-[0.98]"
+                    className="inline-flex min-w-[108px] items-center justify-center gap-1.5 rounded-lg bg-hive-yellow px-5 py-2 font-heading text-xs font-bold text-hive-black shadow-md shadow-hive-yellow/15 transition-all hover:-translate-y-px hover:bg-hive-orange hover:text-white active:translate-y-0"
                   >
                     <span>Continue</span>
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -892,16 +908,16 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 rounded-lg bg-hive-yellow px-6 py-2.5 font-heading text-xs font-bold text-hive-black shadow-md shadow-hive-yellow/20 transition-all hover:bg-hive-orange hover:text-white hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                    className="inline-flex min-w-[108px] items-center justify-center gap-2 rounded-lg bg-hive-yellow px-6 py-2.5 font-heading text-xs font-bold text-hive-black shadow-md shadow-hive-yellow/20 transition-all hover:-translate-y-px hover:bg-hive-orange hover:text-white active:translate-y-0 disabled:opacity-60"
                   >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        <span>Submitting Brief...</span>
+                        <span>Submitting...</span>
                       </>
                     ) : (
                       <>
-                        <span>Submit Project Brief</span>
+                        <span>Submit</span>
                         <ArrowRight className="h-3.5 w-3.5" />
                       </>
                     )}

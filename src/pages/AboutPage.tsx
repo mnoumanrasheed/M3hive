@@ -1,4 +1,5 @@
 import React, {
+  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -21,10 +22,41 @@ export const AboutPage: React.FC = () => {
   const [isMuted, setIsMuted] =
     useState(true);
 
+  const [shouldLoadVideo, setShouldLoadVideo] =
+    useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadVideo(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: '300px 0px',
+      },
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const toggleVideoSound = () => {
     const video = videoRef.current;
 
     if (!video) return;
+
+    if (!shouldLoadVideo) {
+      setShouldLoadVideo(true);
+    }
 
     const nextMuted = !video.muted;
 
@@ -472,13 +504,13 @@ export const AboutPage: React.FC = () => {
                         ease-out
                         group-md:hover:scale-[1.01]
                       "
-                      src="/videos/who-we-are.mp4"
-                      poster="/assets/heroes/hero-about.jpg"
+                      src={shouldLoadVideo ? '/videos/who-we-are.mp4' : undefined}
+                      poster="/assets/heroes/hero-about.webp"
                       autoPlay
                       muted
                       loop
                       playsInline
-                      preload="metadata"
+                      preload="none"
                     />
 
                     {/* Cinematic video overlay */}
@@ -852,7 +884,7 @@ export const AboutPage: React.FC = () => {
           <FadeIn>
             <SectionHeading
               title="Our Global Offices"
-              description={`M3 Hive operates ${officeLocations.length} offices and development centres across the world, enabling us to deliver round-the-clock support and regional expertise.`}
+              description="Our teams operate across multiple international offices and development centres, enabling us to deliver round-the-clock support and regional expertise."
               accentBar
             />
           </FadeIn>

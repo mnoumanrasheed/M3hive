@@ -177,10 +177,10 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
   }, [isOpen]);
 
   const activeLinkClass =
-    'text-hive-orange';
+    'border-hive-yellow/40 bg-hive-yellow/15 text-hive-black';
 
   const linkClass =
-    'text-hive-black hover:text-hive-orange';
+    'border-transparent text-neutral-700 hover:border-hive-yellow/30 hover:bg-hive-yellow/10 hover:text-hive-black';
 
   return (
     <>
@@ -217,10 +217,13 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
           right-0
           z-50
           flex
-          w-[min(360px,100vw)]
+          w-[min(380px,calc(100vw-24px))]
           flex-col
-          bg-hive-white
-          shadow-hive-lg
+          border-l
+          border-hive-border
+          bg-white
+          shadow-[0_24px_70px_rgba(15,15,15,0.18)]
+          backdrop-blur-2xl
         "
         style={{
           transform: 'translateX(100%)',
@@ -257,18 +260,19 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
               rounded-xl
               border
               border-hive-border
-              text-hive-text-muted
+              bg-hive-warm-white
+              text-hive-black
               transition-all
               duration-150
-              hover:border-hive-yellow
-              hover:text-hive-black
+              hover:border-hive-yellow/60
+              hover:bg-hive-yellow/10
               focus-visible:outline-none
               focus-visible:ring-2
               focus-visible:ring-hive-yellow
             "
           >
             <X
-              className="h-4.5 w-4.5"
+              className="h-4 w-4"
               aria-hidden="true"
             />
           </button>
@@ -297,6 +301,7 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
                 [
                   'block',
                   'rounded-xl',
+                  'border',
                   'px-4',
                   'py-3',
                   'font-heading',
@@ -304,7 +309,9 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
                   'font-semibold',
                   'transition-colors',
                   'duration-150',
-                  'hover:bg-hive-warm-white',
+                  'focus-visible:outline-none',
+                  'focus-visible:ring-2',
+                  'focus-visible:ring-hive-yellow',
 
                   isActive
                     ? activeLinkClass
@@ -333,7 +340,7 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
             variant="primary"
             fullWidth
           >
-            Start a Conversation
+            Start a Project
 
             <ArrowRight
               className="h-4 w-4"
@@ -399,34 +406,36 @@ export const Header: React.FC = () => {
           'top-0',
           'z-[60]',
           'w-full',
-          'bg-hive-white',
-          'transition-shadow',
-          'duration-300',
-
+          'border-b',
+          'border-hive-border',
+          'transition-[background,border-color,box-shadow,backdrop-filter]',
+          'duration-[250ms]',
+          'ease-out',
+          'supports-[backdrop-filter]:backdrop-blur-[14px]',
           scrolled
-            ? 'border-b border-hive-border shadow-hive-md'
-            : 'border-b border-transparent',
+            ? 'bg-white/95 shadow-[0_10px_30px_rgba(15,15,15,0.08)] supports-[backdrop-filter]:backdrop-blur-[18px]'
+            : 'bg-white/95 shadow-[0_1px_0_rgba(15,15,15,0.04)]',
         ].join(' ')}
       >
         <Container size="lg">
           <div
             className="
               flex
-              h-16
+              h-[72px]
               items-center
               justify-between
-              lg:h-[70px]
+              lg:h-20
             "
           >
             {/* Logo */}
 
             <BrandLogo
               imgClassName="
-                h-8
+                h-9
                 w-auto
                 object-contain
-                sm:h-9
-                lg:h-10
+                sm:h-10
+                lg:h-11
               "
             />
 
@@ -438,8 +447,7 @@ export const Header: React.FC = () => {
               className="
                 hidden
                 items-center
-                gap-0.5
-                xl:gap-1
+                gap-1
                 md:flex
               "
               aria-label="Primary navigation"
@@ -452,25 +460,38 @@ export const Header: React.FC = () => {
                     isActive,
                   }) =>
                     [
-                      'rounded-xl',
-                      'px-2.5',
-                      'xl:px-3.5',
-                      'py-2',
+                      'relative',
+                      'rounded-full',
+                      'px-3.5',
+                      'xl:px-4',
+                      'py-2.5',
                       'font-heading',
                       'text-[13px]',
                       'xl:text-sm',
-                      'font-medium',
-                      'transition-colors',
-                      'duration-150',
+                      'font-semibold',
+                      'transition-all',
+                      'duration-200',
+                      'after:absolute',
+                      'after:bottom-1.5',
+                      'after:left-1/2',
+                      'after:h-px',
+                      'after:w-5',
+                      'after:-translate-x-1/2',
+                      'after:scale-x-0',
+                      'after:bg-hive-yellow',
+                      'after:shadow-[0_0_10px_rgba(253,207,9,0.55)]',
+                      'after:transition-transform',
+                      'after:duration-200',
                       'hover:bg-hive-warm-white',
-                      'hover:text-hive-orange',
+                      'hover:text-hive-black',
+                      'hover:after:scale-x-100',
                       'focus-visible:outline-none',
                       'focus-visible:ring-2',
                       'focus-visible:ring-hive-yellow',
 
                       isActive
-                        ? 'font-semibold text-hive-orange'
-                        : 'text-hive-black',
+                        ? 'bg-hive-warm-white text-hive-black after:scale-x-100'
+                        : 'text-neutral-700',
                     ].join(' ')
                   }
                 >
@@ -496,9 +517,9 @@ export const Header: React.FC = () => {
                   href="/contact"
                   variant="primary"
                   size="md"
-                  className="text-[13px] xl:text-sm px-4 xl:px-5"
+                  className="px-4 text-[13px] shadow-[0_8px_24px_rgba(253,207,9,0.24)] transition-transform hover:-translate-y-px xl:px-5 xl:text-sm"
                 >
-                  Start a Conversation
+                  Start a Project
 
                   <ArrowRight
                     className="h-3.5 w-3.5 xl:h-4 xl:w-4"
@@ -519,14 +540,15 @@ export const Header: React.FC = () => {
                   w-9
                   items-center
                   justify-center
-                  rounded-xl
+                  rounded-lg
                   border
                   border-hive-border
-                  text-hive-text-muted
+                  bg-hive-warm-white
+                  text-hive-black
                   transition-all
                   duration-150
-                  hover:border-hive-yellow
-                  hover:text-hive-black
+                  hover:border-hive-yellow/60
+                  hover:bg-hive-yellow/10
                   focus-visible:outline-none
                   focus-visible:ring-2
                   focus-visible:ring-hive-yellow
@@ -534,7 +556,7 @@ export const Header: React.FC = () => {
                 "
               >
                 <Menu
-                  className="h-4.5 w-4.5"
+                  className="h-4 w-4"
                   aria-hidden="true"
                 />
               </button>

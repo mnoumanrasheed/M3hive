@@ -942,7 +942,7 @@ export const CloudPlatformsDetailPage: React.FC = () => {
                     variant="primary"
                     size="lg"
                   >
-                    Start a Conversation
+                    Start a Project
 
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -1527,7 +1527,7 @@ export const CloudPlatformsDetailPage: React.FC = () => {
               variant="primary"
               size="lg"
             >
-              Start a Conversation
+              Start a Project
 
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

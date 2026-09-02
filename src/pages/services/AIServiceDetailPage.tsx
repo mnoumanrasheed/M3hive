@@ -349,7 +349,7 @@ export const AIServiceDetailPage: React.FC = () => {
                     variant="primary"
                     size="lg"
                   >
-                    Start a Conversation
+                    Start a Project
 
                     <ArrowRight
                       className="
@@ -1074,7 +1074,7 @@ export const AIServiceDetailPage: React.FC = () => {
               variant="primary"
               size="lg"
             >
-              Start a Conversation
+              Start a Project
 
               <ArrowRight
                 className="
