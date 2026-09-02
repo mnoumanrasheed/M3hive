@@ -1269,7 +1269,7 @@ export const CloudPlatformsDetailPage: React.FC = () => {
                       group
                       relative
                       h-full
-                      overflow-hidden
+                      overflow-visible
                       rounded-2xl
                       border
                       border-white/[0.14]

@@ -51,6 +51,8 @@ export const App: React.FC = () => {
             <Route path="/risk-and-compliance" element={<RiskCompliancePage />} />
             <Route path="/risk-and-compliance/:slug" element={<RiskPolicyDetailPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/contact-us" element={<ContactPage />} />
+            <Route path="/contact-us.html" element={<ContactPage />} />
 
             {/* Services Routes */}
             <Route path="/services" element={<ServicesIndexPage />} />

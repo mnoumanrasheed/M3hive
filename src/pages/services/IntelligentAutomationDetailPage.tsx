@@ -1371,7 +1371,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                       group
                       relative
                       h-full
-                      overflow-hidden
+                      overflow-visible
                       rounded-2xl
                       border
                       border-white/[0.14]
@@ -1398,7 +1398,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         to-hive-yellow
                         transition-all
                         duration-500
-                        group-md:hover:w-full
+                        md:group-hover:w-full
                       "
                     />
 
@@ -1416,7 +1416,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         bg-hive-yellow/10
                         transition-all
                         duration-300
-                        group-md:hover:bg-hive-yellow/[0.16]
+                        md:group-hover:bg-hive-yellow/[0.16]
                       "
                     >
                       <CheckCircle2
@@ -1534,7 +1534,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         text-hive-black
                         transition-colors
                         duration-300
-                        group-md:hover:text-hive-orange
+                        md:group-hover:text-hive-orange
                       "
                     >
                       {
@@ -1552,7 +1552,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                         text-hive-text-muted
                         transition-colors
                         duration-300
-                        group-md:hover:text-hive-orange
+                        md:group-hover:text-hive-orange
                       "
                     >
                       Learn More
@@ -1563,7 +1563,7 @@ export const IntelligentAutomationDetailPage: React.FC = () => {
                           w-4
                           transition-transform
                           duration-300
-                          group-md:hover:translate-x-1
+                          md:group-hover:translate-x-1
                         "
                       />
                     </div>

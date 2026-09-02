@@ -762,7 +762,7 @@ export const AIServiceDetailPage: React.FC = () => {
                         to-hive-yellow
                         transition-all
                         duration-500
-                        group-md:hover:w-full
+                        md:group-hover:w-full
                       "
                     />
 
@@ -782,8 +782,8 @@ export const AIServiceDetailPage: React.FC = () => {
                         bg-hive-yellow/[0.10]
                         transition-all
                         duration-300
-                        group-md:hover:border-hive-yellow/70
-                        group-md:hover:bg-hive-yellow/[0.16]
+                        md:group-hover:border-hive-yellow/70
+                        md:group-hover:bg-hive-yellow/[0.16]
                       "
                     >
                       <CheckCircle2

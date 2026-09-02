@@ -760,7 +760,7 @@ export const OurApproachDetailPage: React.FC = () => {
               >
                 <div className="group relative h-full w-full overflow-hidden rounded-2xl border border-white/[0.14] bg-[#151515] p-7 transition-all duration-300 md:hover:-translate-y-1 md:hover:border-hive-yellow/50 md:hover:bg-[#191919] md:hover:shadow-[0_20px_50px_rgba(0,0,0,0.40)] sm:p-8">
 
-                  <div className="absolute left-0 top-0 h-[2px] w-0 bg-gradient-to-r from-hive-orange to-hive-yellow transition-all duration-500 group-md:hover:w-full" />
+                  <div className="absolute left-0 top-0 h-[2px] w-0 bg-gradient-to-r from-hive-orange to-hive-yellow transition-all duration-500 md:group-hover:w-full" />
 
                   <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-hive-yellow/40 bg-hive-yellow/10">
                     <CheckCircle2 className="h-6 w-6 text-hive-yellow" />
@@ -817,10 +817,10 @@ export const OurApproachDetailPage: React.FC = () => {
                       {related.intro}
                     </p>
 
-                    <div className="flex items-center gap-1.5 text-sm font-semibold text-hive-text-muted transition-colors duration-300 group-md:hover:text-hive-yellow">
+                    <div className="flex items-center gap-1.5 text-sm font-semibold text-hive-text-muted transition-colors duration-300 md:group-hover:text-hive-yellow">
                       Explore Details
 
-                      <ChevronRight className="h-4 w-4 transition-transform duration-300 group-md:hover:translate-x-1" />
+                      <ChevronRight className="h-4 w-4 transition-transform duration-300 md:group-hover:translate-x-1" />
                     </div>
                   </div>
                 </FadeIn>

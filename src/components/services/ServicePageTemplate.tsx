@@ -333,7 +333,7 @@ export const ServicePageTemplate: React.FC<
                           transition-colors
                           duration-300
 
-                          group-md:hover:text-hive-yellow
+                          md:group-hover:text-hive-yellow
                         "
                       >
                         {offering.ctaLabel}
@@ -346,7 +346,7 @@ export const ServicePageTemplate: React.FC<
                             transition-transform
                             duration-300
 
-                            group-md:hover:translate-x-1
+                            md:group-hover:translate-x-1
                           "
                         />
                       </div>

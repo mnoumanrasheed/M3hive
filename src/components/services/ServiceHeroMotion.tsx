@@ -38,6 +38,14 @@ export const ServiceHeroMotion: React.FC<ServiceHeroMotionProps> = ({
 
   const particleRefs = useRef<Array<HTMLSpanElement | null>>([]);
 
+  // Track if device supports hover (disable parallax on touch devices)
+  const supportsHover = useRef(true);
+
+  useLayoutEffect(() => {
+    // Detect touch devices to disable parallax
+    supportsHover.current = window.matchMedia('(hover: hover)').matches;
+  }, []);
+
   useLayoutEffect(() => {
     if (!rootRef.current) return;
 
@@ -49,16 +57,16 @@ export const ServiceHeroMotion: React.FC<ServiceHeroMotionProps> = ({
       if (imageRef.current) {
         gsap.set(imageRef.current, {
           scale: 1.06,
-          xPercent: -1,
-          yPercent: -0.4,
+          xPercent: supportsHover.current ? -1 : 0,
+          yPercent: supportsHover.current ? -0.4 : 0,
           transformOrigin: '50% 50%',
           force3D: true,
         });
 
         gsap.to(imageRef.current, {
           scale: 1.12,
-          xPercent: 1.1,
-          yPercent: 0.7,
+          xPercent: supportsHover.current ? 1.1 : 0,
+          yPercent: supportsHover.current ? 0.7 : 0,
           duration: 16,
           ease: 'sine.inOut',
           repeat: -1,
@@ -420,7 +428,7 @@ export const ServiceHeroMotion: React.FC<ServiceHeroMotionProps> = ({
       />
 
       {/* =============================================
-          PREMIUM ORBIT SYSTEM
+          PREMIUM ORBIT SYSTEM - RESPONSIVE SCALING
       ============================================= */}
 
       <div
@@ -434,15 +442,24 @@ export const ServiceHeroMotion: React.FC<ServiceHeroMotionProps> = ({
 
           hidden
 
-          h-[390px]
-          w-[390px]
+          h-[220px]
+          w-[220px]
 
           -translate-y-1/2
 
           opacity-70
 
+          sm:h-[260px]
+          sm:w-[260px]
+          sm:right-[-80px]
+          
+          md:h-[300px]
+          md:w-[300px]
+          md:right-[-60px]
           md:block
 
+          lg:h-[340px]
+          lg:w-[340px]
           lg:right-[-40px]
 
           xl:right-[3%]

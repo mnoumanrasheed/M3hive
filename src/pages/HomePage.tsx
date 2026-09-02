@@ -7,7 +7,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { Button } from '../components/ui/Button';
 import { FadeIn } from '../components/ui/FadeIn';
 
-import { DiscoveryForm } from '../components/home/DiscoveryForm';
+import { EnterpriseMainCTA } from '../components/home/EnterpriseMainCTA';
 import { HeroCarousel } from '../components/home/HeroCarousel';
 
 import TestimonialsCarousel from '../components/TestimonialsCarousel';
@@ -300,101 +300,10 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ======================================================
-          CONTACT CTA
+          MAIN ENTERPRISE CTA SECTION
       ====================================================== */}
 
-      <section className="bg-hive-white py-16 sm:py-24 lg:py-32">
-        <Container size="lg">
-          <FadeIn>
-            <div
-              className="
-                relative
-                overflow-hidden
-                rounded-2xl
-                border
-                border-hive-border
-                bg-hive-black
-                p-6
-                text-hive-white
-                sm:rounded-[2rem]
-                sm:p-8
-                md:p-12
-                lg:p-16
-              "
-            >
-              {/* Decorative glow */}
-              <div
-                className="
-                  absolute
-                  right-0
-                  top-0
-                  h-64
-                  w-64
-                  -translate-y-1/2
-                  translate-x-1/3
-                  rounded-full
-                  bg-hive-yellow/10
-                  blur-xl
-                  md:blur-3xl
-                "
-              />
-
-              <div
-                className="
-                  absolute
-                  bottom-0
-                  left-0
-                  h-64
-                  w-64
-                  -translate-x-1/3
-                  translate-y-1/2
-                  rounded-full
-                  bg-hive-orange/10
-                  blur-xl
-                  md:blur-3xl
-                "
-              />
-
-              <div
-                className="
-                  relative
-                  z-10
-                  grid
-                  grid-cols-1
-                  items-center
-                  gap-8
-                  lg:grid-cols-12
-                  lg:gap-16
-                "
-              >
-                <div className="text-center lg:col-span-5 lg:text-left">
-                  <h2
-                    className="
-                      mb-4
-                      font-heading
-                      text-display-sm
-                      font-bold
-                      text-hive-yellow
-                      sm:mb-6
-                      sm:text-display-md
-                    "
-                  >
-                    {homepageData.contactCTA.title}
-                  </h2>
-
-                  <p className="text-base text-neutral-400 sm:text-lg">
-                    {homepageData.contactCTA.description}
-                  </p>
-                </div>
-
-                <div className="lg:col-span-7">
-                  <DiscoveryForm />
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </Container>
-      </section>
+      <EnterpriseMainCTA />
     </PageShell>
   );
 };

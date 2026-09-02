@@ -1291,7 +1291,7 @@ export const EdgeTechnologiesDetailPage: React.FC = () => {
                       group
                       relative
                       h-full
-                      overflow-hidden
+                      overflow-visible
                       rounded-2xl
                       border
                       border-white/[0.14]
@@ -1318,7 +1318,7 @@ export const EdgeTechnologiesDetailPage: React.FC = () => {
                         to-hive-yellow
                         transition-all
                         duration-500
-                        group-md:hover:w-full
+                        md:group-hover:w-full
                       "
                     />
 
@@ -1336,7 +1336,7 @@ export const EdgeTechnologiesDetailPage: React.FC = () => {
                         bg-hive-yellow/10
                         transition-all
                         duration-300
-                        group-md:hover:bg-hive-yellow/[0.16]
+                        md:group-hover:bg-hive-yellow/[0.16]
                       "
                     >
                       <CheckCircle2 className="h-6 w-6 text-hive-yellow" />
@@ -1441,7 +1441,7 @@ export const EdgeTechnologiesDetailPage: React.FC = () => {
                           text-hive-black
                           transition-colors
                           duration-300
-                          group-md:hover:text-hive-orange
+                          md:group-hover:text-hive-orange
                         "
                       >
                         {relatedService.title}
@@ -1457,7 +1457,7 @@ export const EdgeTechnologiesDetailPage: React.FC = () => {
                           text-hive-text-muted
                           transition-colors
                           duration-300
-                          group-md:hover:text-hive-orange
+                          md:group-hover:text-hive-orange
                         "
                       >
                         Learn More
@@ -1468,7 +1468,7 @@ export const EdgeTechnologiesDetailPage: React.FC = () => {
                             w-4
                             transition-transform
                             duration-300
-                            group-md:hover:translate-x-1
+                            md:group-hover:translate-x-1
                           "
                         />
                       </div>

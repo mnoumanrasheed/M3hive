@@ -10,6 +10,10 @@ type ContactPayload = {
   email?: string;
   country?: string;
   interest?: string;
+  company?: string;
+  phone?: string;
+  journeyStage?: string;
+  timeline?: string;
   message?: string;
   honeypot?: string;
   recaptchaToken?: string;
@@ -86,6 +90,10 @@ export async function POST(request: Request) {
     const email = payload.email?.trim().toLowerCase() ?? '';
     const country = payload.country?.trim() ?? '';
     const interest = payload.interest?.trim() || 'Not specified';
+    const company = payload.company?.trim() || '';
+    const phone = payload.phone?.trim() || '';
+    const journeyStage = payload.journeyStage?.trim() || '';
+    const timeline = payload.timeline?.trim() || '';
     const message = payload.message?.trim() ?? '';
     const honeypot = payload.honeypot?.trim() ?? '';
     const recaptchaToken = payload.recaptchaToken?.trim() ?? '';
@@ -156,6 +164,10 @@ export async function POST(request: Request) {
     const safeEmail = escapeHtml(email);
     const safeCountry = escapeHtml(country);
     const safeInterest = escapeHtml(interest);
+    const safeCompany = escapeHtml(company);
+    const safePhone = escapeHtml(phone);
+    const safeJourneyStage = escapeHtml(journeyStage);
+    const safeTimeline = escapeHtml(timeline);
     const safeMessage = escapeHtml(message).replace(
       /\n/g,
       '<br />'
@@ -170,7 +182,7 @@ export async function POST(request: Request) {
 
       replyTo: email,
 
-      subject: `New M3 Hive enquiry from ${firstName} ${lastName}`,
+      subject: `New M3 Hive enquiry from ${firstName} ${lastName}${company ? ` (${company})` : ''}`,
 
       html: `
         <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;color:#161616;">
@@ -180,7 +192,7 @@ export async function POST(request: Request) {
 
           <table style="width:100%;border-collapse:collapse;">
             <tr>
-              <td style="padding:8px 0;font-weight:bold;">Name</td>
+              <td style="padding:8px 0;font-weight:bold;width:160px;">Name</td>
               <td style="padding:8px 0;">
                 ${safeFirstName} ${safeLastName}
               </td>
@@ -192,6 +204,24 @@ export async function POST(request: Request) {
                 ${safeEmail}
               </td>
             </tr>
+
+            ${safeCompany ? `
+            <tr>
+              <td style="padding:8px 0;font-weight:bold;">Company</td>
+              <td style="padding:8px 0;">
+                ${safeCompany}
+              </td>
+            </tr>
+            ` : ''}
+
+            ${safePhone ? `
+            <tr>
+              <td style="padding:8px 0;font-weight:bold;">Phone</td>
+              <td style="padding:8px 0;">
+                ${safePhone}
+              </td>
+            </tr>
+            ` : ''}
 
             <tr>
               <td style="padding:8px 0;font-weight:bold;">Country</td>
@@ -206,10 +236,28 @@ export async function POST(request: Request) {
                 ${safeInterest}
               </td>
             </tr>
+
+            ${safeJourneyStage ? `
+            <tr>
+              <td style="padding:8px 0;font-weight:bold;">Journey Stage</td>
+              <td style="padding:8px 0;">
+                ${safeJourneyStage}
+              </td>
+            </tr>
+            ` : ''}
+
+            ${safeTimeline ? `
+            <tr>
+              <td style="padding:8px 0;font-weight:bold;">Timeline</td>
+              <td style="padding:8px 0;">
+                ${safeTimeline}
+              </td>
+            </tr>
+            ` : ''}
           </table>
 
           <div style="margin-top:24px;">
-            <h3 style="margin-bottom:8px;">Message</h3>
+            <h3 style="margin-bottom:8px;">Message / Objectives</h3>
 
             <div style="background:#f7f7f7;border:1px solid #e5e5e5;border-radius:8px;padding:16px;line-height:1.6;">
               ${safeMessage}
@@ -217,7 +265,7 @@ export async function POST(request: Request) {
           </div>
 
           <p style="margin-top:24px;font-size:12px;color:#777;">
-            Submitted through the M3 Hive website contact form.
+            Submitted through the M3 Hive website enquiry form.
           </p>
         </div>
       `,

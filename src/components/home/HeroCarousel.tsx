@@ -168,8 +168,18 @@ function useParticles(ref: React.RefObject<HTMLCanvasElement>) {
 
       particles.length = 0;
 
+      // Responsive particle count: mobile ~40-60, tablet ~70-100, desktop ~120-180
+      let divisor;
+      if (W < 768) {
+        divisor = 15000; // Mobile: ~40-60 particles
+      } else if (W < 1024) {
+        divisor = 10000; // Tablet: ~70-100 particles  
+      } else {
+        divisor = 8000;  // Desktop: ~120-180 particles
+      }
+      
       const count = Math.min(
-        Math.floor((W * H) / 8000),
+        Math.floor((W * H) / divisor),
         180
       );
 
@@ -193,6 +203,11 @@ function useParticles(ref: React.RefObject<HTMLCanvasElement>) {
     }
 
     const onMove = (e: PointerEvent) => {
+      // Skip parallax on touch devices  
+      if (!window.matchMedia('(hover: hover)').matches) {
+        return;
+      }
+
       const rect = canvasEl.getBoundingClientRect();
 
       targetMouseX =
@@ -436,12 +451,16 @@ export const HeroCarousel: React.FC = () => {
 
   useParticles(canvasRef);
 
-  /* ── Preload hero images to prevent first-time slide flashes ───── */
+  /* ── Preload hero images: current + next only ───── */
   useEffect(() => {
-    const preloadedImages = SLIDES.map((slideItem) => {
+    const preloadedImages: HTMLImageElement[] = [];
+    const currentSlide = SLIDES[idx];
+    const nextSlide = SLIDES[(idx + 1) % SLIDES.length];
+
+    [currentSlide, nextSlide].forEach((slide) => {
       const img = new Image();
-      img.src = slideItem.image;
-      return img;
+      img.src = slide.image;
+      preloadedImages.push(img);
     });
 
     return () => {
@@ -450,7 +469,7 @@ export const HeroCarousel: React.FC = () => {
         img.onerror = null;
       });
     };
-  }, []);
+  }, [idx]);
 
   /* ── init bg opacity ───────────────────────────────────────── */
   useLayoutEffect(() => {
@@ -819,7 +838,8 @@ export const HeroCarousel: React.FC = () => {
       e: PointerEvent
     ) => {
       if (
-        touchRef.current
+        touchRef.current ||
+        !window.matchMedia('(hover: hover)').matches
       ) {
         return;
       }
@@ -1052,7 +1072,7 @@ export const HeroCarousel: React.FC = () => {
         }}
       />
 
-      {/* ── TEXT BLOCK — FIXED POSITIONING ────────────────── */}
+      {/* ── TEXT BLOCK — CENTERED ─────────────────────────── */}
       <div
         className="
           relative
@@ -1061,12 +1081,9 @@ export const HeroCarousel: React.FC = () => {
           w-full
           flex
           flex-col
-          justify-start
-          pt-10
-          sm:pt-12
-          lg:pt-10
-          pb-28
-          sm:pb-32
+          justify-center
+          pb-16
+          sm:pb-20
         "
       >
         <div
