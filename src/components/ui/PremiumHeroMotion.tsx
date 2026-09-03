@@ -355,6 +355,8 @@ export const PremiumHeroMotion: React.FC<
         pointer-events-none
         absolute
         inset-0
+        w-full
+        h-full
         z-[2]
         overflow-hidden
       "

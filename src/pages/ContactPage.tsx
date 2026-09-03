@@ -6,8 +6,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { FadeIn } from '../components/ui/FadeIn';
 import { OfficeCard } from '../components/ui/OfficeCard';
 import { officeLocations } from '../data/offices';
-import { HeroBackground } from '../components/ui/HeroBackground';
-import { PremiumHeroMotion } from '../components/ui/PremiumHeroMotion';
+import { InnerPageHero } from '../components/ui/InnerPageHero';
 import { StartProjectWorkflow } from '../components/contact/StartProjectWorkflow';
 
 export const ContactPage: React.FC = () => {
@@ -29,99 +28,59 @@ export const ContactPage: React.FC = () => {
       {/* ============================================================
           HERO BANNER — M3 HIVE HERO WITH SEAMLESS GRADIENT BLEND
       ============================================================ */}
-      <section
-        className="relative z-0 flex flex-col justify-center overflow-hidden border-b border-hive-border px-0 pt-20"
-        style={{ minHeight: '92svh' }}
+      <InnerPageHero
+        imageUrl="/assets/heroes/hero-contact.jpg"
+        variant="contact"
+        badge={
+          <div className="inline-flex items-center gap-2 rounded-full border border-hive-yellow/40 bg-hive-black/50 px-4 py-1.5 backdrop-blur-md">
+            <span className="h-2 w-2 rounded-full bg-hive-yellow shadow-sm shadow-hive-yellow/50" />
+            <span className="font-heading text-xs font-semibold tracking-wider text-hive-yellow uppercase">
+              LET'S BUILD WHAT'S NEXT
+            </span>
+          </div>
+        }
+        heading="Start Your Project Journey"
+        subheading="Tell us what you are trying to build, improve or scale. Our specialists will help identify the right technology approach."
       >
-        <HeroBackground imageUrl="/assets/heroes/hero-contact.jpg" priority />
-        <PremiumHeroMotion variant="contact" />
-
-        <Container size="md" className="relative z-10 text-center">
-          <FadeIn>
-            {/* Eyebrow */}
-            <div
-              className="mb-5 inline-flex items-center gap-2 rounded-full border border-hive-yellow/40 bg-hive-black/50 px-4 py-1.5 backdrop-blur-md"
-              style={{ animationDelay: '0ms' }}
+        {/* Scroll cue button */}
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={scrollToCTA}
+            className="group flex flex-col items-center gap-2 opacity-70 transition-opacity hover:opacity-100"
+            aria-label="Scroll to project brief"
+          >
+            <span className="font-heading text-[10px] font-bold uppercase tracking-widest text-white/70 group-hover:text-hive-yellow">
+              Scroll to begin
+            </span>
+            <svg
+              width="16"
+              height="24"
+              viewBox="0 0 16 24"
+              fill="none"
+              className="animate-bounce text-hive-yellow"
             >
-              <span className="h-2 w-2 rounded-full bg-hive-yellow shadow-sm shadow-hive-yellow/50" />
-              <span className="font-heading text-xs font-semibold tracking-wider text-hive-yellow uppercase">
-                LET'S BUILD WHAT'S NEXT
-              </span>
-            </div>
-
-            {/* Attention-grabbing line */}
-            <p
-              className="mx-auto mb-4 max-w-xl font-heading font-medium leading-snug text-white/85 drop-shadow"
-              style={{
-                fontSize: 'clamp(1.05rem, 2.2vw, 1.35rem)',
-                animationDelay: '80ms',
-              }}
-            >
-              Turn ambitious ideas into scalable digital products.
-            </p>
-
-            {/* Main Heading */}
-            <h1
-              className="mb-5 font-heading font-bold text-white drop-shadow-md sm:mb-6"
-              style={{
-                fontSize: 'clamp(2.25rem, 5vw, 3.75rem)',
-                lineHeight: '1.1',
-                animationDelay: '160ms',
-              }}
-            >
-              Start Your Project Journey
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 drop-shadow sm:text-lg"
-              style={{ animationDelay: '240ms' }}
-            >
-              Tell us what you are trying to build, improve or scale. Our specialists will help identify the right technology approach.
-            </p>
-
-            {/* Scroll cue button */}
-            <div className="mt-8 flex justify-center">
-              <button
-                type="button"
-                onClick={scrollToCTA}
-                className="group flex flex-col items-center gap-2 opacity-70 transition-opacity hover:opacity-100"
-                aria-label="Scroll to project brief"
-              >
-                <span className="font-heading text-[10px] font-bold uppercase tracking-widest text-white/70 group-hover:text-hive-yellow">
-                  Scroll to begin
-                </span>
-                <svg
-                  width="16"
-                  height="24"
-                  viewBox="0 0 16 24"
-                  fill="none"
-                  className="animate-bounce text-hive-yellow"
-                >
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="15"
-                    height="23"
-                    rx="7.5"
-                    stroke="currentColor"
-                    strokeOpacity="0.6"
-                  />
-                  <rect
-                    x="6.5"
-                    y="4"
-                    width="3"
-                    height="6"
-                    rx="1.5"
-                    fill="currentColor"
-                  />
-                </svg>
-              </button>
-            </div>
-          </FadeIn>
-        </Container>
-
-      </section>
+              <rect
+                x="0.5"
+                y="0.5"
+                width="15"
+                height="23"
+                rx="7.5"
+                stroke="currentColor"
+                strokeOpacity="0.6"
+              />
+              <rect
+                x="6.5"
+                y="4"
+                width="3"
+                height="6"
+                rx="1.5"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+        </div>
+      </InnerPageHero>
 
       {/* ============================================================
           WHITE BRIDGE SECTION — ATTENTION GRABBING LINE

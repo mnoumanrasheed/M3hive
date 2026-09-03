@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom';
 import { PageShell } from '../components/layout/PageShell';
 import { Container } from '../components/ui/Container';
 import { FadeIn } from '../components/ui/FadeIn';
-import { HeroBackground } from '../components/ui/HeroBackground';
+import { InnerPageHero } from '../components/ui/InnerPageHero';
 import { ChevronRight } from 'lucide-react';
 import { ourApproachOfferings } from '../data/ourApproach';
-import { PremiumHeroMotion } from '../components/ui/PremiumHeroMotion';
 
 export const OurApproachPage: React.FC = () => {
   return (
@@ -15,42 +14,20 @@ export const OurApproachPage: React.FC = () => {
       description="Let's accelerate to tomorrow, together. M3 Hive brings people, technology and collaboration together to help organisations explore opportunities, develop innovative solutions and move their digital journey forward."
     >
       {/* HERO */}
-      <section 
-        className="relative overflow-hidden border-b border-hive-border z-0 flex flex-col justify-center"
-        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
-      >
-        <HeroBackground imageUrl="/assets/heroes/hero-resources.jpg" />
-        <PremiumHeroMotion variant="approach" />
-
-        <Container
-          size="md"
-          className="relative z-10 text-center"
-        >
-          <FadeIn>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 px-3 py-1.5">
-              <span className="h-2 w-2 rounded-full bg-hive-yellow shadow-[0_0_10px_rgba(253,207,9,0.6)]" />
-
-              <span className="font-heading text-xs font-bold uppercase tracking-widest text-white">
-                Approach
-              </span>
-            </div>
-
-            <h1 
-              className="mx-auto mb-3 max-w-4xl font-heading font-bold text-white drop-shadow-md"
-              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: '1.1' }}
-            >
-              Your Experience with M3 Hive
-            </h1>
-
-            <p className="mx-auto max-w-3xl text-base leading-relaxed text-white/90 drop-shadow sm:text-lg">
-              Let's accelerate to tomorrow, together. M3 Hive brings people,
-              technology and collaboration together to help organisations
-              explore opportunities, develop innovative solutions and move
-              their digital journey forward.
-            </p>
-          </FadeIn>
-        </Container>
-      </section>
+      <InnerPageHero
+        imageUrl="/assets/heroes/hero-resources.jpg"
+        variant="approach"
+        badge={
+          <div className="inline-flex items-center gap-2 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 px-3 py-1.5">
+            <span className="h-2 w-2 rounded-full bg-hive-yellow shadow-[0_0_10px_rgba(253,207,9,0.6)]" />
+            <span className="font-heading text-xs font-bold uppercase tracking-widest text-white">
+              Approach
+            </span>
+          </div>
+        }
+        heading="Your Experience with M3 Hive"
+        subheading="Let’s accelerate to tomorrow, together. M3 Hive brings people, technology and collaboration together to help organisations explore opportunities, develop innovative solutions and move their digital journey forward."
+      />
 
       {/* OFFERINGS */}
       <section className="bg-hive-white py-14 sm:py-20 lg:py-24">

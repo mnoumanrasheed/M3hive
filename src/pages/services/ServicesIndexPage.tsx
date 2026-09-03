@@ -1,5 +1,5 @@
 import React from 'react';
-import { PremiumHeroMotion } from '../../components/ui/PremiumHeroMotion';
+import { InnerPageHero } from '../../components/ui/InnerPageHero';
 import { PageShell } from '../../components/layout/PageShell';
 import { Container } from '../../components/ui/Container';
 import { SectionHeading } from '../../components/ui/SectionHeading';
@@ -7,39 +7,26 @@ import { FadeIn } from '../../components/ui/FadeIn';
 import { Button } from '../../components/ui/Button';
 import { allServicesData } from '../../data/services/servicesIndex';
 import { ArrowRight, Settings2 } from 'lucide-react';
-import { HeroBackground } from '../../components/ui/HeroBackground';
 
 
 export const ServicesIndexPage: React.FC = () => {
   return (
     <PageShell title="Services Overview" description="Comprehensive capabilities to transform operations">
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section 
-        className="relative overflow-hidden border-b border-hive-border z-0 flex flex-col justify-center"
-        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
-      >
-        <HeroBackground imageUrl="/assets/heroes/hero-services.jpg" />
-        <PremiumHeroMotion variant="services" />
-        <Container size="md" className="relative z-10 text-center">
-          <FadeIn>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-4 sm:mb-6">
-              <Settings2 className="w-4 h-4 text-hive-yellow flex-shrink-0" />
-              <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
-                Capabilities
-              </span>
-            </div>
-            <h1 
-              className="font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6"
-              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: '1.1' }}
-            >
-              Our Services Overview
-            </h1>
-            <p className="text-base sm:text-lg text-white/90 drop-shadow leading-relaxed">
-              Comprehensive capabilities to transform operations, improve experiences, and build competitive advantage.
-            </p>
-          </FadeIn>
-        </Container>
-      </section>
+      <InnerPageHero
+        imageUrl="/assets/heroes/hero-services.jpg"
+        variant="services"
+        badge={
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10">
+            <Settings2 className="w-4 h-4 text-hive-yellow flex-shrink-0" />
+            <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
+              Capabilities
+            </span>
+          </div>
+        }
+        heading="Our Services Overview"
+        subheading="Comprehensive capabilities to transform operations, improve experiences, and build competitive advantage."
+      />
 
       {/* ─── SERVICES GRID ────────────────────────────────────────── */}
       <section className="py-14 sm:py-20 lg:py-24 bg-hive-white">

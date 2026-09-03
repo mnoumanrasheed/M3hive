@@ -32,7 +32,7 @@ export const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
   );
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="w-full">
       {children}
     </div>
   );

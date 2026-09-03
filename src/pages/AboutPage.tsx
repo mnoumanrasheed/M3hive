@@ -9,8 +9,7 @@ import { Container } from '../components/ui/Container';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { FadeIn } from '../components/ui/FadeIn';
 import { OfficeCard } from '../components/ui/OfficeCard';
-import { HeroBackground } from '../components/ui/HeroBackground';
-import { PremiumHeroMotion } from '../components/ui/PremiumHeroMotion';
+import { InnerPageHero } from '../components/ui/InnerPageHero';
 
 import { aboutPageData } from '../data/about';
 import { officeLocations } from '../data/offices';
@@ -75,92 +74,41 @@ export const AboutPage: React.FC = () => {
           HERO
       ========================================================= */}
 
-      <section
-        className="
-          relative
-          z-0
-          overflow-hidden
-          border-b
-          border-hive-border
-          flex
-          flex-col
-          justify-center
-        "
-        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
-      >
-        <HeroBackground imageUrl="/assets/heroes/hero-about.jpg" />
-        <PremiumHeroMotion variant="about" />
-
-        <Container
-          size="md"
-          className="relative z-10 text-center"
-        >
-          <FadeIn>
-            <div
+      <InnerPageHero
+        imageUrl="/assets/heroes/hero-about.jpg"
+        variant="about"
+        badge={
+          <div
+            className="
+              inline-flex
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-hive-yellow/40
+              bg-hive-yellow/10
+              px-3
+              py-1.5
+            "
+          >
+            <span className="h-2 w-2 rounded-full bg-hive-yellow" />
+            <span
               className="
-                mb-4
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-hive-yellow/40
-                bg-hive-yellow/10
-                px-3
-                py-1.5
-                sm:mb-6
-              "
-            >
-              <span
-                className="
-                  h-2
-                  w-2
-                  rounded-full
-                  bg-hive-yellow
-                "
-              />
-
-              <span
-                className="
-                  font-heading
-                  text-xs
-                  font-bold
-                  uppercase
-                  tracking-widest
-                  text-white
-                "
-              >
-                About Us
-              </span>
-            </div>
-
-            <h1
-              className="
-                mb-4
                 font-heading
+                text-xs
                 font-bold
+                uppercase
+                tracking-widest
                 text-white
-                drop-shadow-md
-                sm:mb-6
-              "
-              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: '1.1' }}
-            >
-              {aboutPageData.title}
-            </h1>
-
-            <p
-              className="
-                text-base
-                leading-relaxed
-                text-white/90
-                sm:text-lg
               "
             >
-              {aboutPageData.subtitle}
-            </p>
-          </FadeIn>
-        </Container>
-      </section>
+              About Us
+            </span>
+          </div>
+        }
+        heading={aboutPageData.title}
+        subheading={aboutPageData.subtitle}
+      />
 
       {/* =========================================================
           WHO WE ARE

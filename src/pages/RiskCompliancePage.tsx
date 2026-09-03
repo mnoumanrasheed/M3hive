@@ -7,40 +7,26 @@ import { FadeIn } from '../components/ui/FadeIn';
 import { Button } from '../components/ui/Button';
 import { compliancePageData, compliancePillars } from '../data/compliance';
 import { ShieldCheck, Mail, ArrowRight } from 'lucide-react';
-import { PremiumHeroMotion } from '../components/ui/PremiumHeroMotion';
-
-import { HeroBackground } from '../components/ui/HeroBackground';
+import { InnerPageHero } from '../components/ui/InnerPageHero';
 
 export const RiskCompliancePage: React.FC = () => {
   return (
     <PageShell title={compliancePageData.title}>
       {/* ─── HERO SECTION ─────────────────────────────────────────── */}
-      <section 
-        className="relative overflow-hidden border-b border-hive-border z-0 flex flex-col justify-center"
-        style={{ minHeight: 'max(560px, calc(100svh - 80px))' }}
-      >
-        <HeroBackground imageUrl="/assets/heroes/hero-risk-compliance.jpg" />
-        <PremiumHeroMotion variant="risk" />
-        <Container size="md" className="relative z-10 text-center">
-          <FadeIn>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10 mb-4 sm:mb-6">
-              <ShieldCheck className="w-4 h-4 text-hive-yellow flex-shrink-0" />
-              <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
-                Governance
-              </span>
-            </div>
-            <h1 
-              className="font-bold font-heading text-white drop-shadow-md mb-4 sm:mb-6"
-              style={{ fontSize: 'clamp(2.25rem, 5vw, 4rem)', lineHeight: '1.1' }}
-            >
-              {compliancePageData.title}
-            </h1>
-            <p className="text-base sm:text-lg text-white/90 drop-shadow leading-relaxed">
-              {compliancePageData.subtitle}
-            </p>
-          </FadeIn>
-        </Container>
-      </section>
+      <InnerPageHero
+        imageUrl="/assets/heroes/hero-risk-compliance.jpg"
+        variant="risk"
+        badge={
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hive-yellow/40 bg-hive-yellow/10">
+            <ShieldCheck className="w-4 h-4 text-hive-yellow flex-shrink-0" />
+            <span className="text-xs font-heading font-bold tracking-widest uppercase text-white drop-shadow">
+              Governance
+            </span>
+          </div>
+        }
+        heading={compliancePageData.title}
+        subheading={compliancePageData.subtitle}
+      />
 
       {/* ─── INTRO ────────────────────────────────────────────────── */}
       <section className="py-14 sm:py-20 lg:py-24 bg-hive-white">
