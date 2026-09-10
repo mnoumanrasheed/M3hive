@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ScrollToTop } from './components/animation/ScrollToTop';
+import { ChatbotWidget } from './components/chatbot';
 
 // Main navigation pages - static imports for instant navigation
 import { HomePage } from './pages/HomePage';
@@ -41,6 +42,8 @@ export const App: React.FC = () => {
     <HelmetProvider>
       <Router>
         <ScrollToTop />
+        {/* Global chatbot widget — renders on all pages */}
+        <ChatbotWidget />
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Main Routes */}

@@ -83,6 +83,7 @@ export function CinematicLoader({
   const reducedMotion =
     usePrefersReducedMotion();
 
+
   useLayoutEffect(() => {
     const loader = loaderRef.current;
 
@@ -142,58 +143,40 @@ export function CinematicLoader({
         select('.cinematic-scene');
 
       /* =====================================================
-         INITIAL STATE
-
-         Keep everything near its final position.
-         This prevents sudden zooms / jumps.
+         INITIAL STATE — everything hidden / slightly offset
       ===================================================== */
 
-      gsap.set(loader, {
-        autoAlpha: 1,
-      });
-
-      gsap.set(scene, {
-        scale: 1,
-      });
+      gsap.set(loader, { autoAlpha: 1 });
+      gsap.set(scene, { scale: 1 });
 
       gsap.set(glow, {
         autoAlpha: 0,
-        scale: 0.97,
+        scale: 0.85,
       });
 
       gsap.set(particleElements, {
         autoAlpha: 0,
-        scale: 0.9,
-        y: 3,
+        scale: 0.6,
+        y: 12,
       });
 
       gsap.set(hexElements, {
         autoAlpha: 0,
-        scale: 0.96,
-        y: 3,
+        scale: 0.7,
+        y: 10,
+        rotate: '+=15',
       });
 
-      /*
-       * No blur.
-       * No rotationX.
-       * No rotationY.
-       *
-       * These were contributing to the
-       * unstable / glitchy logo appearance.
-       */
       gsap.set(logo, {
         autoAlpha: 0,
-        scale: 0.97,
-        y: 8,
+        scale: 0.88,
+        y: 22,
       });
 
-      gsap.set(
-        [copy, progress],
-        {
-          autoAlpha: 0,
-          y: 5,
-        },
-      );
+      gsap.set([copy, progress], {
+        autoAlpha: 0,
+        y: 12,
+      });
 
       gsap.set(progressFill, {
         scaleX: 0,
@@ -206,8 +189,7 @@ export function CinematicLoader({
       });
 
       if (percentageRef.current) {
-        percentageRef.current.textContent =
-          '0%';
+        percentageRef.current.textContent = '0%';
       }
 
       /* =====================================================
@@ -215,378 +197,175 @@ export function CinematicLoader({
       ===================================================== */
 
       if (reducedMotion) {
-        const counter = {
-          value: 0,
-        };
-
+        const counter = { value: 0 };
         const tl = gsap.timeline();
 
-        tl.to(
-          logo,
-          {
-            autoAlpha: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.12,
-            ease: 'power2.out',
+        tl.to(logo, { autoAlpha: 1, scale: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0);
+        tl.to([copy, progress], { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0.15);
+        tl.to(progressFill, { scaleX: 1, duration: 0.3, ease: 'sine.inOut' }, 0.25);
+        tl.to(counter, {
+          value: 100,
+          duration: 0.3,
+          ease: 'sine.inOut',
+          onUpdate: () => {
+            if (percentageRef.current) {
+              percentageRef.current.textContent = `${Math.round(counter.value)}%`;
+            }
           },
-          0,
-        );
-
-        tl.to(
-          [copy, progress],
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.25,
-            ease: 'power2.out',
+          onComplete: () => {
+            if (percentageRef.current) percentageRef.current.textContent = '100%';
           },
-          0.2,
-        );
-
-        tl.to(
-          progressFill,
-          {
-            scaleX: 1,
-            duration: 0.22,
-            ease: 'sine.inOut',
-          },
-          0.3,
-        );
-
-        tl.to(
-          counter,
-          {
-            value: 100,
-            duration: 0.22,
-            ease: 'sine.inOut',
-
-            onUpdate: () => {
-              if (percentageRef.current) {
-                percentageRef.current.textContent =
-                  `${Math.round(counter.value)}%`;
-              }
-            },
-
-            onComplete: () => {
-              if (percentageRef.current) {
-                percentageRef.current.textContent =
-                  '100%';
-              }
-            },
-          },
-          0.3,
-        );
-
-        tl.to(
-          loader,
-          {
-            autoAlpha: 0,
-            duration: 0.25,
-            ease: 'power2.inOut',
-            onComplete: finish,
-          },
-          0.45,
-        );
-
+        }, 0.25);
+        tl.to(loader, { autoAlpha: 0, duration: 0.25, ease: 'power2.inOut', onComplete: finish }, 0.65);
         return;
       }
 
       /* =====================================================
          NORMAL PREMIUM CINEMATIC TIMELINE
+         Total runtime: ~3.8 seconds
       ===================================================== */
 
-      const counter = {
-        value: 0,
-      };
+      const counter = { value: 0 };
 
       const timeline = gsap.timeline({
-        defaults: {
-          overwrite: 'auto',
-        },
+        defaults: { overwrite: 'auto' },
       });
 
-      /* =====================================================
-         0.00s
-         ATMOSPHERE
-      ===================================================== */
+      // ── 0.00s  ATMOSPHERE BLOOMS ───────────────────────
+      timeline.to(glow, {
+        autoAlpha: 1,
+        scale: 1,
+        duration: 1.1,
+        ease: 'power2.out',
+      }, 0);
 
-      timeline.to(
-        glow,
-        {
-          autoAlpha: 1,
-          scale: 1,
-          duration: 0.45,
-          ease: 'sine.out',
+      // ── 0.20s  PARTICLES DRIFT IN (staggered) ─────────
+      timeline.to(particleElements, {
+        autoAlpha: 0.5,
+        scale: 1,
+        y: 0,
+        duration: 0.7,
+        stagger: 0.045,
+        ease: 'power3.out',
+      }, 0.2);
+
+      // ── 0.45s  HEXAGONS ROTATE INTO PLACE ─────────────
+      timeline.to(hexElements, {
+        autoAlpha: 0.75,
+        scale: 1,
+        y: 0,
+        rotate: '-=15',
+        duration: 0.75,
+        stagger: 0.08,
+        ease: 'power3.out',
+      }, 0.45);
+
+      // ── 0.40s  LOGO RISES UP WITH BREATHING SCALE ─────
+      timeline.to(logo, {
+        autoAlpha: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.9,
+        ease: 'power4.out',
+      }, 0.4);
+
+      // ── 1.05s  COPY + PROGRESS BAR FADE IN ────────────
+      timeline.to([copy, progress], {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.55,
+        stagger: 0.12,
+        ease: 'power2.out',
+      }, 1.05);
+
+      // ── 1.20s  PROGRESS BAR FILLS (slow, satisfying) ──
+      timeline.to(progressFill, {
+        scaleX: 1,
+        duration: 1.1,
+        ease: 'power1.inOut',
+      }, 1.2);
+
+      timeline.to(counter, {
+        value: 100,
+        duration: 1.1,
+        ease: 'power1.inOut',
+        onUpdate: () => {
+          if (percentageRef.current) {
+            percentageRef.current.textContent = `${Math.round(counter.value)}%`;
+          }
         },
-        0,
-      );
-
-      /* =====================================================
-         0.15s
-         PARTICLES
-      ===================================================== */
-
-      timeline.to(
-        particleElements,
-        {
-          autoAlpha: 0.4,
-          scale: 1,
-          y: 0,
-          duration: 0.12,
-          stagger: 0.035,
-          ease: 'power2.out',
+        onComplete: () => {
+          if (percentageRef.current) percentageRef.current.textContent = '100%';
         },
-        0.15,
-      );
+      }, 1.2);
 
-      /* =====================================================
-         0.35s
-         HEXAGONS
-      ===================================================== */
+      // ── 1.50s  SHIMMER LIGHT SWEEP ACROSS LOGO ────────
+      timeline.to(shine, { autoAlpha: 0.7, duration: 0.2, ease: 'sine.out' }, 1.5);
+      timeline.to(shine, { xPercent: 180, duration: 0.55, ease: 'power2.inOut' }, 1.55);
+      timeline.to(shine, { autoAlpha: 0, duration: 0.2, ease: 'sine.in' }, 2.0);
 
-      timeline.to(
-        hexElements,
-        {
-          autoAlpha: 0.7,
-          scale: 1,
-          y: 0,
-          duration: 0.12,
-          stagger: 0.065,
-          ease: 'power2.out',
-        },
-        0.35,
-      );
+      // ── 2.10s  SUBTLE FLOAT — particles/hex drift ─────
+      timeline.to(particleElements, {
+        y: '-=6',
+        duration: 0.7,
+        stagger: 0.03,
+        ease: 'sine.inOut',
+      }, 2.1);
 
-      /* =====================================================
-         0.55s
-         LOGO REVEAL
-      ===================================================== */
+      timeline.to(hexElements, {
+        y: '-=4',
+        duration: 0.7,
+        stagger: 0.04,
+        ease: 'sine.inOut',
+      }, 2.1);
 
-      timeline.to(
-        logo,
-        {
-          autoAlpha: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.32,
-          ease: 'power3.out',
-        },
-        0.08,
-      );
+      // ── 2.40s  MICRO BREATHE — scene pulses once ──────
+      timeline.to(scene, {
+        scale: 1.007,
+        duration: 0.4,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: 1,
+      }, 2.4);
 
-      /* =====================================================
-         1.40s
-         TEXT + PROGRESS APPEAR
-      ===================================================== */
+      // ── 2.80s  EXIT: COPY + PROGRESS LIFT & FADE ──────
+      timeline.to([copy, progress], {
+        autoAlpha: 0,
+        y: -10,
+        duration: 0.35,
+        stagger: 0.07,
+        ease: 'power2.in',
+      }, 2.8);
 
-      timeline.to(
-        [copy, progress],
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.22,
-          stagger: 0.08,
-          ease: 'power2.out',
-        },
-        0.18,
-      );
+      // ── 2.95s  EXIT: BG ELEMENTS DISSOLVE ─────────────
+      timeline.to([particleElements, hexElements, glow], {
+        autoAlpha: 0,
+        duration: 0.45,
+        ease: 'power2.inOut',
+      }, 2.95);
 
-      /* =====================================================
-         1.65s - 4.15s
-         PROGRESS
-      ===================================================== */
+      // ── 3.05s  EXIT: LOGO LIFTS & FADES ───────────────
+      timeline.to(logo, {
+        autoAlpha: 0,
+        scale: 1.04,
+        y: -14,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      }, 3.05);
 
-      timeline.to(
-        progressFill,
-        {
-          scaleX: 1,
-          duration: 0.4,
-          ease: 'power2.inOut',
-        },
-        0.24,
-      );
+      // ── 3.30s  EXIT: FULL OVERLAY DISSOLVES ───────────
+      timeline.to(loader, {
+        autoAlpha: 0,
+        duration: 0.45,
+        ease: 'power2.inOut',
+        onComplete: finish,
+      }, 3.3);
 
-      timeline.to(
-        counter,
-        {
-          value: 100,
-          duration: 0.4,
-          ease: 'power2.inOut',
-
-          onUpdate: () => {
-            if (percentageRef.current) {
-              percentageRef.current.textContent =
-                `${Math.round(counter.value)}%`;
-            }
-          },
-
-          onComplete: () => {
-            if (percentageRef.current) {
-              percentageRef.current.textContent =
-                '100%';
-            }
-          },
-        },
-        0.24,
-      );
-
-      /* =====================================================
-         2.00s
-         PREMIUM LIGHT SWEEP
-      ===================================================== */
-
-      timeline.to(
-        shine,
-        {
-          autoAlpha: 0.6,
-          duration: 0.25,
-          ease: 'sine.out',
-        },
-        0.28,
-      );
-
-      timeline.to(
-        shine,
-        {
-          xPercent: 180,
-          duration: 0.34,
-          ease: 'power2.inOut',
-        },
-        0.3,
-      );
-
-      timeline.to(
-        shine,
-        {
-          autoAlpha: 0,
-          duration: 0.14,
-          ease: 'sine.out',
-        },
-        0.58,
-      );
-
-      /* =====================================================
-         VERY SUBTLE ENVIRONMENT MOVEMENT
-
-         This is part of the SAME timeline.
-         No repeat:-1.
-      ===================================================== */
-
-      timeline.to(
-        particleElements,
-        {
-          y: -3,
-          duration: 0.45,
-          stagger: 0.02,
-          ease: 'sine.inOut',
-        },
-        0.24,
-      );
-
-      timeline.to(
-        hexElements,
-        {
-          y: -2,
-          duration: 0.45,
-          stagger: 0.03,
-          ease: 'sine.inOut',
-        },
-        0.24,
-      );
-
-      /* =====================================================
-         4.15s
-         100% MICRO HOLD
-      ===================================================== */
-
-      timeline.to(
-        scene,
-        {
-          scale: 1.004,
-          duration: 0.12,
-          ease: 'sine.inOut',
-        },
-        0.64,
-      );
-
-      /* =====================================================
-         4.35s
-         COPY DISAPPEARS FIRST
-      ===================================================== */
-
-      timeline.to(
-        [copy, progress],
-        {
-          autoAlpha: 0,
-          y: -4,
-          duration: 0.12,
-          ease: 'power2.in',
-        },
-        0.68,
-      );
-
-      /* =====================================================
-         4.45s
-         BACKGROUND ELEMENTS SOFTEN
-      ===================================================== */
-
-      timeline.to(
-        [
-          particleElements,
-          hexElements,
-          glow,
-        ],
-        {
-          autoAlpha: 0,
-          duration: 0.22,
-          ease: 'power2.inOut',
-        },
-        0.7,
-      );
-
-      /* =====================================================
-         4.50s
-         LOGO SOFT EXIT
-      ===================================================== */
-
-      timeline.to(
-        logo,
-        {
-          autoAlpha: 0,
-          scale: 1.012,
-          y: -2,
-          duration: 0.22,
-          ease: 'power2.inOut',
-        },
-        0.7,
-      );
-
-      /* =====================================================
-         4.75s - 5.65s
-         FULL OVERLAY DISSOLVE
-
-         Website underneath is revealed smoothly.
-      ===================================================== */
-
-      timeline.to(
-        loader,
-        {
-          autoAlpha: 0,
-          duration: 0.24,
-          ease: 'power2.inOut',
-
-          onComplete: finish,
-        },
-        0.76,
-      );
     }, loader);
 
     return () => {
       ctx.revert();
-
-      document.body.style.overflow =
-        previousOverflow;
+      document.body.style.overflow = previousOverflow;
     };
   }, [
     onComplete,

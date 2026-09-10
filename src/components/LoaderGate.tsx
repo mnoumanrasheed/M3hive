@@ -1,4 +1,4 @@
-import {
+﻿import {
   type ReactNode,
   useCallback,
   useEffect,
@@ -7,50 +7,33 @@ import {
 
 import { CinematicLoader } from './CinematicLoader';
 
+// Module-level flag: false on every fresh page load / hard refresh,
+// stays true during SPA navigation so the loader only plays once per load.
+let loaderHasPlayed = false;
+
 interface LoaderGateProps {
   children: ReactNode;
 }
 
-export function LoaderGate({
-  children,
-}: LoaderGateProps) {
-  const [showLoader, setShowLoader] = useState(() => {
-    if (typeof window === 'undefined') {
-      return true;
-    }
-
-    return window.sessionStorage.getItem('m3hive-loader-seen') !== 'true';
-  });
+export function LoaderGate({ children }: LoaderGateProps) {
+  const [showLoader, setShowLoader] = useState(() => !loaderHasPlayed);
 
   const handleComplete = useCallback(() => {
-    window.sessionStorage.setItem('m3hive-loader-seen', 'true');
+    loaderHasPlayed = true;
     setShowLoader(false);
   }, []);
 
+  // Safety fallback — if GSAP somehow never fires onComplete
   useEffect(() => {
-    if (!showLoader) {
-      return;
-    }
-
-    const fallback = window.setTimeout(handleComplete, 1100);
-
-    return () => {
-      window.clearTimeout(fallback);
-    };
-  }, [
-    handleComplete,
-    showLoader,
-  ]);
+    if (!showLoader) return;
+    const fallback = window.setTimeout(handleComplete, 5000);
+    return () => window.clearTimeout(fallback);
+  }, [handleComplete, showLoader]);
 
   return (
     <>
       {children}
-
-      {showLoader && (
-        <CinematicLoader
-          onComplete={handleComplete}
-        />
-      )}
+      {showLoader && <CinematicLoader onComplete={handleComplete} />}
     </>
   );
 }
