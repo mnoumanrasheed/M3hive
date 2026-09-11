@@ -23,6 +23,7 @@ import { Button } from '../../components/ui/Button';
 import { HeroBackground } from '../../components/ui/HeroBackground';
 import { FadeIn } from '../../components/ui/FadeIn';
 import { SectionHeading } from '../../components/ui/SectionHeading';
+import { ServiceHero, ServiceHeroViewportContent } from '../../components/services/ServiceHeroLayout';
 import {
   Breadcrumbs,
   BreadcrumbItem,
@@ -211,22 +212,13 @@ export const AIServiceDetailPage: React.FC = () => {
           HERO
       ====================================================== */}
 
-      <section
+      <ServiceHero
         ref={heroRef}
         className="
-          relative
-          z-0
-          flex
-          flex-col
-          overflow-hidden
           border-b
           border-hive-border
           bg-hive-black
         "
-        style={{
-          minHeight:
-            'clamp(600px, calc(100svh - 80px), 720px)',
-        }}
       >
         <HeroBackground
           imageUrl={
@@ -234,17 +226,11 @@ export const AIServiceDetailPage: React.FC = () => {
           }
         />
 
-        <div
+        <ServiceHeroViewportContent
           className="
-            relative
             z-10
-            flex
-            w-full
-            flex-1
-            flex-col
-            justify-center
-            py-24
-            sm:py-32
+            pb-24
+            sm:pb-32
           "
         >
           <Container size="lg">
@@ -382,8 +368,8 @@ export const AIServiceDetailPage: React.FC = () => {
               </div>
             </div>
           </Container>
-        </div>
-      </section>
+        </ServiceHeroViewportContent>
+      </ServiceHero>
 
       {/* ======================================================
           OVERVIEW

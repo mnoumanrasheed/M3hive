@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { AnimatedTimeline } from '../animation/AnimatedTimeline';
 import { ServiceHeroMotion } from './ServiceHeroMotion';
+import { ServiceHero, ServiceHeroViewportContent } from './ServiceHeroLayout';
 
 interface ServicePageTemplateProps {
   data: ServicePageData;
@@ -72,22 +73,13 @@ export const ServicePageTemplate: React.FC<
           HERO
       ================================================== */}
 
-      <section
+      <ServiceHero
         className="
-          relative
           isolate
-          flex
-          min-h-[600px]
-          w-full
-          flex-col
-          overflow-hidden
           border-b
           border-hive-border
           bg-black
         "
-        style={{
-          minHeight: 'max(600px, calc(100svh - 80px))',
-        }}
       >
         {/* ===============================================
             PREMIUM MOVING SERVICE HERO
@@ -108,20 +100,12 @@ export const ServicePageTemplate: React.FC<
             HERO CONTENT
         =============================================== */}
 
-        <div
+        <ServiceHeroViewportContent
           className="
-            relative
             z-20
-
-            flex
-            w-full
-            flex-1
-            flex-col
-            justify-center
-
-            py-16
-            sm:py-20
-            lg:py-24
+            pb-16
+            sm:pb-20
+            lg:pb-24
           "
         >
           <Container size="md">
@@ -210,8 +194,8 @@ export const ServicePageTemplate: React.FC<
               )}
             </div>
           </Container>
-        </div>
-      </section>
+        </ServiceHeroViewportContent>
+      </ServiceHero>
 
       {/* ==================================================
           OFFERINGS

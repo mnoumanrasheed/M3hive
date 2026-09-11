@@ -30,6 +30,7 @@ import { Container } from '../../components/ui/Container';
 import { Button } from '../../components/ui/Button';
 import { FadeIn } from '../../components/ui/FadeIn';
 import { SectionHeading } from '../../components/ui/SectionHeading';
+import { ServiceHero, ServiceHeroViewportContent } from '../../components/services/ServiceHeroLayout';
 
 import {
   Breadcrumbs,
@@ -797,19 +798,13 @@ export const DataAnalyticsDetailPage: React.FC = () => {
           HERO
       ====================================================== */}
 
-      <section
+      <ServiceHero
         ref={heroRef}
         className="
-          relative
-          z-0
-          flex
-          flex-col
-          overflow-hidden
           border-b
           border-white/10
           bg-[#080808]
         "
-        style={{ minHeight: 'max(620px, calc(100svh - 80px))' }}
       >
         {/* Golden glow */}
 
@@ -835,18 +830,12 @@ export const DataAnalyticsDetailPage: React.FC = () => {
           "
         />
 
-        <div
+        <ServiceHeroViewportContent
           className="
-            relative
             z-10
-            flex
-            w-full
-            flex-1
-            flex-col
-            justify-center
-            py-16
-            sm:py-20
-            lg:py-24
+            pb-16
+            sm:pb-20
+            lg:pb-24
           "
         >
           <Container size="lg">
@@ -966,8 +955,8 @@ export const DataAnalyticsDetailPage: React.FC = () => {
               </div>
             </div>
           </Container>
-        </div>
-      </section>
+        </ServiceHeroViewportContent>
+      </ServiceHero>
 
       {/* ======================================================
           OVERVIEW

@@ -10,6 +10,7 @@ import { Button } from '../components/ui/Button';
 import { FadeIn } from '../components/ui/FadeIn';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { HeroBackground } from '../components/ui/HeroBackground';
+import { InternalHeroContent, InternalHeroSection } from '../components/ui/InternalHeroLayout';
 import {
   Breadcrumbs,
   BreadcrumbItem,
@@ -57,7 +58,7 @@ export const OurApproachDetailPage: React.FC = () => {
       {/* HERO */}
       {/* ===================================================== */}
 
-      <section className="relative z-0 overflow-hidden border-b border-hive-border pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24">
+      <InternalHeroSection className="border-b border-hive-border">
 
         <style>{`
           @keyframes approachBgDrift {
@@ -634,7 +635,8 @@ export const OurApproachDetailPage: React.FC = () => {
         {/* HERO CONTENT */}
         {/* ================================================= */}
 
-        <Container size="md" className="relative z-10">
+        <InternalHeroContent className="z-10 pb-12 sm:pb-16 lg:pb-24">
+          <Container size="md">
 
           <div className="approach-enter approach-enter-1">
             <Breadcrumbs
@@ -672,8 +674,9 @@ export const OurApproachDetailPage: React.FC = () => {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
-        </Container>
-      </section>
+          </Container>
+        </InternalHeroContent>
+      </InternalHeroSection>
 
       {/* ===================================================== */}
       {/* OVERVIEW */}

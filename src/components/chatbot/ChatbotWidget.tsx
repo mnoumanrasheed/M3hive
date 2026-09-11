@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MessageCircle, X, Send, Bot, User, WifiOff } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// Types
 
 type Sender = 'user' | 'bot';
 
@@ -13,7 +13,7 @@ interface Message {
   isError?: boolean;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// Helpers
 
 function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -30,11 +30,70 @@ function getOrCreateVisitorId(): string {
 }
 
 const STORAGE_KEY = 'm3hive_chat_session';
+const POSITION_STORAGE_KEY = 'm3hive_chatbot_position';
+const GREETING_STORAGE_KEY = 'm3hive_proactive_greeting_seen';
+const GREETING_DELAY_MS = 10000;
+const GREETING_TYPING_MS = 1_150;
+const GREETING_VISIBLE_MS = 12_000;
+const FAB_SIZE = 58;
+const VIEWPORT_MARGIN = 12;
+const PANEL_GAP = 16;
 const API_URL = (import.meta as any).env?.VITE_CHATBOT_API_URL || 'http://localhost:8000';
 const WELCOME_TEXT =
   "Hello, welcome to M3Hive! I'm your AI assistant. How can I help you today — exploring our services, a career opportunity, or something else?";
 
-// ─── Typing Indicator ─────────────────────────────────────────────────────────
+interface WidgetPosition {
+  x: number;
+  y: number;
+}
+
+type GreetingPhase = 'hidden' | 'typing' | 'visible' | 'exiting';
+
+function hasHandledGreeting(): boolean {
+  try {
+    return sessionStorage.getItem(GREETING_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function markGreetingHandled(): void {
+  try {
+    sessionStorage.setItem(GREETING_STORAGE_KEY, 'true');
+  } catch {
+    // Ignore unavailable storage.
+  }
+}
+
+function clampPosition(position: WidgetPosition): WidgetPosition {
+  const maxX = Math.max(VIEWPORT_MARGIN, window.innerWidth - FAB_SIZE - VIEWPORT_MARGIN);
+  const maxY = Math.max(VIEWPORT_MARGIN, window.innerHeight - FAB_SIZE - VIEWPORT_MARGIN);
+
+  return {
+    x: Math.min(Math.max(position.x, VIEWPORT_MARGIN), maxX),
+    y: Math.min(Math.max(position.y, VIEWPORT_MARGIN), maxY),
+  };
+}
+
+function getInitialPosition(): WidgetPosition {
+  const fallback = clampPosition({
+    x: window.innerWidth - FAB_SIZE - 28,
+    y: window.innerHeight - FAB_SIZE - 28,
+  });
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(POSITION_STORAGE_KEY) || 'null');
+    if (Number.isFinite(saved?.x) && Number.isFinite(saved?.y)) {
+      return clampPosition(saved);
+    }
+  } catch {
+    // Ignore unavailable storage or malformed saved data.
+  }
+
+  return fallback;
+}
+
+// Typing Indicator
 
 const TypingIndicator: React.FC = () => (
   <div className="m3-chat-msg m3-chat-msg--bot">
@@ -49,7 +108,7 @@ const TypingIndicator: React.FC = () => (
   </div>
 );
 
-// ─── Message Bubble ───────────────────────────────────────────────────────────
+// Message Bubble
 
 const MessageBubble: React.FC<{ message: Message }> = ({ message }) => {
   const isUser = message.sender === 'user';
@@ -74,7 +133,7 @@ const MessageBubble: React.FC<{ message: Message }> = ({ message }) => {
   );
 };
 
-// ─── Main Widget ──────────────────────────────────────────────────────────────
+// Main Widget
 
 export const ChatbotWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,12 +144,204 @@ export const ChatbotWidget: React.FC = () => {
   const [requestInFlight, setRequestInFlight] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
   const [showPulse, setShowPulse] = useState(true);
+  const [position, setPosition] = useState<WidgetPosition>(getInitialPosition);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isSettling, setIsSettling] = useState(false);
+  const [greetingPhase, setGreetingPhase] = useState<GreetingPhase>('hidden');
+  const [greetingMessageReady, setGreetingMessageReady] = useState(false);
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fabRef = useRef<HTMLDivElement>(null);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
+  const greetingRef = useRef<HTMLDivElement>(null);
   const visitorId = useRef(getOrCreateVisitorId());
+  const positionRef = useRef(position);
+  const dragRef = useRef<{
+    pointerId: number;
+    startPointerX: number;
+    startPointerY: number;
+    startPosition: WidgetPosition;
+    hasMoved: boolean;
+  } | null>(null);
+  const suppressClickRef = useRef(false);
+  const animationFrameRef = useRef<number | null>(null);
+  const pendingPositionRef = useRef<WidgetPosition | null>(null);
 
-  // ── Restore session ──────────────────────────────────────────────────────
+  const applyPosition = useCallback((nextPosition: WidgetPosition) => {
+    positionRef.current = nextPosition;
+
+    if (fabRef.current) {
+      fabRef.current.style.transform = `translate3d(${nextPosition.x}px, ${nextPosition.y}px, 0)`;
+    }
+
+    const panel = chatWindowRef.current;
+    if (panel) {
+      const panelWidth = panel.offsetWidth;
+      const panelHeight = panel.offsetHeight;
+      const maxLeft = Math.max(VIEWPORT_MARGIN, window.innerWidth - panelWidth - VIEWPORT_MARGIN);
+      const maxTop = Math.max(VIEWPORT_MARGIN, window.innerHeight - panelHeight - VIEWPORT_MARGIN);
+      const preferredLeft = nextPosition.x + FAB_SIZE - panelWidth;
+      const preferredTop = nextPosition.y - panelHeight - PANEL_GAP;
+      const fallbackTop = nextPosition.y + FAB_SIZE + PANEL_GAP;
+
+      panel.style.left = `${Math.min(Math.max(preferredLeft, VIEWPORT_MARGIN), maxLeft)}px`;
+      panel.style.top = `${Math.min(
+        Math.max(preferredTop >= VIEWPORT_MARGIN ? preferredTop : fallbackTop, VIEWPORT_MARGIN),
+        maxTop,
+      )}px`;
+    }
+
+    const greeting = greetingRef.current;
+    if (greeting) {
+      const greetingWidth = greeting.offsetWidth;
+      const greetingHeight = greeting.offsetHeight;
+      const maxLeft = Math.max(VIEWPORT_MARGIN, window.innerWidth - greetingWidth - VIEWPORT_MARGIN);
+      const maxTop = Math.max(VIEWPORT_MARGIN, window.innerHeight - greetingHeight - VIEWPORT_MARGIN);
+      const isMobile = window.matchMedia('(max-width: 480px)').matches;
+      let greetingLeft: number;
+      let greetingTop: number;
+
+      if (isMobile) {
+        greetingLeft = nextPosition.x + FAB_SIZE / 2 - greetingWidth / 2;
+        const above = nextPosition.y - greetingHeight - PANEL_GAP;
+        greetingTop = above >= VIEWPORT_MARGIN
+          ? above
+          : nextPosition.y + FAB_SIZE + PANEL_GAP;
+      } else {
+        const leftSide = nextPosition.x - greetingWidth - PANEL_GAP;
+        greetingLeft = leftSide >= VIEWPORT_MARGIN
+          ? leftSide
+          : nextPosition.x + FAB_SIZE + PANEL_GAP;
+        greetingTop = nextPosition.y + FAB_SIZE / 2 - greetingHeight / 2;
+      }
+
+      greeting.style.left = `${Math.min(Math.max(greetingLeft, VIEWPORT_MARGIN), maxLeft)}px`;
+      greeting.style.top = `${Math.min(Math.max(greetingTop, VIEWPORT_MARGIN), maxTop)}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    applyPosition(position);
+  }, [applyPosition, greetingPhase, isOpen, position]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const nextPosition = clampPosition(positionRef.current);
+      applyPosition(nextPosition);
+      setPosition(nextPosition);
+
+      try {
+        localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify(nextPosition));
+      } catch {
+        // Ignore unavailable storage.
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.visualViewport?.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      if (animationFrameRef.current !== null) cancelAnimationFrame(animationFrameRef.current);
+    };
+  }, [applyPosition]);
+
+  const dismissGreeting = useCallback(() => {
+    markGreetingHandled();
+    setGreetingPhase((current) => current === 'hidden' ? 'hidden' : 'exiting');
+  }, []);
+
+  useEffect(() => {
+    if (hasHandledGreeting()) return;
+
+    try {
+      const savedChat = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null');
+      if (savedChat?.messages?.length) {
+        markGreetingHandled();
+        return;
+      }
+    } catch {
+      // Continue when session data is unavailable or malformed.
+    }
+
+    let hasEngaged = false;
+    let delayHasElapsed = false;
+    let hasStarted = false;
+
+    const removeListeners = () => {
+      window.removeEventListener('pointermove', handleEngagement);
+      window.removeEventListener('pointerdown', handleEngagement);
+      window.removeEventListener('scroll', handleEngagement, true);
+      window.removeEventListener('keydown', handleEngagement);
+      document.removeEventListener('visibilitychange', maybeShowGreeting);
+      document.removeEventListener('focusout', maybeShowGreeting);
+    };
+
+    function maybeShowGreeting() {
+      const activeElement = document.activeElement as HTMLElement | null;
+      const isEditing = Boolean(activeElement?.matches('input, textarea, select, [contenteditable="true"]'));
+
+      if (
+        hasStarted ||
+        !hasEngaged ||
+        !delayHasElapsed ||
+        hasHandledGreeting() ||
+        document.visibilityState !== 'visible' ||
+        isEditing
+      ) return;
+
+      hasStarted = true;
+      markGreetingHandled();
+      setGreetingPhase('typing');
+      removeListeners();
+    }
+
+    function handleEngagement() {
+      hasEngaged = true;
+      maybeShowGreeting();
+    }
+
+    window.addEventListener('pointermove', handleEngagement, { passive: true });
+    window.addEventListener('pointerdown', handleEngagement, { passive: true });
+    window.addEventListener('scroll', handleEngagement, { passive: true, capture: true });
+    window.addEventListener('keydown', handleEngagement, { passive: true });
+    document.addEventListener('visibilitychange', maybeShowGreeting);
+    document.addEventListener('focusout', maybeShowGreeting);
+
+    const delayTimer = window.setTimeout(() => {
+      delayHasElapsed = true;
+      maybeShowGreeting();
+    }, GREETING_DELAY_MS);
+
+    return () => {
+      window.clearTimeout(delayTimer);
+      removeListeners();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (greetingPhase !== 'typing') return;
+    const typingTimer = window.setTimeout(() => {
+      setGreetingMessageReady(true);
+      setGreetingPhase('visible');
+    }, GREETING_TYPING_MS);
+    return () => window.clearTimeout(typingTimer);
+  }, [greetingPhase]);
+
+  useEffect(() => {
+    if (greetingPhase !== 'visible') return;
+    const hideTimer = window.setTimeout(dismissGreeting, GREETING_VISIBLE_MS);
+    return () => window.clearTimeout(hideTimer);
+  }, [dismissGreeting, greetingPhase]);
+
+  useEffect(() => {
+    if (greetingPhase !== 'exiting') return;
+    const exitTimer = window.setTimeout(() => setGreetingPhase('hidden'), 360);
+    return () => window.clearTimeout(exitTimer);
+  }, [greetingPhase]);
+
+  // Restore session
   useEffect(() => {
     try {
       const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null');
@@ -103,7 +354,7 @@ export const ChatbotWidget: React.FC = () => {
     }
   }, []);
 
-  // ── Persist session ──────────────────────────────────────────────────────
+  // Persist session
   useEffect(() => {
     if (messages.length === 0) return;
     try {
@@ -145,6 +396,7 @@ export const ChatbotWidget: React.FC = () => {
 
   // ── Open chat with welcome message ───────────────────────────────────────
   const openChat = useCallback(() => {
+    dismissGreeting();
     setIsOpen(true);
     if (!hasOpened) {
       setHasOpened(true);
@@ -156,7 +408,7 @@ export const ChatbotWidget: React.FC = () => {
       };
       setMessages([welcome]);
     }
-  }, [hasOpened]);
+  }, [dismissGreeting, hasOpened]);
 
   const toggleChat = () => {
     if (isOpen) {
@@ -237,25 +489,115 @@ export const ChatbotWidget: React.FC = () => {
     }
   };
 
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = {
+      pointerId: e.pointerId,
+      startPointerX: e.clientX,
+      startPointerY: e.clientY,
+      startPosition: positionRef.current,
+      hasMoved: false,
+    };
+    suppressClickRef.current = false;
+    setIsSettling(false);
+  };
+
+  const getDraggedPosition = (clientX: number, clientY: number): WidgetPosition => {
+    const drag = dragRef.current;
+    if (!drag) return positionRef.current;
+
+    return clampPosition({
+      x: drag.startPosition.x + clientX - drag.startPointerX,
+      y: drag.startPosition.y + clientY - drag.startPointerY,
+    });
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+
+    const distance = Math.hypot(e.clientX - drag.startPointerX, e.clientY - drag.startPointerY);
+    if (!drag.hasMoved && distance < 5) return;
+
+    if (!drag.hasMoved) {
+      drag.hasMoved = true;
+      suppressClickRef.current = true;
+      dismissGreeting();
+      setIsDragging(true);
+    }
+
+    e.preventDefault();
+    pendingPositionRef.current = getDraggedPosition(e.clientX, e.clientY);
+    if (animationFrameRef.current === null) {
+      animationFrameRef.current = requestAnimationFrame(() => {
+        if (pendingPositionRef.current) applyPosition(pendingPositionRef.current);
+        animationFrameRef.current = null;
+      });
+    }
+  };
+
+  const handlePointerEnd = (e: React.PointerEvent<HTMLButtonElement>, cancelled = false) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    if (drag.hasMoved) {
+      const finalPosition = cancelled ? positionRef.current : getDraggedPosition(e.clientX, e.clientY);
+      applyPosition(finalPosition);
+      setPosition(finalPosition);
+      setIsSettling(true);
+
+      try {
+        localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify(finalPosition));
+      } catch {
+        // Ignore unavailable storage.
+      }
+
+      window.setTimeout(() => {
+        suppressClickRef.current = false;
+      }, 0);
+    }
+
+    pendingPositionRef.current = null;
+    dragRef.current = null;
+    setIsDragging(false);
+
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+  };
+
+  const handleToggleClick = () => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
+    toggleChat();
+  };
+
   return (
     <>
       <style>{`
         .m3-widget {
           position: fixed;
-          bottom: 28px;
-          right: 28px;
-          z-index: 9999;
+          inset: 0;
+          z-index: 2147483000;
           font-family: 'Manrope', sans-serif;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 16px;
+          pointer-events: none;
         }
         .m3-chat-window {
-          width: 380px;
-          height: 560px;
+          position: fixed;
+          width: min(380px, calc(100vw - 24px));
+          height: min(560px, calc(100dvh - 24px));
           display: flex;
           flex-direction: column;
+          box-sizing: border-box;
           background: rgba(12, 12, 12, 0.9);
           backdrop-filter: blur(28px) saturate(180%);
           -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -503,10 +845,165 @@ export const ChatbotWidget: React.FC = () => {
           color: rgba(255,255,255,0.25);
           letter-spacing: 0.01em;
         }
-        .m3-fab-wrapper {
+        .m3-proactive-greeting {
+          position: fixed;
+          width: min(300px, calc(100vw - 24px));
+          min-height: 92px;
+          box-sizing: border-box;
+          display: flex;
+          overflow: hidden;
+          pointer-events: auto;
+          color: #FFFFFF;
+          background: linear-gradient(145deg, rgba(24,24,22,0.94), rgba(8,8,8,0.9));
+          backdrop-filter: blur(24px) saturate(165%);
+          -webkit-backdrop-filter: blur(24px) saturate(165%);
+          border: 1px solid rgba(253,207,9,0.3);
+          border-radius: 18px;
+          box-shadow: 0 20px 54px rgba(0,0,0,0.52), 0 0 24px rgba(253,207,9,0.08), inset 0 1px 0 rgba(255,255,255,0.08);
+          isolation: isolate;
+          transform-origin: bottom right;
+          animation: m3GreetingIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        .m3-proactive-greeting::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          pointer-events: none;
+          background: radial-gradient(circle at 12% 10%, rgba(253,207,9,0.11), transparent 38%);
+        }
+        .m3-proactive-greeting--exiting {
+          pointer-events: none;
+          animation: m3GreetingOut 0.36s cubic-bezier(0.4,0,1,1) both;
+        }
+        @keyframes m3GreetingIn {
+          from { opacity: 0; transform: translateY(14px) scale(0.96); filter: blur(3px); }
+          to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes m3GreetingOut {
+          from { opacity: 1; transform: translateY(0) scale(1); }
+          to { opacity: 0; transform: translateY(10px) scale(0.96); }
+        }
+        .m3-greeting-main {
+          appearance: none;
+          width: 100%;
+          min-width: 0;
+          display: flex;
+          align-items: center;
+          gap: 13px;
+          padding: 16px 42px 16px 16px;
+          border: 0;
+          background: transparent;
+          color: inherit;
+          text-align: left;
+          font: inherit;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .m3-greeting-main:hover {
+          background: rgba(253,207,9,0.035);
+        }
+        .m3-greeting-main:focus-visible,
+        .m3-greeting-dismiss:focus-visible {
+          outline: 2px solid rgba(253,207,9,0.85);
+          outline-offset: -3px;
+        }
+        .m3-greeting-ai {
           position: relative;
+          width: 34px;
+          height: 34px;
+          border-radius: 11px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+          color: #090909;
+          background: linear-gradient(135deg, #FDCF09, #F69822);
+          box-shadow: 0 6px 18px rgba(253,207,9,0.22);
+        }
+        .m3-greeting-ai::before {
+          content: '';
+          position: absolute;
+          inset: -5px;
+          border: 1px solid rgba(253,207,9,0.5);
+          border-radius: 14px;
+          animation: m3GreetingPulse 1.8s ease-out infinite;
+        }
+        @keyframes m3GreetingPulse {
+          0% { opacity: 0.75; transform: scale(0.88); }
+          75%, 100% { opacity: 0; transform: scale(1.3); }
+        }
+        .m3-greeting-content {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .m3-greeting-eyebrow {
+          color: rgba(253,207,9,0.72);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+        .m3-greeting-copy {
+          color: rgba(255,255,255,0.92);
+          font-size: 13.5px;
+          font-weight: 500;
+          line-height: 1.48;
+        }
+        .m3-greeting-dots {
+          height: 22px;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        .m3-greeting-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: rgba(253,207,9,0.82);
+          animation: m3GreetingDot 1s ease-in-out infinite;
+        }
+        .m3-greeting-dot:nth-child(2) { animation-delay: 0.14s; }
+        .m3-greeting-dot:nth-child(3) { animation-delay: 0.28s; }
+        @keyframes m3GreetingDot {
+          0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+          30% { opacity: 1; transform: translateY(-4px); }
+        }
+        .m3-greeting-dismiss {
+          position: absolute;
+          top: 9px;
+          right: 9px;
+          width: 25px;
+          height: 25px;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 0;
+          border-radius: 8px;
+          background: transparent;
+          color: rgba(255,255,255,0.38);
+          cursor: pointer;
+          transition: color 0.18s ease, background 0.18s ease;
+        }
+        .m3-greeting-dismiss:hover {
+          color: #FFFFFF;
+          background: rgba(255,255,255,0.08);
+        }
+        .m3-fab-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
           width: 58px;
           height: 58px;
+          pointer-events: auto;
+          will-change: transform;
+          user-select: none;
+          -webkit-user-select: none;
         }
         .m3-fab-pulse {
           position: absolute;
@@ -527,7 +1024,7 @@ export const ChatbotWidget: React.FC = () => {
           border-radius: 50%;
           background: linear-gradient(135deg, #FDCF09 0%, #F69822 100%);
           border: none;
-          cursor: pointer;
+          cursor: grab;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -536,12 +1033,30 @@ export const ChatbotWidget: React.FC = () => {
           transition: all 0.22s cubic-bezier(0.19,1,0.22,1);
           position: relative;
           z-index: 1;
+          touch-action: none;
+          -webkit-tap-highlight-color: transparent;
         }
         .m3-fab-btn:hover {
           transform: scale(1.08);
           box-shadow: 0 12px 32px rgba(253,207,9,0.5), 0 4px 12px rgba(0,0,0,0.35);
         }
         .m3-fab-btn:active { transform: scale(0.95); }
+        .m3-fab-wrapper--dragging .m3-fab-btn,
+        .m3-fab-wrapper--dragging .m3-fab-btn:hover,
+        .m3-fab-wrapper--dragging .m3-fab-btn:active {
+          cursor: grabbing;
+          transform: scale(1.03);
+          transition-duration: 0.08s;
+        }
+        .m3-fab-wrapper--settling .m3-fab-btn {
+          animation: m3FabSpring 0.48s cubic-bezier(0.2, 1.5, 0.4, 1);
+        }
+        @keyframes m3FabSpring {
+          0% { transform: scale(1.03); }
+          45% { transform: scale(0.92); }
+          72% { transform: scale(1.06); }
+          100% { transform: scale(1); }
+        }
         .m3-fab-icon {
           transition: transform 0.22s cubic-bezier(0.19,1,0.22,1), opacity 0.15s ease;
           position: absolute;
@@ -555,17 +1070,31 @@ export const ChatbotWidget: React.FC = () => {
           opacity: 1;
           transform: scale(1) rotate(0deg);
         }
+        .m3-fab-icon--chat.m3-fab-icon--visible {
+          animation: m3IconFloat 3.2s ease-in-out infinite;
+        }
+        @keyframes m3IconFloat {
+          0%, 100% { transform: scale(1) rotate(0deg) translateY(0); }
+          50% { transform: scale(1) rotate(0deg) translateY(-2px); }
+        }
         @media (max-width: 480px) {
-          .m3-widget {
-            bottom: 20px;
-            right: 16px;
-            left: 16px;
-            align-items: flex-end;
-          }
           .m3-chat-window {
-            width: 100%;
+            width: calc(100vw - 24px);
             height: calc(100dvh - 100px);
             border-radius: 18px;
+          }
+          .m3-proactive-greeting {
+            width: min(280px, calc(100vw - 24px));
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .m3-proactive-greeting,
+          .m3-proactive-greeting--exiting,
+          .m3-greeting-ai::before,
+          .m3-greeting-dot,
+          .m3-fab-icon--chat.m3-fab-icon--visible {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
           }
         }
       `}</style>
@@ -573,6 +1102,7 @@ export const ChatbotWidget: React.FC = () => {
       <div className="m3-widget" role="complementary" aria-label="M3Hive AI Assistant">
         {/* Chat window */}
         <div
+          ref={chatWindowRef}
           className={`m3-chat-window ${isOpen ? 'm3-chat-window--open' : 'm3-chat-window--closed'}`}
           aria-hidden={!isOpen}
         >
@@ -647,20 +1177,72 @@ export const ChatbotWidget: React.FC = () => {
           </div>
         </div>
 
+        {greetingPhase !== 'hidden' && (
+          <div
+            ref={greetingRef}
+            className={`m3-proactive-greeting ${greetingPhase === 'exiting' ? 'm3-proactive-greeting--exiting' : ''}`}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <button
+              type="button"
+              className="m3-greeting-main"
+              onClick={openChat}
+              aria-label="Open M3Hive Assistant"
+            >
+              <span className="m3-greeting-ai" aria-hidden="true">
+                <Bot size={17} />
+              </span>
+              <span className="m3-greeting-content">
+                <span className="m3-greeting-eyebrow">M3Hive AI Assistant</span>
+                {!greetingMessageReady ? (
+                  <span className="m3-greeting-dots" aria-label="Assistant is typing">
+                    <span className="m3-greeting-dot" />
+                    <span className="m3-greeting-dot" />
+                    <span className="m3-greeting-dot" />
+                  </span>
+                ) : (
+                  <span className="m3-greeting-copy">
+                    Hi 👋 Welcome to M3Hive.<br />How can I help you today?
+                  </span>
+                )}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="m3-greeting-dismiss"
+              onClick={dismissGreeting}
+              aria-label="Dismiss greeting"
+            >
+              <X size={14} aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
         {/* FAB */}
-        <div className="m3-fab-wrapper">
+        <div
+          ref={fabRef}
+          className={`m3-fab-wrapper ${isDragging ? 'm3-fab-wrapper--dragging' : ''} ${isSettling ? 'm3-fab-wrapper--settling' : ''}`}
+          style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
+          onAnimationEnd={() => setIsSettling(false)}
+        >
           <span className={`m3-fab-pulse ${showPulse ? '' : 'm3-fab-pulse--hidden'}`} aria-hidden="true" />
           <button
             id="m3hive-chat-toggle-btn"
             className="m3-fab-btn"
-            onClick={toggleChat}
+            onClick={handleToggleClick}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerEnd}
+            onPointerCancel={(e) => handlePointerEnd(e, true)}
             aria-label={isOpen ? 'Close AI assistant' : 'Open AI assistant'}
             aria-expanded={isOpen}
             aria-controls="m3hive-chat-body"
           >
             <MessageCircle
               size={24}
-              className={`m3-fab-icon ${isOpen ? 'm3-fab-icon--hidden' : 'm3-fab-icon--visible'}`}
+              className={`m3-fab-icon m3-fab-icon--chat ${isOpen ? 'm3-fab-icon--hidden' : 'm3-fab-icon--visible'}`}
               aria-hidden="true"
             />
             <X

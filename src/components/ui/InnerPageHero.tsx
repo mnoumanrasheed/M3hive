@@ -3,6 +3,7 @@ import { HeroBackground } from './HeroBackground';
 import { PremiumHeroMotion } from './PremiumHeroMotion';
 import { Container } from './Container';
 import { FadeIn } from './FadeIn';
+import { InternalHeroContent, InternalHeroSection } from './InternalHeroLayout';
 
 /* ─── Types ─────────────────────────────────────────────────────────── */
 
@@ -23,18 +24,6 @@ interface InnerPageHeroProps {
   children?: React.ReactNode;
 }
 
-/*
-  Layout math:
-    Navbar pill height   = 74px  (from Header.tsx grid h-[74px])
-    Navbar top gap       = 16px  (pt-3/pt-4 outer padding, safe at 16px)
-    Visual breathing gap = 28px  (clear space below navbar before badge)
-    ─────────────────────────────
-    Safe top padding     = 118px desktop
-
-  We use clamp() so the value never goes below 100px (tight mobile) or
-  above 140px (large monitors with generous space).
-*/
-const HERO_SAFE_TOP = 'clamp(100px, calc(74px + 16px + 28px), 140px)';
 const HERO_SAFE_BOTTOM = 'clamp(40px, 5vh, 72px)';
 
 export const InnerPageHero: React.FC<InnerPageHeroProps> = ({
@@ -46,24 +35,12 @@ export const InnerPageHero: React.FC<InnerPageHeroProps> = ({
   children,
 }) => {
   return (
-    <section
-      /*
-        Full viewport height — no subtracting the navbar because the navbar
-        is fixed/floating OVER the hero (not outside it).
-        We use 100svh with a 100vh fallback via @supports in globals.css.
-      */
+    <InternalHeroSection
       className="
-        relative
-        z-0
-        w-full
         max-w-none
-        overflow-hidden
         border-b
         border-hive-border
-        flex
-        flex-col
       "
-      style={{ minHeight: '100svh' }}
     >
       {/* ── Background image (absolutely fills the section) ── */}
       <HeroBackground imageUrl={imageUrl} priority />
@@ -77,19 +54,12 @@ export const InnerPageHero: React.FC<InnerPageHeroProps> = ({
         text block vertically centered within the viewport space.
         Safe top padding prevents content from sliding under the fixed navbar.
       */}
-      <div
+      <InternalHeroContent
         className="
-          relative
           z-10
-          flex
-          flex-1
-          flex-col
           items-center
-          justify-center
-          w-full
         "
         style={{
-          paddingTop: HERO_SAFE_TOP,
           paddingBottom: HERO_SAFE_BOTTOM,
         }}
       >
@@ -141,7 +111,7 @@ export const InnerPageHero: React.FC<InnerPageHeroProps> = ({
             {children}
           </FadeIn>
         </Container>
-      </div>
-    </section>
+      </InternalHeroContent>
+    </InternalHeroSection>
   );
 };

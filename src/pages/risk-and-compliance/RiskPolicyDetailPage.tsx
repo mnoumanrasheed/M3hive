@@ -6,6 +6,7 @@ import { FadeIn } from '../../components/ui/FadeIn';
 import { Button } from '../../components/ui/Button';
 import { Breadcrumbs } from '../../components/ui/Breadcrumbs';
 import { HeroBackground } from '../../components/ui/HeroBackground';
+import { InternalHeroContent, InternalHeroSection } from '../../components/ui/InternalHeroLayout';
 import { riskPolicies } from '../../data/riskCompliancePolicies';
 import {
   ShieldCheck,
@@ -37,7 +38,7 @@ export const RiskPolicyDetailPage: React.FC = () => {
       {/* HERO */}
       {/* ===================================================== */}
 
-      <section className="relative z-0 overflow-hidden border-b border-hive-border pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-32 lg:pb-24">
+      <InternalHeroSection className="border-b border-hive-border">
 
         <style>{`
           @keyframes riskHeroDrift {
@@ -525,7 +526,8 @@ export const RiskPolicyDetailPage: React.FC = () => {
         {/* HERO CONTENT */}
         {/* ================================================= */}
 
-        <Container size="md" className="relative z-10">
+        <InternalHeroContent className="z-10 pb-12 sm:pb-16 lg:pb-24">
+          <Container size="md">
 
           {/* Breadcrumbs */}
           <div className="risk-enter risk-enter-1 mb-6 max-w-[720px]">
@@ -582,8 +584,9 @@ export const RiskPolicyDetailPage: React.FC = () => {
           <p className="risk-enter risk-enter-4 max-w-2xl text-base leading-relaxed text-white/90 drop-shadow sm:text-lg">
             {policy.intro}
           </p>
-        </Container>
-      </section>
+          </Container>
+        </InternalHeroContent>
+      </InternalHeroSection>
 
       {/* ===================================================== */}
       {/* POLICY CONTENT */}
