@@ -37,7 +37,7 @@ const GREETING_TYPING_MS = 1_150;
 const GREETING_VISIBLE_MS = 12_000;
 const FOLLOW_UP_DELAY_MS = 20_000;
 const MAX_FOLLOW_UPS_PER_SESSION = 2;
-const FOLLOW_UP_STORAGE_KEY = 'm3hive_contextual_follow_up_turns';
+const FOLLOW_UP_STORAGE_KEY = 'm3hive_proactive_follow_up_count';
 const FAB_SIZE = 58;
 const VIEWPORT_MARGIN = 12;
 const PANEL_GAP = 16;
@@ -68,24 +68,24 @@ function markGreetingHandled(): void {
   }
 }
 
-function getFollowUpTurnIds(): string[] {
+function getProactiveCount(): number {
   try {
-    const saved = JSON.parse(sessionStorage.getItem(FOLLOW_UP_STORAGE_KEY) || '[]');
-    return Array.isArray(saved) ? saved.filter((value): value is string => typeof value === 'string') : [];
+    const saved = Number(sessionStorage.getItem(FOLLOW_UP_STORAGE_KEY));
+    return Number.isFinite(saved) ? Math.min(Math.max(saved, 0), MAX_FOLLOW_UPS_PER_SESSION) : 0;
   } catch {
-    return [];
+    return 0;
   }
 }
 
-function saveFollowUpTurnIds(turnIds: string[]): void {
+function saveProactiveCount(count: number): void {
   try {
-    sessionStorage.setItem(FOLLOW_UP_STORAGE_KEY, JSON.stringify(turnIds));
+    sessionStorage.setItem(FOLLOW_UP_STORAGE_KEY, String(count));
   } catch {
     // Ignore unavailable storage.
   }
 }
 
-function getLatestCompletedTurn(messages: Message[]): { replyId: string; history: Message[] } | null {
+function getLatestCompletedTurn(messages: Message[]): { history: Message[] } | null {
   let latestUserIndex = -1;
 
   for (let index = messages.length - 1; index >= 0; index -= 1) {
@@ -101,7 +101,7 @@ function getLatestCompletedTurn(messages: Message[]): { replyId: string; history
     .slice(latestUserIndex + 1)
     .find((message) => message.sender === 'bot' && !message.isError);
 
-  return reply ? { replyId: reply.id, history: messages.slice(-6) } : null;
+  return reply ? { history: messages.slice(-6) } : null;
 }
 
 function makeConciseFollowUp(text: string): string {
@@ -195,6 +195,7 @@ export const ChatbotWidget: React.FC = () => {
   const [greetingMessageReady, setGreetingMessageReady] = useState(false);
   const [followUpNotification, setFollowUpNotification] = useState<string | null>(null);
   const [isPageVisible, setIsPageVisible] = useState(() => document.visibilityState === 'visible');
+  const [inactivityActivity, setInactivityActivity] = useState(0);
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -213,8 +214,13 @@ export const ChatbotWidget: React.FC = () => {
   const suppressClickRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
   const pendingPositionRef = useRef<WidgetPosition | null>(null);
-  const followUpTurnIdsRef = useRef(getFollowUpTurnIds());
+  const proactiveCountRef = useRef(getProactiveCount());
+  const lastProactiveActivityRef = useRef(-1);
   const isOpenRef = useRef(isOpen);
+
+  const registerInactivityActivity = useCallback(() => {
+    setInactivityActivity((current) => current + 1);
+  }, []);
 
   const applyPosition = useCallback((nextPosition: WidgetPosition) => {
     positionRef.current = nextPosition;
@@ -433,8 +439,8 @@ export const ChatbotWidget: React.FC = () => {
       isTyping ||
       requestInFlight ||
       !isPageVisible ||
-      followUpTurnIdsRef.current.includes(completedTurn.replyId) ||
-      followUpTurnIdsRef.current.length >= MAX_FOLLOW_UPS_PER_SESSION
+      proactiveCountRef.current >= MAX_FOLLOW_UPS_PER_SESSION ||
+      lastProactiveActivityRef.current === inactivityActivity
     ) return;
 
     let cancelled = false;
@@ -452,11 +458,6 @@ export const ChatbotWidget: React.FC = () => {
           console.debug('[INACTIVITY] 20 seconds reached');
           console.debug('[INACTIVITY] Generating proactive message');
         }
-
-        const nextTurnIds = [...followUpTurnIdsRef.current, completedTurn.replyId]
-          .slice(-MAX_FOLLOW_UPS_PER_SESSION);
-        followUpTurnIdsRef.current = nextTurnIds;
-        saveFollowUpTurnIds(nextTurnIds);
 
         const history = completedTurn.history
           .map((message) => `${message.sender === 'user' ? 'User' : 'Assistant'}: ${message.text}`)
@@ -490,6 +491,10 @@ export const ChatbotWidget: React.FC = () => {
           const message = makeConciseFollowUp(String(data.reply || data.response || '').trim());
           if (cancelled || !message) return;
 
+          proactiveCountRef.current += 1;
+          lastProactiveActivityRef.current = inactivityActivity;
+          saveProactiveCount(proactiveCountRef.current);
+
           if (import.meta.env.DEV) console.debug('[INACTIVITY] Proactive message received');
           setMessages((previousMessages) => [
             ...previousMessages,
@@ -517,25 +522,19 @@ export const ChatbotWidget: React.FC = () => {
       }, FOLLOW_UP_DELAY_MS);
     };
 
-    const resetInactivityTimer = () => {
-      if (cancelled || proactiveRequestStarted) return;
-      if (import.meta.env.DEV) console.debug('[INACTIVITY] Timer reset');
-      startInactivityTimer();
-    };
-
     startInactivityTimer();
-    window.addEventListener('pointerdown', resetInactivityTimer, { passive: true });
-    window.addEventListener('keydown', resetInactivityTimer);
-    window.addEventListener('scroll', resetInactivityTimer, { passive: true, capture: true });
+    window.addEventListener('pointerdown', registerInactivityActivity, { passive: true });
+    window.addEventListener('keydown', registerInactivityActivity);
+    window.addEventListener('scroll', registerInactivityActivity, { passive: true, capture: true });
 
     return () => {
       cancelled = true;
       if (inactivityTimer !== undefined) window.clearTimeout(inactivityTimer);
-      window.removeEventListener('pointerdown', resetInactivityTimer);
-      window.removeEventListener('keydown', resetInactivityTimer);
-      window.removeEventListener('scroll', resetInactivityTimer, true);
+      window.removeEventListener('pointerdown', registerInactivityActivity);
+      window.removeEventListener('keydown', registerInactivityActivity);
+      window.removeEventListener('scroll', registerInactivityActivity, true);
     };
-  }, [inputValue, isPageVisible, isTyping, messages, requestInFlight]);
+  }, [inactivityActivity, inputValue, isPageVisible, isTyping, messages, registerInactivityActivity, requestInFlight]);
 
   // ── Auto-scroll ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -555,12 +554,14 @@ export const ChatbotWidget: React.FC = () => {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen && !requestInFlight) {
+        isOpenRef.current = false;
+        registerInactivityActivity();
         setIsOpen(false);
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [isOpen, requestInFlight]);
+  }, [isOpen, registerInactivityActivity, requestInFlight]);
 
   // ── Stop pulse after first open ──────────────────────────────────────────
   useEffect(() => {
@@ -572,6 +573,7 @@ export const ChatbotWidget: React.FC = () => {
     dismissGreeting();
     setFollowUpNotification(null);
     isOpenRef.current = true;
+    registerInactivityActivity();
     setIsOpen(true);
     if (!hasOpened) {
       setHasOpened(true);
@@ -583,12 +585,13 @@ export const ChatbotWidget: React.FC = () => {
       };
       setMessages([welcome]);
     }
-  }, [dismissGreeting, hasOpened]);
+  }, [dismissGreeting, hasOpened, registerInactivityActivity]);
 
   const toggleChat = () => {
     if (isOpen) {
       if (!requestInFlight) {
         isOpenRef.current = false;
+        registerInactivityActivity();
         setIsOpen(false);
       }
     } else {
@@ -601,6 +604,7 @@ export const ChatbotWidget: React.FC = () => {
     if (requestInFlight || !inputValue.trim()) return;
 
     const text = inputValue.trim();
+    registerInactivityActivity();
     setInputValue('');
 
     const userMsg: Message = {
@@ -658,7 +662,7 @@ export const ChatbotWidget: React.FC = () => {
       setRequestInFlight(false);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [inputValue, requestInFlight]);
+  }, [inputValue, registerInactivityActivity, requestInFlight]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -1304,6 +1308,7 @@ export const ChatbotWidget: React.FC = () => {
               onClick={() => {
                 if (!requestInFlight) {
                   isOpenRef.current = false;
+                  registerInactivityActivity();
                   setIsOpen(false);
                 }
               }}
