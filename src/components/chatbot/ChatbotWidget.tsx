@@ -36,8 +36,8 @@ const GREETING_DELAY_MS = 10000;
 const GREETING_TYPING_MS = 1_150;
 const GREETING_VISIBLE_MS = 12_000;
 const FOLLOW_UP_DELAY_MS = 20_000;
-const MAX_FOLLOW_UPS_PER_SESSION = 2;
-const FOLLOW_UP_STORAGE_KEY = 'm3hive_proactive_follow_up_count';
+const MAX_FOLLOW_UPS_PER_SESSION = 3;
+const FOLLOW_UP_STORAGE_KEY = 'm3hive_proactive_follow_up_count_v3';
 const FAB_SIZE = 58;
 const VIEWPORT_MARGIN = 12;
 const PANEL_GAP = 16;
@@ -195,7 +195,7 @@ export const ChatbotWidget: React.FC = () => {
   const [greetingMessageReady, setGreetingMessageReady] = useState(false);
   const [followUpNotification, setFollowUpNotification] = useState<string | null>(null);
   const [isPageVisible, setIsPageVisible] = useState(() => document.visibilityState === 'visible');
-  const [inactivityActivity, setInactivityActivity] = useState(0);
+  const [lastInteractionAt, setLastInteractionAt] = useState(() => Date.now());
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -215,11 +215,11 @@ export const ChatbotWidget: React.FC = () => {
   const animationFrameRef = useRef<number | null>(null);
   const pendingPositionRef = useRef<WidgetPosition | null>(null);
   const proactiveCountRef = useRef(getProactiveCount());
-  const lastProactiveActivityRef = useRef(-1);
+  const lastProactiveInteractionRef = useRef<number | null>(null);
   const isOpenRef = useRef(isOpen);
 
   const registerInactivityActivity = useCallback(() => {
-    setInactivityActivity((current) => current + 1);
+    setLastInteractionAt((current) => Math.max(Date.now(), current + 1));
   }, []);
 
   const applyPosition = useCallback((nextPosition: WidgetPosition) => {
@@ -433,108 +433,102 @@ export const ChatbotWidget: React.FC = () => {
     const completedTurn = getLatestCompletedTurn(messages);
     const isUserTyping = inputValue.trim().length > 0;
 
-    if (
-      !completedTurn ||
-      isUserTyping ||
-      isTyping ||
-      requestInFlight ||
-      !isPageVisible ||
-      proactiveCountRef.current >= MAX_FOLLOW_UPS_PER_SESSION ||
-      lastProactiveActivityRef.current === inactivityActivity
-    ) return;
+    if (!completedTurn || isUserTyping || isTyping || requestInFlight || !isPageVisible) return;
+
+    if (proactiveCountRef.current >= MAX_FOLLOW_UPS_PER_SESSION) {
+      if (import.meta.env.DEV) console.debug('[INACTIVITY] Follow-up limit reached');
+      return;
+    }
+
+    if (lastProactiveInteractionRef.current === lastInteractionAt) return;
 
     let cancelled = false;
     let proactiveRequestStarted = false;
-    let inactivityTimer: number | undefined;
+    const remainingDelay = Math.max(0, FOLLOW_UP_DELAY_MS - (Date.now() - lastInteractionAt));
 
-    const startInactivityTimer = () => {
-      if (inactivityTimer !== undefined) window.clearTimeout(inactivityTimer);
+    if (import.meta.env.DEV) console.debug('[INACTIVITY] Timer started');
+    const inactivityTimer = window.setTimeout(async () => {
+      if (cancelled || proactiveRequestStarted) return;
+      proactiveRequestStarted = true;
+      if (import.meta.env.DEV) {
+        console.debug('[INACTIVITY] 20 seconds reached');
+        console.debug('[INACTIVITY] Generating proactive message');
+      }
 
-      if (import.meta.env.DEV) console.debug('[INACTIVITY] Timer started');
-      inactivityTimer = window.setTimeout(async () => {
-        if (cancelled || proactiveRequestStarted) return;
-        proactiveRequestStarted = true;
+      const history = completedTurn.history
+        .map((message) => `${message.sender === 'user' ? 'User' : 'Assistant'}: ${message.text}`)
+        .join('\n');
+
+      const followUpPrompt = [
+        'Using the recent conversation below, write one concise follow-up that advances the user\'s current topic.',
+        'Maximum 2 sentences and 25 words. Do not greet, mention inactivity, ask if the user is still there, repeat a previous answer, or add an explanation.',
+        'Return only the follow-up message.',
+        '',
+        `Recent conversation:\n${history}`,
+      ].join('\n');
+
+      try {
+        // Reuse the normal chat endpoint so the existing visitor conversation context remains intact.
+        const response = await fetch(`${API_URL}/chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
+          },
+          body: JSON.stringify({
+            message: followUpPrompt,
+            visitor_id: visitorId.current,
+          }),
+        });
+
+        if (!response.ok) throw new Error(`Proactive follow-up API error ${response.status}`);
+
+        const data = await response.json();
+        const message = makeConciseFollowUp(String(data.reply || data.response || '').trim());
+        if (cancelled || !message) return;
+
+        proactiveCountRef.current += 1;
+        lastProactiveInteractionRef.current = lastInteractionAt;
+        saveProactiveCount(proactiveCountRef.current);
+
+        if (import.meta.env.DEV) console.debug('[INACTIVITY] Proactive message received');
+        setMessages((previousMessages) => [
+          ...previousMessages,
+          {
+            id: generateId(),
+            text: message,
+            sender: 'bot',
+            timestamp: Date.now(),
+          },
+        ]);
         if (import.meta.env.DEV) {
-          console.debug('[INACTIVITY] 20 seconds reached');
-          console.debug('[INACTIVITY] Generating proactive message');
+          console.debug('[INACTIVITY] Message added to chat');
+          console.debug(`[INACTIVITY] Chat state: ${isOpenRef.current ? 'open' : 'closed'}`);
         }
 
-        const history = completedTurn.history
-          .map((message) => `${message.sender === 'user' ? 'User' : 'Assistant'}: ${message.text}`)
-          .join('\n');
-
-        const followUpPrompt = [
-          'Using the recent conversation below, write one concise follow-up that advances the user\'s current topic.',
-          'Maximum 2 sentences and 25 words. Do not greet, mention inactivity, ask if the user is still there, repeat a previous answer, or add an explanation.',
-          'Return only the follow-up message.',
-          '',
-          `Recent conversation:\n${history}`,
-        ].join('\n');
-
-        try {
-          // Reuse the normal chat endpoint so the existing visitor conversation context remains intact.
-          const response = await fetch(`${API_URL}/chat`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'ngrok-skip-browser-warning': 'true',
-            },
-            body: JSON.stringify({
-              message: followUpPrompt,
-              visitor_id: visitorId.current,
-            }),
-          });
-
-          if (!response.ok) throw new Error(`Proactive follow-up API error ${response.status}`);
-
-          const data = await response.json();
-          const message = makeConciseFollowUp(String(data.reply || data.response || '').trim());
-          if (cancelled || !message) return;
-
-          proactiveCountRef.current += 1;
-          lastProactiveActivityRef.current = inactivityActivity;
-          saveProactiveCount(proactiveCountRef.current);
-
-          if (import.meta.env.DEV) console.debug('[INACTIVITY] Proactive message received');
-          setMessages((previousMessages) => [
-            ...previousMessages,
-            {
-              id: generateId(),
-              text: message,
-              sender: 'bot',
-              timestamp: Date.now(),
-            },
-          ]);
-          if (import.meta.env.DEV) {
-            console.debug('[INACTIVITY] Message added to chat');
-            console.debug(`[INACTIVITY] Chat state: ${isOpenRef.current ? 'open' : 'closed'}`);
-          }
-
-          if (isOpenRef.current) {
-            if (import.meta.env.DEV) console.debug('[INACTIVITY] Showing inside chat');
-          } else {
-            setFollowUpNotification(message);
-            if (import.meta.env.DEV) console.debug('[INACTIVITY] Showing launcher popup');
-          }
-        } catch (error) {
-          if (!cancelled) console.error('[M3Hive Chatbot] proactive follow-up error:', error);
+        if (isOpenRef.current) {
+          if (import.meta.env.DEV) console.debug('[INACTIVITY] Showing inside chat');
+        } else {
+          setFollowUpNotification(message);
+          if (import.meta.env.DEV) console.debug('[INACTIVITY] Showing launcher popup');
         }
-      }, FOLLOW_UP_DELAY_MS);
-    };
+      } catch (error) {
+        if (!cancelled) console.error('[M3Hive Chatbot] proactive follow-up error:', error);
+      }
+    }, remainingDelay);
 
-    startInactivityTimer();
     window.addEventListener('pointerdown', registerInactivityActivity, { passive: true });
     window.addEventListener('keydown', registerInactivityActivity);
-    window.addEventListener('scroll', registerInactivityActivity, { passive: true, capture: true });
+    window.addEventListener('wheel', registerInactivityActivity, { passive: true });
 
     return () => {
       cancelled = true;
-      if (inactivityTimer !== undefined) window.clearTimeout(inactivityTimer);
+      window.clearTimeout(inactivityTimer);
       window.removeEventListener('pointerdown', registerInactivityActivity);
       window.removeEventListener('keydown', registerInactivityActivity);
-      window.removeEventListener('scroll', registerInactivityActivity, true);
+      window.removeEventListener('wheel', registerInactivityActivity);
     };
-  }, [inactivityActivity, inputValue, isPageVisible, isTyping, messages, registerInactivityActivity, requestInFlight]);
+  }, [inputValue, isPageVisible, isTyping, lastInteractionAt, messages, registerInactivityActivity, requestInFlight]);
 
   // ── Auto-scroll ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -646,6 +640,7 @@ export const ChatbotWidget: React.FC = () => {
         timestamp: Date.now(),
       };
       setMessages((prev) => [...prev, botMsg]);
+      registerInactivityActivity();
     } catch (err) {
       console.error('[M3Hive Chatbot] API error:', err);
       setIsOnline(false);
