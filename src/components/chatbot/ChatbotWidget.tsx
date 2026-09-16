@@ -35,6 +35,9 @@ const GREETING_STORAGE_KEY = 'm3hive_proactive_greeting_seen';
 const GREETING_DELAY_MS = 10000;
 const GREETING_TYPING_MS = 1_150;
 const GREETING_VISIBLE_MS = 12_000;
+const FOLLOW_UP_DELAY_MS = 20_000;
+const MAX_FOLLOW_UPS_PER_SESSION = 2;
+const FOLLOW_UP_STORAGE_KEY = 'm3hive_contextual_follow_up_turns';
 const FAB_SIZE = 58;
 const VIEWPORT_MARGIN = 12;
 const PANEL_GAP = 16;
@@ -63,6 +66,47 @@ function markGreetingHandled(): void {
   } catch {
     // Ignore unavailable storage.
   }
+}
+
+function getFollowUpTurnIds(): string[] {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(FOLLOW_UP_STORAGE_KEY) || '[]');
+    return Array.isArray(saved) ? saved.filter((value): value is string => typeof value === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveFollowUpTurnIds(turnIds: string[]): void {
+  try {
+    sessionStorage.setItem(FOLLOW_UP_STORAGE_KEY, JSON.stringify(turnIds));
+  } catch {
+    // Ignore unavailable storage.
+  }
+}
+
+function getLatestCompletedTurn(messages: Message[]): { replyId: string; history: Message[] } | null {
+  let latestUserIndex = -1;
+
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    if (messages[index].sender === 'user') {
+      latestUserIndex = index;
+      break;
+    }
+  }
+
+  if (latestUserIndex === -1) return null;
+
+  const reply = messages
+    .slice(latestUserIndex + 1)
+    .find((message) => message.sender === 'bot' && !message.isError);
+
+  return reply ? { replyId: reply.id, history: messages.slice(-6) } : null;
+}
+
+function makeConciseFollowUp(text: string): string {
+  const firstTwoSentences = text.trim().split(/(?<=[.!?])\s+/).slice(0, 2).join(' ');
+  return firstTwoSentences.split(/\s+/).slice(0, 25).join(' ');
 }
 
 function clampPosition(position: WidgetPosition): WidgetPosition {
@@ -149,6 +193,8 @@ export const ChatbotWidget: React.FC = () => {
   const [isSettling, setIsSettling] = useState(false);
   const [greetingPhase, setGreetingPhase] = useState<GreetingPhase>('hidden');
   const [greetingMessageReady, setGreetingMessageReady] = useState(false);
+  const [followUpNotification, setFollowUpNotification] = useState<string | null>(null);
+  const [isPageVisible, setIsPageVisible] = useState(() => document.visibilityState === 'visible');
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -167,6 +213,8 @@ export const ChatbotWidget: React.FC = () => {
   const suppressClickRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
   const pendingPositionRef = useRef<WidgetPosition | null>(null);
+  const followUpTurnIdsRef = useRef(getFollowUpTurnIds());
+  const isOpenRef = useRef(isOpen);
 
   const applyPosition = useCallback((nextPosition: WidgetPosition) => {
     positionRef.current = nextPosition;
@@ -223,7 +271,11 @@ export const ChatbotWidget: React.FC = () => {
 
   useEffect(() => {
     applyPosition(position);
-  }, [applyPosition, greetingPhase, isOpen, position]);
+  }, [applyPosition, followUpNotification, greetingPhase, isOpen, position]);
+
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -330,6 +382,12 @@ export const ChatbotWidget: React.FC = () => {
   }, [greetingPhase]);
 
   useEffect(() => {
+    const updatePageVisibility = () => setIsPageVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', updatePageVisibility);
+    return () => document.removeEventListener('visibilitychange', updatePageVisibility);
+  }, []);
+
+  useEffect(() => {
     if (greetingPhase !== 'visible') return;
     const hideTimer = window.setTimeout(dismissGreeting, GREETING_VISIBLE_MS);
     return () => window.clearTimeout(hideTimer);
@@ -364,6 +422,121 @@ export const ChatbotWidget: React.FC = () => {
     }
   }, [messages]);
 
+  // Start a separate follow-up timer only once a user message has received a normal bot reply.
+  useEffect(() => {
+    const completedTurn = getLatestCompletedTurn(messages);
+    const isUserTyping = inputValue.trim().length > 0;
+
+    if (
+      !completedTurn ||
+      isUserTyping ||
+      isTyping ||
+      requestInFlight ||
+      !isPageVisible ||
+      followUpTurnIdsRef.current.includes(completedTurn.replyId) ||
+      followUpTurnIdsRef.current.length >= MAX_FOLLOW_UPS_PER_SESSION
+    ) return;
+
+    let cancelled = false;
+    let proactiveRequestStarted = false;
+    let inactivityTimer: number | undefined;
+
+    const startInactivityTimer = () => {
+      if (inactivityTimer !== undefined) window.clearTimeout(inactivityTimer);
+
+      if (import.meta.env.DEV) console.debug('[INACTIVITY] Timer started');
+      inactivityTimer = window.setTimeout(async () => {
+        if (cancelled || proactiveRequestStarted) return;
+        proactiveRequestStarted = true;
+        if (import.meta.env.DEV) {
+          console.debug('[INACTIVITY] 20 seconds reached');
+          console.debug('[INACTIVITY] Generating proactive message');
+        }
+
+        const nextTurnIds = [...followUpTurnIdsRef.current, completedTurn.replyId]
+          .slice(-MAX_FOLLOW_UPS_PER_SESSION);
+        followUpTurnIdsRef.current = nextTurnIds;
+        saveFollowUpTurnIds(nextTurnIds);
+
+        const history = completedTurn.history
+          .map((message) => `${message.sender === 'user' ? 'User' : 'Assistant'}: ${message.text}`)
+          .join('\n');
+
+        const followUpPrompt = [
+          'Using the recent conversation below, write one concise follow-up that advances the user\'s current topic.',
+          'Maximum 2 sentences and 25 words. Do not greet, mention inactivity, ask if the user is still there, repeat a previous answer, or add an explanation.',
+          'Return only the follow-up message.',
+          '',
+          `Recent conversation:\n${history}`,
+        ].join('\n');
+
+        try {
+          // Reuse the normal chat endpoint so the existing visitor conversation context remains intact.
+          const response = await fetch(`${API_URL}/chat`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'ngrok-skip-browser-warning': 'true',
+            },
+            body: JSON.stringify({
+              message: followUpPrompt,
+              visitor_id: visitorId.current,
+            }),
+          });
+
+          if (!response.ok) throw new Error(`Proactive follow-up API error ${response.status}`);
+
+          const data = await response.json();
+          const message = makeConciseFollowUp(String(data.reply || data.response || '').trim());
+          if (cancelled || !message) return;
+
+          if (import.meta.env.DEV) console.debug('[INACTIVITY] Proactive message received');
+          setMessages((previousMessages) => [
+            ...previousMessages,
+            {
+              id: generateId(),
+              text: message,
+              sender: 'bot',
+              timestamp: Date.now(),
+            },
+          ]);
+          if (import.meta.env.DEV) {
+            console.debug('[INACTIVITY] Message added to chat');
+            console.debug(`[INACTIVITY] Chat state: ${isOpenRef.current ? 'open' : 'closed'}`);
+          }
+
+          if (isOpenRef.current) {
+            if (import.meta.env.DEV) console.debug('[INACTIVITY] Showing inside chat');
+          } else {
+            setFollowUpNotification(message);
+            if (import.meta.env.DEV) console.debug('[INACTIVITY] Showing launcher popup');
+          }
+        } catch (error) {
+          if (!cancelled) console.error('[M3Hive Chatbot] proactive follow-up error:', error);
+        }
+      }, FOLLOW_UP_DELAY_MS);
+    };
+
+    const resetInactivityTimer = () => {
+      if (cancelled || proactiveRequestStarted) return;
+      if (import.meta.env.DEV) console.debug('[INACTIVITY] Timer reset');
+      startInactivityTimer();
+    };
+
+    startInactivityTimer();
+    window.addEventListener('pointerdown', resetInactivityTimer, { passive: true });
+    window.addEventListener('keydown', resetInactivityTimer);
+    window.addEventListener('scroll', resetInactivityTimer, { passive: true, capture: true });
+
+    return () => {
+      cancelled = true;
+      if (inactivityTimer !== undefined) window.clearTimeout(inactivityTimer);
+      window.removeEventListener('pointerdown', resetInactivityTimer);
+      window.removeEventListener('keydown', resetInactivityTimer);
+      window.removeEventListener('scroll', resetInactivityTimer, true);
+    };
+  }, [inputValue, isPageVisible, isTyping, messages, requestInFlight]);
+
   // ── Auto-scroll ──────────────────────────────────────────────────────────
   useEffect(() => {
     const el = bodyRef.current;
@@ -397,6 +570,8 @@ export const ChatbotWidget: React.FC = () => {
   // ── Open chat with welcome message ───────────────────────────────────────
   const openChat = useCallback(() => {
     dismissGreeting();
+    setFollowUpNotification(null);
+    isOpenRef.current = true;
     setIsOpen(true);
     if (!hasOpened) {
       setHasOpened(true);
@@ -412,7 +587,10 @@ export const ChatbotWidget: React.FC = () => {
 
   const toggleChat = () => {
     if (isOpen) {
-      if (!requestInFlight) setIsOpen(false);
+      if (!requestInFlight) {
+        isOpenRef.current = false;
+        setIsOpen(false);
+      }
     } else {
       openChat();
     }
@@ -711,7 +889,7 @@ export const ChatbotWidget: React.FC = () => {
           gap: 8px;
           animation: m3FadeSlideIn 0.28s cubic-bezier(0.19,1,0.22,1) forwards;
         }
-        .m3-chat-msg--user { flex-direction: row-reverse; }
+        .m3-chat-msg--user { justify-content: flex-end; }
         @keyframes m3FadeSlideIn {
           from { opacity: 0; transform: translateY(10px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -1123,7 +1301,12 @@ export const ChatbotWidget: React.FC = () => {
             </div>
             <button
               className="m3-chat-close-btn"
-              onClick={() => { if (!requestInFlight) setIsOpen(false); }}
+              onClick={() => {
+                if (!requestInFlight) {
+                  isOpenRef.current = false;
+                  setIsOpen(false);
+                }
+              }}
               aria-label="Close chat"
               id="m3hive-chat-close-btn"
             >
@@ -1214,6 +1397,39 @@ export const ChatbotWidget: React.FC = () => {
               className="m3-greeting-dismiss"
               onClick={dismissGreeting}
               aria-label="Dismiss greeting"
+            >
+              <X size={14} aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
+        {followUpNotification && (
+          <div
+            ref={greetingRef}
+            className="m3-proactive-greeting m3-contextual-follow-up"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <button
+              type="button"
+              className="m3-greeting-main"
+              onClick={openChat}
+              aria-label="Open M3Hive Assistant"
+            >
+              <span className="m3-greeting-ai" aria-hidden="true">
+                <Bot size={17} />
+              </span>
+              <span className="m3-greeting-content">
+                <span className="m3-greeting-eyebrow">M3Hive AI Assistant</span>
+                <span className="m3-greeting-copy">{followUpNotification}</span>
+              </span>
+            </button>
+            <button
+              type="button"
+              className="m3-greeting-dismiss"
+              onClick={() => setFollowUpNotification(null)}
+              aria-label="Dismiss follow-up"
             >
               <X size={14} aria-hidden="true" />
             </button>
