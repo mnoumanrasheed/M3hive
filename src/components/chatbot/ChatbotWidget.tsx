@@ -32,9 +32,11 @@ function getOrCreateVisitorId(): string {
 const STORAGE_KEY = 'm3hive_chat_session';
 const POSITION_STORAGE_KEY = 'm3hive_chatbot_position';
 const GREETING_STORAGE_KEY = 'm3hive_proactive_greeting_seen';
+const RESUME_REQUEST_STORAGE_KEY = 'm3hive_resume_greeting_requested';
 const GREETING_DELAY_MS = 10000;
 const GREETING_TYPING_MS = 1_150;
 const GREETING_VISIBLE_MS = 12_000;
+const RESUME_REQUEST_TIMEOUT_MS = 5_000;
 const FOLLOW_UP_DELAY_MS = 20_000;
 const MAX_FOLLOW_UPS_PER_SESSION = 3;
 const FOLLOW_UP_STORAGE_KEY = 'm3hive_proactive_follow_up_count_v3';
@@ -42,6 +44,11 @@ const FAB_SIZE = 58;
 const VIEWPORT_MARGIN = 12;
 const PANEL_GAP = 16;
 const API_URL = (import.meta as any).env?.VITE_CHATBOT_API_URL || 'http://localhost:8000';
+const API_HEADERS = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  'ngrok-skip-browser-warning': 'true',
+};
 const WELCOME_TEXT =
   "Hello, welcome to M3Hive! I'm your AI assistant. How can I help you today — exploring our services, a career opportunity, or something else?";
 
@@ -51,6 +58,28 @@ interface WidgetPosition {
 }
 
 type GreetingPhase = 'hidden' | 'typing' | 'visible' | 'exiting';
+
+function getApiUrl(path: string): string {
+  return `${API_URL.replace(/\/+$/, '')}${path}`;
+}
+
+async function getResumeGreeting(visitorId: string, signal: AbortSignal): Promise<string | null> {
+  const response = await fetch(getApiUrl(`/resume/${encodeURIComponent(visitorId)}`), {
+    method: 'POST',
+    headers: API_HEADERS,
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Resume API error ${response.status}`);
+  }
+
+  const data: unknown = await response.json();
+  if (!data || typeof data !== 'object' || !('greeting' in data)) return null;
+
+  const { greeting } = data as { greeting?: unknown };
+  return typeof greeting === 'string' && greeting.trim() ? greeting.trim() : null;
+}
 
 function hasHandledGreeting(): boolean {
   try {
@@ -193,6 +222,7 @@ export const ChatbotWidget: React.FC = () => {
   const [isSettling, setIsSettling] = useState(false);
   const [greetingPhase, setGreetingPhase] = useState<GreetingPhase>('hidden');
   const [greetingMessageReady, setGreetingMessageReady] = useState(false);
+  const [resumeGreeting, setResumeGreeting] = useState<string | null>(null);
   const [followUpNotification, setFollowUpNotification] = useState<string | null>(null);
   const [isPageVisible, setIsPageVisible] = useState(() => document.visibilityState === 'visible');
   const [lastInteractionAt, setLastInteractionAt] = useState(() => Date.now());
@@ -282,6 +312,35 @@ export const ChatbotWidget: React.FC = () => {
   useEffect(() => {
     isOpenRef.current = isOpen;
   }, [isOpen]);
+
+  // A returning visitor keeps the same ID in local storage. Ask the backend once per
+  // browser session whether it has a contextual greeting to resume with. The normal
+  // welcome text remains available if no greeting is stored or the API is unavailable.
+  useEffect(() => {
+    if (hasHandledGreeting()) return;
+
+    try {
+      const savedChat = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null');
+      if (savedChat?.messages?.length || sessionStorage.getItem(RESUME_REQUEST_STORAGE_KEY)) return;
+      sessionStorage.setItem(RESUME_REQUEST_STORAGE_KEY, 'true');
+    } catch {
+      // Continue without storage-based deduplication when storage is unavailable.
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), RESUME_REQUEST_TIMEOUT_MS);
+
+    void getResumeGreeting(visitorId.current, controller.signal)
+      .then((greeting) => {
+        if (greeting) setResumeGreeting(greeting);
+      })
+      .catch((error: unknown) => {
+        if (import.meta.env.DEV && !(error instanceof DOMException && error.name === 'AbortError')) {
+          console.warn('[M3Hive Chatbot] resume greeting unavailable:', error);
+        }
+      })
+      .finally(() => window.clearTimeout(timeout));
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -573,13 +632,13 @@ export const ChatbotWidget: React.FC = () => {
       setHasOpened(true);
       const welcome: Message = {
         id: generateId(),
-        text: WELCOME_TEXT,
+        text: resumeGreeting || WELCOME_TEXT,
         sender: 'bot',
         timestamp: Date.now(),
       };
       setMessages([welcome]);
     }
-  }, [dismissGreeting, hasOpened, registerInactivityActivity]);
+  }, [dismissGreeting, hasOpened, registerInactivityActivity, resumeGreeting]);
 
   const toggleChat = () => {
     if (isOpen) {
@@ -1387,7 +1446,9 @@ export const ChatbotWidget: React.FC = () => {
                   </span>
                 ) : (
                   <span className="m3-greeting-copy">
-                    Hi 👋 Welcome to M3Hive.<br />How can I help you today?
+                    {resumeGreeting || <>
+                      Hi 👋 Welcome to M3Hive.<br />How can I help you today?
+                    </>}
                   </span>
                 )}
               </span>
