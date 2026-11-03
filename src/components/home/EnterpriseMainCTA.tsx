@@ -2,83 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container } from '../ui/Container';
 import { FadeIn } from '../ui/FadeIn';
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Bot,
-  Code2,
-  Users2,
-  Zap,
-  BarChart3,
-  Cloud,
-  Cpu,
-  ShieldCheck,
-  Sparkles,
-} from 'lucide-react';
-
-interface CapabilityItem {
-  id: string;
-  title: string;
-  category: string;
-  tagline: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-const capabilities: CapabilityItem[] = [
-  {
-    id: 'ai',
-    title: 'Artificial Intelligence',
-    category: 'Intelligence',
-    tagline: 'GenAI, Autonomous Agents & Machine Learning',
-    icon: Bot,
-  },
-  {
-    id: 'engineering',
-    title: 'Product Engineering',
-    category: 'Build',
-    tagline: 'Full-Cycle Web, Mobile & Enterprise Architecture',
-    icon: Code2,
-  },
-  {
-    id: 'cx',
-    title: 'Customer Experience',
-    category: 'Design',
-    tagline: 'Research, User Experience & Interface Systems',
-    icon: Users2,
-  },
-  {
-    id: 'automation',
-    title: 'Intelligent Automation',
-    category: 'Operations',
-    tagline: 'End-to-End RPA & Cognitive Process Workflows',
-    icon: Zap,
-  },
-  {
-    id: 'data',
-    title: 'Data & Analytics',
-    category: 'Insights',
-    tagline: 'Modern Data Stack, Governance & BI Pipelines',
-    icon: BarChart3,
-  },
-  {
-    id: 'cloud',
-    title: 'Cloud Platforms',
-    category: 'Infrastructure',
-    tagline: 'Cloud DevOps, Scalable Systems & Salesforce',
-    icon: Cloud,
-  },
-  {
-    id: 'edge',
-    title: 'Edge Technologies',
-    category: 'Emerging',
-    tagline: 'Extended Reality, IoT & Embedded Systems',
-    icon: Cpu,
-  },
-];
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const EnterpriseMainCTA: React.FC = () => {
   return (
-    <section className="relative overflow-hidden bg-hive-white py-16 sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-hive-white py-14 sm:py-20 lg:py-24">
       <Container size="lg">
         <FadeIn>
           <div
@@ -86,17 +14,17 @@ export const EnterpriseMainCTA: React.FC = () => {
               relative
               isolate
               overflow-hidden
-              rounded-2xl
+              rounded-[2rem]
               border
               border-hive-border
-              bg-[#0A0A0A]
+              bg-hive-white
               p-6
-              text-white
-              shadow-2xl
-              sm:rounded-[2rem]
-              sm:p-10
-              md:p-12
-              lg:p-16
+              text-hive-black
+              shadow-[0_28px_80px_-28px_rgba(10,10,10,0.16)]
+              sm:rounded-[2.5rem]
+              sm:p-9
+              lg:p-12
+              xl:p-14
             "
           >
             {/* Background Ambient Glows */}
@@ -105,13 +33,13 @@ export const EnterpriseMainCTA: React.FC = () => {
               className="
                 pointer-events-none
                 absolute
-                -top-32
-                -left-32
-                h-96
-                w-96
+                -top-20
+                -left-16
+                h-[24rem]
+                w-[24rem]
                 rounded-full
-                bg-hive-yellow/15
-                blur-3xl
+                bg-hive-yellow/20
+                blur-[110px]
               "
             />
             <div
@@ -119,13 +47,13 @@ export const EnterpriseMainCTA: React.FC = () => {
               className="
                 pointer-events-none
                 absolute
-                -bottom-32
-                -right-32
-                h-96
-                w-96
+                -bottom-28
+                -right-16
+                h-[22rem]
+                w-[22rem]
                 rounded-full
-                bg-hive-orange/15
-                blur-3xl
+                bg-hive-orange/10
+                blur-[120px]
               "
             />
             <div
@@ -134,53 +62,63 @@ export const EnterpriseMainCTA: React.FC = () => {
                 pointer-events-none
                 absolute
                 inset-0
-                bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(253,207,9,0.08),rgba(255,255,255,0))]
+                bg-[radial-gradient(ellipse_75%_110%_at_0%_0%,rgba(253,207,9,0.16),rgba(253,207,9,0)_52%),linear-gradient(115deg,rgba(10,10,10,0.025),rgba(255,255,255,0)_42%)]
               "
             />
 
-            {/* Subtle Enterprise Grid Pattern */}
+            {/* Fine architectural grid */}
             <div
               aria-hidden="true"
               className="
                 pointer-events-none
                 absolute
                 inset-0
-                bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)]
-                bg-[size:40px_40px]
-                opacity-40
+                bg-[linear-gradient(to_right,#0A0A0A0a_1px,transparent_1px),linear-gradient(to_bottom,#0A0A0A08_1px,transparent_1px)]
+                bg-[size:56px_56px]
+                opacity-30
               "
             />
 
-            <div className="relative z-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14 xl:gap-16">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-[-5rem] top-1/2 hidden h-[24rem] w-[24rem] -translate-y-1/2 rounded-full border border-hive-yellow/20 lg:block"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-[-1rem] top-1/2 hidden h-[15rem] w-[15rem] -translate-y-1/2 rounded-full border border-hive-border lg:block"
+            />
+
+            <div className="relative z-10 flex justify-center lg:justify-start">
               {/* ============================================================
                   LEFT COLUMN: Value Proposition & CTAs
               ============================================================ */}
-              <div className="flex flex-col text-left lg:col-span-5">
+              <div className="flex w-full max-w-2xl flex-col text-left">
                 {/* Eyebrow */}
-                <div className="mb-4 inline-flex items-center gap-2 self-start rounded-full border border-hive-yellow/30 bg-hive-yellow/10 px-3.5 py-1.5 backdrop-blur-md sm:mb-6">
+                <div className="mb-5 inline-flex items-center gap-2.5 self-start rounded-full border border-hive-yellow/35 bg-hive-yellow/[0.09] px-3.5 py-1.5 backdrop-blur-md sm:mb-6">
                   <span className="relative flex h-2 w-2">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-hive-yellow opacity-75" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-hive-yellow" />
                   </span>
-                  <span className="font-heading text-xs font-semibold tracking-wider text-hive-yellow uppercase">
+                  <span className="font-heading text-[10px] font-bold tracking-[0.17em] text-hive-yellow uppercase sm:text-xs">
                     LET'S BUILD WHAT'S NEXT
                   </span>
                 </div>
 
                 {/* Heading */}
-                <h2 className="mb-4 font-heading text-display-sm font-bold tracking-tight text-white sm:mb-6 sm:text-display-md lg:text-[2.6rem] lg:leading-[1.15]">
-                  Have a challenge worth solving?
+                <h2 className="mb-4 max-w-2xl font-heading text-3xl font-bold tracking-[-0.045em] text-hive-black sm:mb-6 sm:text-4xl lg:text-5xl lg:leading-[1.06]">
+                  Turn your next challenge into{' '}
+                  <span className="text-hive-yellow">real momentum.</span>
                 </h2>
 
                 {/* Supporting copy */}
-                <p className="mb-8 text-base leading-relaxed text-neutral-300 sm:text-lg sm:leading-relaxed">
+                <p className="mb-7 max-w-xl text-sm leading-relaxed text-hive-text-muted sm:mb-8 sm:text-base sm:leading-[1.7]">
                   Tell us what you're trying to build, improve or automate. Our
                   experts will help you identify the right technology approach
                   and a practical way forward.
                 </p>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                   {/* Primary CTA */}
                   <Link
                     to="/contact-us.html?intent=project"
@@ -190,7 +128,7 @@ export const EnterpriseMainCTA: React.FC = () => {
                       items-center
                       justify-center
                       gap-2.5
-                      rounded-xl
+                      rounded-full
                       border
                       border-hive-yellow
                       bg-hive-yellow
@@ -200,11 +138,10 @@ export const EnterpriseMainCTA: React.FC = () => {
                       text-sm
                       font-bold
                       text-hive-black
-                      shadow-lg
-                      shadow-hive-yellow/20
+                      shadow-[0_12px_30px_rgba(253,207,9,0.22)]
                       transition-all
                       duration-300
-                      hover:-translate-y-0.5
+                      hover:-translate-y-1
                       hover:border-hive-orange
                       hover:bg-hive-orange
                       hover:text-white
@@ -229,28 +166,28 @@ export const EnterpriseMainCTA: React.FC = () => {
                       items-center
                       justify-center
                       gap-2
-                      rounded-xl
+                      rounded-full
                       border
-                      border-white/20
-                      bg-white/[0.04]
-                      px-5
+                      border-hive-border
+                      bg-hive-white/80
+                      px-6
                       py-3.5
                       font-heading
                       text-sm
                       font-semibold
-                      text-white
+                      text-hive-black
                       backdrop-blur-sm
                       transition-all
                       duration-300
-                      hover:-translate-y-0.5
-                      hover:border-white/40
-                      hover:bg-white/[0.08]
+                      hover:-translate-y-1
+                      hover:border-hive-yellow/60
+                      hover:bg-hive-yellow/10
                       hover:text-hive-yellow
                       focus-visible:outline-none
                       focus-visible:ring-2
-                      focus-visible:ring-white/50
+                      focus-visible:ring-hive-yellow
                       focus-visible:ring-offset-2
-                      focus-visible:ring-offset-hive-black
+                      focus-visible:ring-offset-hive-white
                     "
                   >
                     <span>Talk to an Expert</span>
@@ -258,155 +195,11 @@ export const EnterpriseMainCTA: React.FC = () => {
                 </div>
 
                 {/* Trust Line */}
-                <div className="mt-8 flex items-center gap-2.5 border-t border-white/10 pt-5 text-xs text-neutral-400 sm:text-sm">
-                  <ShieldCheck className="h-4 w-4 shrink-0 text-hive-yellow" />
+                <div className="mt-8 flex items-center gap-3 border-t border-hive-border pt-5 text-xs text-hive-text-muted sm:text-sm">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-hive-yellow/25 bg-hive-yellow/10">
+                    <ShieldCheck className="h-4 w-4 text-hive-yellow" />
+                  </span>
                   <span>No obligation. Just a focused conversation about your goals.</span>
-                </div>
-              </div>
-
-              {/* ============================================================
-                  RIGHT COLUMN: Interactive Capability Grid
-              ============================================================ */}
-              <div className="lg:col-span-7">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold tracking-wider text-neutral-400 uppercase">
-                    Select a core domain to get started
-                  </span>
-                  <span className="hidden text-xs text-hive-yellow/90 sm:inline-flex items-center gap-1">
-                    <Sparkles className="h-3 w-3" />
-                    Interactive Capabilities
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
-                  {capabilities.map((item, idx) => {
-                    const IconComponent = item.icon;
-                    const isLastOdd =
-                      idx === capabilities.length - 1 &&
-                      capabilities.length % 2 !== 0;
-
-                    return (
-                      <Link
-                        key={item.id}
-                        to={`/contact-us.html?intent=project&service=${encodeURIComponent(
-                          item.title
-                        )}`}
-                        className={`
-                          group
-                          relative
-                          flex
-                          flex-col
-                          justify-between
-                          overflow-hidden
-                          rounded-xl
-                          border
-                          border-white/10
-                          bg-white/[0.03]
-                          p-4
-                          transition-all
-                          duration-300
-                          hover:-translate-y-1
-                          hover:border-hive-yellow/60
-                          hover:bg-white/[0.07]
-                          hover:shadow-lg
-                          hover:shadow-hive-yellow/5
-                          focus-visible:outline-none
-                          focus-visible:ring-2
-                          focus-visible:ring-hive-yellow
-                          ${isLastOdd ? 'sm:col-span-2' : ''}
-                        `}
-                      >
-                        {/* Hover subtle radial glow */}
-                        <div
-                          aria-hidden="true"
-                          className="
-                            pointer-events-none
-                            absolute
-                            top-0
-                            right-0
-                            h-28
-                            w-28
-                            -translate-y-1/2
-                            translate-x-1/2
-                            rounded-full
-                            bg-hive-yellow/0
-                            blur-2xl
-                            transition-all
-                            duration-500
-                            group-hover:bg-hive-yellow/20
-                          "
-                        />
-
-                        {/* Card Header */}
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <div
-                              className="
-                                flex
-                                h-9
-                                w-9
-                                shrink-0
-                                items-center
-                                justify-center
-                                rounded-lg
-                                border
-                                border-white/10
-                                bg-white/[0.06]
-                                text-hive-yellow
-                                transition-colors
-                                duration-300
-                                group-hover:border-hive-yellow/40
-                                group-hover:bg-hive-yellow/15
-                                group-hover:text-white
-                              "
-                            >
-                              <IconComponent className="h-4.5 w-4.5" />
-                            </div>
-                            <div>
-                              <h3 className="font-heading text-sm font-bold text-white transition-colors duration-300 group-hover:text-hive-yellow sm:text-base">
-                                {item.title}
-                              </h3>
-                              <p className="text-[11px] text-neutral-400 sm:text-xs">
-                                {item.tagline}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div
-                            className="
-                              flex
-                              h-6
-                              w-6
-                              shrink-0
-                              items-center
-                              justify-center
-                              rounded-full
-                              border
-                              border-white/10
-                              text-neutral-400
-                              transition-all
-                              duration-300
-                              group-hover:border-hive-yellow/40
-                              group-hover:bg-hive-yellow/20
-                              group-hover:text-hive-yellow
-                            "
-                          >
-                            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                          </div>
-                        </div>
-
-                        {/* Subtle bottom indicator */}
-                        <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-2 text-[11px] text-neutral-400">
-                          <span className="font-mono text-[10px] tracking-wider uppercase text-neutral-400">
-                            0{idx + 1}
-                          </span>
-                          <span className="font-medium text-hive-orange/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                            Start Journey →
-                          </span>
-                        </div>
-                      </Link>
-                    );
-                  })}
                 </div>
               </div>
             </div>

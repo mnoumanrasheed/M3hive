@@ -384,7 +384,7 @@ export function CinematicLoader({
         h-[100dvh]
         w-screen
         overflow-hidden
-        bg-[#020202]
+        bg-white
       "
       style={{
         willChange: 'opacity',
@@ -627,7 +627,7 @@ export function CinematicLoader({
                 className="
                   cinematic-percent
                   ml-3
-                  text-white/70
+                  text-hive-black/70
                 "
               >
                 0%
@@ -646,7 +646,7 @@ export function CinematicLoader({
                 h-px
                 w-[min(60vw,14rem)]
                 overflow-hidden
-                bg-white/15
+                bg-hive-black/15
               "
             >
               <div
