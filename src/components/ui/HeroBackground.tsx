@@ -41,8 +41,8 @@ export const HeroBackground: React.FC<HeroBackgroundProps> = ({
           }}
         />
       </picture>
-      {/* Dark overlay to make white text readable over any image */}
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-black/75 via-black/45 to-black/85" />
+      {/* Keep the full image clear across the hero. */}
+      <div className="absolute inset-0 h-full w-full bg-transparent" />
       <style>{`
         @keyframes hero-subtle-zoom {
           0% { transform: scale(1.0); }

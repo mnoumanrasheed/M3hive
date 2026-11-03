@@ -407,6 +407,9 @@ export const HeroCarousel: React.FC = () => {
   const pausedRef =
     useRef(false);
 
+  const isTransitioningRef =
+    useRef(false);
+
   const tlRef =
     useRef<gsap.core.Timeline | null>(
       null
@@ -521,7 +524,9 @@ export const HeroCarousel: React.FC = () => {
     const from =
       idxRef.current;
 
-    if (next === from) return;
+    if (next === from || isTransitioningRef.current) return;
+
+    isTransitioningRef.current = true;
 
     tlRef.current?.kill();
 
@@ -553,6 +558,8 @@ export const HeroCarousel: React.FC = () => {
       );
 
       setIdx(next);
+
+      isTransitioningRef.current = false;
 
       return;
     }
@@ -680,6 +687,20 @@ export const HeroCarousel: React.FC = () => {
       },
       inStart + 0.24
     );
+
+    tl.eventCallback('onComplete', () => {
+      bgRefs.current.forEach((el, i) => {
+        if (!el) return;
+
+        gsap.set(el, {
+          opacity: i === next ? 1 : 0,
+          scale: i === next ? 1 : 1.05,
+          zIndex: i === next ? 1 : 0,
+        });
+      });
+
+      isTransitioningRef.current = false;
+    });
   };
 
   /* ── always-current goTo ref ──────────────────────────────── */
@@ -943,7 +964,7 @@ export const HeroCarousel: React.FC = () => {
       ref={sectionRef}
       aria-label="Service highlights carousel"
       aria-roledescription="carousel"
-      className="relative w-full overflow-hidden flex flex-col"
+      className="hero-light-overlay relative w-full overflow-hidden flex flex-col"
       style={{
         minHeight: 'max(700px, 100svh)',
       }}
@@ -996,7 +1017,7 @@ export const HeroCarousel: React.FC = () => {
                 bgRefs.current[i] =
                   el;
               }}
-              className="absolute inset-0 bg-center bg-cover bg-no-repeat"
+              className="absolute inset-0 bg-right bg-cover bg-no-repeat"
               style={{
                 backgroundImage:
                   `url("${s.image}")`,
@@ -1012,40 +1033,40 @@ export const HeroCarousel: React.FC = () => {
       {/* ── Dark readability gradient ───────────────────────── */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-0"
         style={{
           background:
-            'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 45%, rgba(0,0,0,0.1) 100%)',
+            'linear-gradient(to right, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.62) 45%, rgba(255,255,255,0.14) 100%)',
         }}
       />
 
       {/* ── Bottom vignette ────────────────────────────────── */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-64 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-64 pointer-events-none opacity-0"
         style={{
           background:
-            'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
+            'linear-gradient(to top, rgba(255,255,255,0.9), transparent)',
         }}
       />
 
       {/* ── Top vignette ───────────────────────────────────── */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+        className="absolute inset-x-0 top-0 h-40 pointer-events-none opacity-0"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(0,0,0,0.6), transparent)',
+            'linear-gradient(to bottom, rgba(255,255,255,0.62), transparent)',
         }}
       />
 
       {/* ── Right shadow ───────────────────────────────────── */}
       <div
         aria-hidden="true"
-        className="absolute inset-y-0 right-0 w-1/3 pointer-events-none"
+        className="absolute inset-y-0 right-0 w-1/3 pointer-events-none opacity-0"
         style={{
           background:
-            'linear-gradient(to left, rgba(0,0,0,0.4), transparent)',
+            'linear-gradient(to left, rgba(255,255,255,0.46), transparent)',
         }}
       />
 
@@ -1089,7 +1110,11 @@ export const HeroCarousel: React.FC = () => {
         "
       >
         <div
-          className="px-5 sm:px-10 lg:px-16 xl:px-24"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 w-[60%] bg-gradient-to-r from-white/90 via-white/55 to-transparent"
+        />
+        <div
+          className="relative z-10 px-5 sm:px-10 lg:px-16 xl:px-24"
           style={{
             maxWidth:
               '720px',

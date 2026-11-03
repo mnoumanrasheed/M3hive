@@ -161,10 +161,10 @@ export const Header: React.FC = () => {
       <header className="fixed top-0 left-0 right-0 z-50 w-full pt-3 sm:pt-4 px-4 sm:px-6 lg:px-8 pointer-events-none transition-all duration-300 bg-transparent">
         <div className="mx-auto max-w-[1360px]">
           <div
-            className={`pointer-events-auto relative grid h-[74px] grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr] items-center rounded-[16px] pl-[26px] pr-[22px] border border-white/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all duration-300 ease-out ${
+            className={`pointer-events-auto relative grid h-[74px] grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr] items-center rounded-[16px] pl-[26px] pr-[22px] border border-hive-border shadow-[0_8px_30px_rgba(10,10,10,0.12)] transition-all duration-300 ease-out ${
               scrolled
-                ? 'bg-[rgba(18,27,25,0.94)] backdrop-blur-[20px] saturate-[140%] shadow-[0_12px_36px_rgba(0,0,0,0.28)]'
-                : 'bg-[rgba(18,27,25,0.65)] backdrop-blur-[18px] saturate-[140%]'
+                ? 'bg-white/95 backdrop-blur-[20px] saturate-[140%] shadow-[0_12px_36px_rgba(10,10,10,0.16)]'
+                : 'bg-white/85 backdrop-blur-[18px] saturate-[140%]'
             }`}
           >
             {/* ── Left Column: Logo ── */}
@@ -189,8 +189,8 @@ export const Header: React.FC = () => {
                   <NavLink
                     key={item.href}
                     to={item.href}
-                    className={`group relative py-1.5 font-heading text-[14px] font-medium tracking-[-0.01em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow focus-visible:ring-offset-4 focus-visible:ring-offset-transparent ${
-                      isActive ? 'text-white' : 'text-white/[0.68] hover:text-white'
+                    className={`group relative py-1.5 font-heading text-[14px] font-semibold tracking-[-0.01em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow focus-visible:ring-offset-4 focus-visible:ring-offset-transparent ${
+                      isActive ? 'text-hive-black' : 'text-hive-black/80 hover:text-hive-black'
                     }`}
                   >
                     <span>{item.label}</span>
@@ -211,7 +211,7 @@ export const Header: React.FC = () => {
               <div className="hidden lg:block">
                 <Link
                   to="/contact"
-                  className="group inline-flex h-[46px] items-center gap-2 rounded-[10px] bg-hive-yellow px-[22px] font-heading text-[14px] font-semibold text-[#111111] shadow-[0_6px_18px_rgba(255,204,0,0.16)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:bg-[#fed62c] active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-[#121B19]"
+                  className="group inline-flex h-[46px] items-center gap-2 rounded-[10px] bg-hive-yellow px-[22px] font-heading text-[14px] font-semibold text-[#111111] shadow-[0_6px_18px_rgba(255,204,0,0.16)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:bg-[#fed62c] active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-hive-white"
                 >
                   <span>Start a Project</span>
                   <ArrowRight
@@ -227,7 +227,7 @@ export const Header: React.FC = () => {
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open navigation menu"
                 aria-expanded={mobileOpen}
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.12] bg-white/[0.04] text-white/90 transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.08] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow lg:hidden"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-hive-border bg-hive-white text-hive-black transition-colors duration-200 hover:border-hive-yellow/60 hover:bg-hive-yellow/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow lg:hidden"
               >
                 <Menu className="h-4 w-4" aria-hidden="true" />
               </button>

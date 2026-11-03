@@ -376,6 +376,7 @@ export const PremiumHeroMotion: React.FC<
           w-[58%]
           -translate-x-1/2
           -translate-y-1/2
+          premium-center-safe-zone
           rounded-full
           bg-black/[0.04]
         "

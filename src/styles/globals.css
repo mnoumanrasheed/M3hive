@@ -101,6 +101,44 @@
   color: var(--hive-black) !important;
 }
 
+/* Hero imagery remains visible, with light overlays instead of black ones. */
+.hero-light-overlay {
+  background-color: var(--hive-white) !important;
+  color: var(--hive-black);
+}
+
+.hero-light-overlay [class*='bg-black'],
+.hero-light-overlay [class*='bg-[#0'] {
+  background-color: transparent !important;
+}
+
+.hero-light-overlay [class*='from-black'] {
+  --tw-gradient-from: rgba(255, 255, 255, 0) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(255, 255, 255, 0) var(--tw-gradient-to-position) !important;
+}
+
+.hero-light-overlay [class*='via-black'] {
+  --tw-gradient-stops: var(--tw-gradient-from), rgba(255, 255, 255, 0) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
+
+.hero-light-overlay [class*='to-black'] {
+  --tw-gradient-to: rgba(255, 255, 255, 0) var(--tw-gradient-to-position) !important;
+}
+
+/* Preserve the signature centre panel in the animated internal heroes. */
+.hero-light-overlay .premium-center-safe-zone {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.hero-light-overlay [class*='text-white'] {
+  color: var(--hive-black) !important;
+}
+
+.hero-light-overlay [class*='border-white'] {
+  border-color: rgba(10, 10, 10, 0.15) !important;
+}
+
+
 /* ─── Honeycomb SVG Pattern ─────────────────────────────────────── */
 @layer utilities {
   .hive-hex-bg {

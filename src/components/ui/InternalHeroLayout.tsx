@@ -14,7 +14,7 @@ export const InternalHeroSection = forwardRef<HTMLElement, InternalHeroSectionPr
   ({ className = '', style, ...props }, ref) => (
     <section
       ref={ref}
-      className={`relative z-0 flex min-h-screen w-full flex-col overflow-hidden ${className}`}
+      className={`hero-light-overlay relative z-0 flex min-h-screen w-full flex-col overflow-hidden ${className}`}
       style={{ minHeight: '100svh', ...style }}
       {...props}
     />
