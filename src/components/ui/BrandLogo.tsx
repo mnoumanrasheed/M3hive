@@ -17,17 +17,19 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       aria-label="M3 Hive Homepage"
     >
       <img
-        src="/assets/brand/m3hive-logo.png"
+        src="/assets/brand/m3hive-logo-navbar-transparent.png"
         alt="M3 Hive Logo"
-        width={270}
-        height={120}
+        width={1881}
+        height={836}
         className={`block object-contain ${imgClassName}`}
         draggable={false}
         loading="eager"
         fetchPriority="high"
-        decoding="async"
+        decoding="sync"
         style={{
           imageRendering: 'auto',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
         }}
       />
     </Link>

@@ -170,7 +170,7 @@ export const Header: React.FC = () => {
             {/* ── Left Column: Logo ── */}
             <div className="justify-self-start flex items-center">
               <BrandLogo
-                imgClassName="h-8 w-auto max-w-[105px] object-contain transition-opacity duration-200 hover:opacity-90"
+                imgClassName="h-9 w-auto max-w-[110px] object-contain transition-opacity duration-200 hover:opacity-90"
               />
             </div>
 
