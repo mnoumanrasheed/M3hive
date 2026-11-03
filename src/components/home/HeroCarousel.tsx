@@ -1165,8 +1165,6 @@ export const HeroCarousel: React.FC = () => {
 
               opacity: 0,
 
-              textShadow:
-                '0 4px 24px rgba(0,0,0,0.4)',
             }}
           >
             {slide.heading

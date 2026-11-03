@@ -138,6 +138,15 @@
   border-color: rgba(10, 10, 10, 0.15) !important;
 }
 
+/* Keep hero copy crisp, without text glow or drop-shadow effects. */
+.hero-light-overlay :is(h1, h2, h3, p, span, a) {
+  text-shadow: none !important;
+}
+
+.hero-light-overlay [class*='drop-shadow'] {
+  filter: none !important;
+}
+
 
 /* ─── Honeycomb SVG Pattern ─────────────────────────────────────── */
 @layer utilities {
