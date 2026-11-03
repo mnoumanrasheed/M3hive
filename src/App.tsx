@@ -29,6 +29,7 @@ const IntelligentAutomationDetailPage = React.lazy(() => import('./pages/service
 const DataAnalyticsDetailPage = React.lazy(() => import('./pages/services/DataAnalyticsDetailPage').then(module => ({ default: module.DataAnalyticsDetailPage })));
 const CloudPlatformsDetailPage = React.lazy(() => import('./pages/services/CloudPlatformsDetailPage').then(module => ({ default: module.CloudPlatformsDetailPage })));
 const EdgeTechnologiesDetailPage = React.lazy(() => import('./pages/services/EdgeTechnologiesDetailPage').then(module => ({ default: module.EdgeTechnologiesDetailPage })));
+const ProductPage = React.lazy(() => import('./pages/products/ProductPage').then(module => ({ default: module.ProductPage })));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then(module => ({ default: module.NotFoundPage })));
 
 const PageLoader = () => (
@@ -73,6 +74,11 @@ export const App: React.FC = () => {
             <Route path="/services/cloud-platforms/:slug" element={<CloudPlatformsDetailPage />} />
             <Route path="/services/edge-technologies" element={<EdgeTechnologiesPage />} />
             <Route path="/services/edge-technologies/:slug" element={<EdgeTechnologiesDetailPage />} />
+
+            {/* Product Routes */}
+            <Route path="/products/leadhive-ai" element={<ProductPage productId="leadhive-ai" />} />
+            <Route path="/products/nourdoc" element={<ProductPage productId="nourdoc" />} />
+            <Route path="/products/smart-animal" element={<ProductPage productId="smart-animal" />} />
 
             {/* 404 Fallback */}
             <Route path="*" element={<NotFoundPage />} />
