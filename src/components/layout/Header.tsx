@@ -89,16 +89,16 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) => {
       />
 
       {/* Floating Card Panel */}
-      <div className="fixed inset-x-4 top-4 z-[101] max-h-[calc(100svh-2rem)] max-w-md mx-auto overflow-y-auto rounded-2xl bg-[rgba(18,27,25,0.97)] border border-white/[0.10] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl flex flex-col justify-between transition-all duration-300 ease-out">
+      <div className="fixed inset-x-4 top-4 z-[101] max-h-[calc(100svh-2rem)] max-w-md mx-auto overflow-y-auto rounded-2xl border border-hive-border bg-hive-white p-6 shadow-[0_20px_50px_rgba(10,10,10,0.22)] flex flex-col justify-between transition-all duration-300 ease-out">
         <div>
           {/* Header */}
-          <div className="flex items-center justify-between pb-5 border-b border-white/[0.08]">
+          <div className="flex items-center justify-between pb-5 border-b border-hive-border">
             <BrandLogo imgClassName="h-7 w-auto max-w-[100px] object-contain" />
             <button
               type="button"
               onClick={onClose}
               aria-label="Close navigation menu"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.12] bg-white/[0.04] text-white/80 transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.08] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-hive-border bg-hive-white text-hive-black transition-colors duration-200 hover:border-hive-yellow/60 hover:bg-hive-warm-white focus:outline-none focus-visible:ring-2 focus-visible:ring-hive-yellow"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -121,8 +121,8 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) => {
                   onClick={onClose}
                   className={`flex items-center justify-between py-3 px-3.5 rounded-xl font-heading text-[15px] font-medium transition-colors duration-200 ${
                     isActive
-                      ? 'text-white bg-white/[0.07]'
-                      : 'text-white/70 hover:text-white hover:bg-white/[0.03]'
+                      ? 'text-hive-black bg-hive-warm-white'
+                      : 'text-hive-black/75 hover:text-hive-black hover:bg-hive-gray'
                   }`}
                 >
                   <span>{item.label}</span>
@@ -136,7 +136,7 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-6 pt-5 border-t border-white/[0.08]">
+        <div className="mt-6 pt-5 border-t border-hive-border">
           <Link
             to="/contact"
             onClick={onClose}
@@ -157,8 +157,8 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) => {
 interface DropdownItem { label: string; href: string; description?: string }
 
 const MobileAccordion: React.FC<{ label: string; open: boolean; onToggle: () => void; active: boolean; items: DropdownItem[]; onClose: () => void }> = ({ label, open, onToggle, active, items, onClose }) => <div className="rounded-xl">
-  <button type="button" onClick={onToggle} aria-expanded={open} className={`flex w-full items-center justify-between rounded-xl px-3.5 py-3 font-heading text-[15px] font-medium transition-colors duration-200 ${active ? 'bg-white/[0.07] text-white' : 'text-white/70 hover:bg-white/[0.03] hover:text-white'}`}><span>{label}</span><ChevronDown className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} /></button>
-  <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}><div className="overflow-hidden"><div className="space-y-1 pb-1 pt-1 pl-3">{items.map((item) => <NavLink key={item.href} to={item.href} onClick={onClose} className={({ isActive }) => `block rounded-lg px-3 py-2.5 text-sm transition-colors ${isActive ? 'bg-white/[0.08] text-hive-yellow' : 'text-white/65 hover:bg-white/[0.04] hover:text-white'}`}><span className="block font-heading font-semibold">{item.label}</span><span className="mt-0.5 block text-xs leading-snug text-white/45">{item.description}</span></NavLink>)}</div></div></div>
+  <button type="button" onClick={onToggle} aria-expanded={open} className={`flex w-full items-center justify-between rounded-xl px-3.5 py-3 font-heading text-[15px] font-medium transition-colors duration-200 ${active || open ? 'bg-hive-warm-white text-hive-black' : 'text-hive-black/75 hover:bg-hive-gray hover:text-hive-black'}`}><span>{label}</span><ChevronDown className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} /></button>
+  <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}><div className="overflow-hidden"><div className="space-y-1 pb-1 pt-1 pl-3">{items.map((item) => <NavLink key={item.href} to={item.href} onClick={onClose} className={({ isActive }) => `block rounded-lg px-3 py-2.5 text-sm transition-colors ${isActive ? 'bg-hive-warm-white text-hive-orange' : 'text-hive-black/75 hover:bg-hive-gray hover:text-hive-black'}`}><span className="block font-heading font-semibold">{item.label}</span><span className="mt-0.5 block text-xs leading-snug text-hive-text-muted">{item.description}</span></NavLink>)}</div></div></div>
 </div>;
 
 const productIcons = [Cpu, HeartPulse, Radio];
