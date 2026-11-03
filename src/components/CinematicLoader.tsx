@@ -666,19 +666,6 @@ export function CinematicLoader({
         </div>
       </div>
 
-      {/* =====================================================
-          CINEMATIC VIGNETTE
-      ===================================================== */}
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          z-[30]
-          shadow-[inset_0_0_150px_55px_rgba(0,0,0,0.68)]
-        "
-      />
     </div>
   );
 }
