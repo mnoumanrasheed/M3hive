@@ -3,7 +3,7 @@ import { HomepageData } from '../types/content';
 export const homepageData: HomepageData = {
   hero: {
     title: 'Engineering Digital Experiences That Move Business Forward',
-    description: 'AI-powered product engineering, intelligent automation, data, cloud, and experience design—built to improve how people live, work, and engage with technology.',
+    description: 'AI-powered product engineering, intelligent automation, data, cloud, and experience design, built to improve how people live, work, and engage with technology.',
     ctaLabel: 'Start a Project',
     ctaHref: '/contact',
   },
@@ -66,7 +66,7 @@ export const homepageData: HomepageData = {
   },
   contactCTA: {
     title: 'Let’s Turn Your Next Business Challenge into an Opportunity',
-    description: 'Speak with our experts to explore your goals, identify the right technology approach, and define a practical path forward—with no obligation.',
+    description: 'Speak with our experts to explore your goals, identify the right technology approach, and define a practical path forward, with no obligation.',
     ctaLabel: 'Book a Free Discovery Call',
     formFields: ['First Name', 'Last Name', 'Work Email Address', 'Country', 'Area of Interest'],
     disclaimer: 'By submitting the form, you agree to receive relevant communications from M3 Hive. You may unsubscribe at any time. Please review our Terms and Privacy Notice for information on how we process personal data.',

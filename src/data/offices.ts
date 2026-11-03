@@ -5,7 +5,7 @@ export const officeLocations: OfficeLocation[] = [
     id: 'office-pakistan',
     country: 'Pakistan',
     city: 'Islamabad',
-    title: 'Pakistan — Development & Support Centre',
+    title: 'Pakistan: Development & Support Centre',
     address: 'Office 3028, 3rd Floor, World Trade Centre, DHA 2, Islamabad ICT 45730',
     phone: null,
     email: 'hello@m3hive.com',

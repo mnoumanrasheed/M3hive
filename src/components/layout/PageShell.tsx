@@ -24,7 +24,7 @@ export const PageShell: React.FC<PageShellProps> = ({
   const canonicalUrl = `${siteUrl}${location.pathname === '/' ? '' : location.pathname}`;
 
   const fullTitle = title === 'Engineering Digital Experiences'
-    ? 'M3 Hive — Engineering Digital Experiences That Move Business Forward'
+    ? 'M3 Hive | Engineering Digital Experiences That Move Business Forward'
     : `${title} | M3 Hive`;
 
   // Breadcrumb schema based on current location

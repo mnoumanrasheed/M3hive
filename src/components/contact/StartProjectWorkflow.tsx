@@ -519,7 +519,7 @@ export const StartProjectWorkflow: React.FC<StartProjectWorkflowProps> = ({
                   A tech lead reads every brief
                 </h4>
                 <p className="mt-0.5 text-[11px] leading-relaxed text-neutral-400">
-                  Direct engineering review — no SDR or generic sales script in the middle.
+                  Direct engineering review, with no SDR or generic sales script in the middle.
                 </p>
               </div>
             </div>

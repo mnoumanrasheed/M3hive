@@ -108,7 +108,7 @@ export const dataAnalyticsData: ServicePageData = {
     },
     {
       title: 'AI-Assisted Operational Resilience',
-      description: 'Use intelligent agents to identify issues, support root-cause analysis, and trigger automated recovery workflows—improving uptime and reducing manual intervention.',
+      description: 'Use intelligent agents to identify issues, support root-cause analysis, and trigger automated recovery workflows, improving uptime and reducing manual intervention.',
     },
   ],
 };

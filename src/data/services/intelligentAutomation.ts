@@ -28,7 +28,7 @@ export const intelligentAutomationData: ServicePageData = {
     {
       id: 'intelligent-document-processing',
       title: 'Intelligent Document Processing',
-      description: 'Use AI to classify documents, extract information, validate content, and route work automatically—turning unstructured information into actionable data.',
+      description: 'Use AI to classify documents, extract information, validate content, and route work automatically, turning unstructured information into actionable data.',
       ctaLabel: 'Explore Details',
       ctaHref: '/services/intelligent-automation/intelligent-document-processing',
     },
@@ -83,7 +83,7 @@ export const intelligentAutomationData: ServicePageData = {
   differentiators: [
     {
       title: 'Advice Before Technology',
-      description: 'We do not recommend automation for its own sake. We first understand the process, business problem, users, risks, and desired outcome—then determine the most appropriate solution.',
+      description: 'We do not recommend automation for its own sake. We first understand the process, business problem, users, risks, and desired outcome, then determine the most appropriate solution.',
     },
     {
       title: 'Accountable for Results',

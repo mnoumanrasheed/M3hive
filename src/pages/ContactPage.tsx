@@ -101,7 +101,7 @@ export const ContactPage: React.FC = () => {
             </h2>
 
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-hive-text-muted sm:text-base">
-              From enterprise AI architectures to resilient digital platforms — share your requirements below for an upfront, senior technical evaluation.
+              From enterprise AI architectures to resilient digital platforms, share your requirements below for an upfront, senior technical evaluation.
             </p>
           </FadeIn>
         </Container>

@@ -50,7 +50,7 @@ const API_HEADERS = {
   'ngrok-skip-browser-warning': 'true',
 };
 const WELCOME_TEXT =
-  "Hello, welcome to M3Hive! I'm your AI assistant. How can I help you today — exploring our services, a career opportunity, or something else?";
+  "Hello, welcome to M3Hive! I'm your AI assistant. How can I help you today: exploring our services, a career opportunity, or something else?";
 
 interface WidgetPosition {
   x: number;

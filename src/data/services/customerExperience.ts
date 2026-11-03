@@ -96,7 +96,7 @@ export const customerExperienceData: ServicePageData = {
   differentiators: [
     {
       title: 'Decisions Grounded in User Evidence',
-      description: 'Research, analytics, and usability testing ensure design decisions are based on real behaviour rather than assumption—supporting stronger retention, satisfaction, and customer value.',
+      description: 'Research, analytics, and usability testing ensure design decisions are based on real behaviour rather than assumption, supporting stronger retention, satisfaction, and customer value.',
     },
     {
       title: 'End-to-End UX and UI Capability',

@@ -19,7 +19,7 @@ const SLIDES = [
     label: 'Welcome to M3 Hive',
     heading: 'Engineering Digital Experiences\nThat Move Business Forward',
     description:
-      'AI-powered product engineering, intelligent automation, data, cloud, and experience design—built to improve how people live, work, and engage with technology.',
+      'AI-powered product engineering, intelligent automation, data, cloud, and experience design, built to improve how people live, work, and engage with technology.',
     cta: 'Start a Project',
     href: '/contact',
     secondaryCta: 'Discover M3 Hive',
@@ -32,7 +32,7 @@ const SLIDES = [
     label: 'Artificial Intelligence',
     heading: 'Move from AI Ambition to\nMeasurable Business Value',
     description:
-      'Design, deploy, and scale AI solutions that integrate seamlessly into existing operations—delivering measurable impact across every layer of the business.',
+      'Design, deploy, and scale AI solutions that integrate seamlessly into existing operations, delivering measurable impact across every layer of the business.',
     cta: 'Explore Artificial Intelligence',
     href: '/services/artificial-intelligence',
     image: '/assets/heroes/hero-artificial-intelligence.webp',
@@ -65,7 +65,7 @@ const SLIDES = [
     label: 'Intelligent Automation',
     heading: 'Transform Operations with Intelligent,\nConnected Automation',
     description:
-      'Automate complex, high-volume processes by combining RPA with AI—eliminating inefficiency and scaling without adding headcount.',
+      'Automate complex, high-volume processes by combining RPA with AI, eliminating inefficiency and scaling without adding headcount.',
     cta: 'Explore Intelligent Automation',
     href: '/services/intelligent-automation',
     image: '/assets/heroes/hero-intelligent-automation.webp',
@@ -76,7 +76,7 @@ const SLIDES = [
     label: 'Data & Analytics',
     heading: 'Turn Data Complexity into\nClear, Actionable Insight',
     description:
-      'Unify, govern, and activate your data—building the platforms and analytics capabilities needed to make confident, evidence-based decisions.',
+      'Unify, govern, and activate your data, building the platforms and analytics capabilities needed to make confident, evidence-based decisions.',
     cta: 'Explore Data & Analytics',
     href: '/services/data-and-analytics',
     image: '/assets/heroes/hero-data-analytics.webp',
@@ -87,7 +87,7 @@ const SLIDES = [
     label: 'Cloud Platforms',
     heading: 'Modernise, Migrate, and Operate\nthe Cloud with Confidence',
     description:
-      'Plan, execute, and manage cloud transformations across AWS, Azure, and GCP—building secure, resilient, and cost-efficient cloud estates.',
+      'Plan, execute, and manage cloud transformations across AWS, Azure, and GCP, building secure, resilient, and cost-efficient cloud estates.',
     cta: 'Explore Cloud Platforms',
     href: '/services/cloud-platforms',
     image: '/assets/heroes/hero-cloud-platforms.webp',
