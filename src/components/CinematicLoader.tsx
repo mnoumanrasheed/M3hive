@@ -168,9 +168,9 @@ export function CinematicLoader({
       });
 
       gsap.set(logo, {
-        autoAlpha: 0,
-        scale: 0.88,
-        y: 22,
+        autoAlpha: 1,
+        scale: 0.96,
+        y: 0,
       });
 
       gsap.set([copy, progress], {
@@ -575,6 +575,9 @@ export function CinematicLoader({
                 }}
                 src="/assets/brand/m3hive-logo.png"
                 alt="M3 Hive"
+                loading="eager"
+                fetchPriority="high"
+                decoding="sync"
                 draggable="false"
               />
 
@@ -612,12 +615,12 @@ export function CinematicLoader({
                 mb-0
                 mt-7
                 font-['Space_Grotesk']
-                text-[9px]
-                font-medium
+                text-[11px]
+                font-bold
                 uppercase
                 tracking-[0.36em]
-                text-[#fbe176]
-                sm:text-[10px]
+                text-black
+                sm:text-[12px]
               "
             >
               Reprogramming the world
