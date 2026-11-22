@@ -615,12 +615,12 @@ export function CinematicLoader({
                 mb-0
                 mt-7
                 font-['Space_Grotesk']
-                text-[11px]
+                text-[14px]
                 font-bold
                 uppercase
                 tracking-[0.36em]
                 text-black
-                sm:text-[12px]
+                sm:text-[16px]
               "
             >
               Reprogramming the world
