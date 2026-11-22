@@ -453,7 +453,7 @@ export const AboutPage: React.FC = () => {
                         group-md:hover:scale-[1.01]
                       "
                       src={shouldLoadVideo ? '/videos/who-we-are.mp4' : undefined}
-                      poster="/assets/heroes/hero-about.webp"
+                      poster="/assets/heroes/hero-about.jpg"
                       autoPlay
                       muted
                       loop

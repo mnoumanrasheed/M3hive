@@ -20,12 +20,6 @@ const PARTICLES = [
   { left: '90%', top: '48%', size: 5, tone: 'orange' },
 ] as const;
 
-const toImageSet = (imageUrl: string) => {
-  const base = imageUrl.replace(/\.(jpe?g|png)$/i, '');
-
-  return `image-set(url("${base}.avif") type("image/avif"), url("${base}.webp") type("image/webp"), url("${imageUrl}"))`;
-};
-
 export const ServiceHeroMotion: React.FC<ServiceHeroMotionProps> = ({
   imageUrl,
 }) => {
@@ -324,7 +318,7 @@ export const ServiceHeroMotion: React.FC<ServiceHeroMotionProps> = ({
           will-change-transform
         "
         style={{
-          backgroundImage: toImageSet(imageUrl),
+          backgroundImage: `url("${imageUrl}")`,
         }}
       />
 
