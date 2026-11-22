@@ -52,4 +52,14 @@ export const officeLocations: OfficeLocation[] = [
     email: null,
     contactPerson: 'Shoaib Malik',
   },
+  {
+    id: 'office-south-africa',
+    country: 'South Africa',
+    city: 'Cape Town',
+    title: 'South Africa',
+    address: '11 Langeberg Rd, Eversdal, 7550, Cape Town, South Africa',
+    phone: null,
+    email: null,
+    contactPerson: null,
+  },
 ];
